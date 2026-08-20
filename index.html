@@ -6,7 +6,7 @@
 <title>Маша Воробьева — Senior Product Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -26,240 +26,98 @@
 <div class="wrap-wide" id="top">
 
   <section class="hero">
-    <div class="hero-with-photo">
-      <div>
-        <div class="eyebrow mono">SENIOR PRODUCT DESIGNER</div>
-        <h1>Больше 9 лет проектирую продукты, которыми пользуются <em>миллионы.</em></h1>
-        <p class="sub">Делаю B2C и B2B продукты в e‑commerce, telecom, fintech и HR‑tech — от исследования и CJM до запуска и поддержки метрик после релиза.</p>
-        <div class="hero-meta mono">
-          <span>Сейчас — Альфа-Банк</span>
-          <span>Ранее — МегаФон, X5, Сбер, Citi</span>
-        </div>
-      </div>
-      <img src="images/home/photo.webp" alt="Маша Воробьева" class="profile-photo reveal">
+    <span class="hero-emoji reveal">👋</span>
+    <h1 class="reveal">Привет! Я Маша Воробьева — Senior Product Designer</h1>
+    <p class="sub reveal">Больше 9 лет проектирую B2C и B2B продукты для миллионов пользователей в e‑commerce, telecom, fintech и HR‑tech — от исследования и CJM до запуска и метрик после релиза.</p>
+    <div class="hero-row reveal">
+      <img src="images/home/photo.webp" alt="Маша Воробьева" class="avatar">
+      <a href="https://t.me/Maria_Vorobyeva" target="_blank" rel="noopener" class="btn-pill">↗ Написать в Telegram</a>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2 class="section-title reveal">Контакты</h2>
+    <div class="contact-row reveal">
+      <a href="https://bit.ly/3iJdhfn" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://t.me/Maria_Vorobyeva" target="_blank" rel="noopener">Tg: @Maria_Vorobyeva</a>
     </div>
   </section>
 
   <section id="powers">
-    <div class="section-head">
-      <h2 class="reveal">Мои суперсилы</h2>
-      <div class="tag reveal">Как я работаю</div>
-    </div>
-    <div class="superpowers reveal">
-      <div class="superpower">
-        <span class="emoji">🧩</span>
-        <h4>Распутываю сложные сценарии</h4>
-        <p>Быстро нахожу, где пользователь теряется, и собираю понятный флоу</p>
-      </div>
-      <div class="superpower">
-        <span class="emoji">🤝</span>
-        <h4>Соединяю интересы</h4>
-        <p>Помогаю бизнесу, разработке и дизайну двигаться в одну сторону</p>
-      </div>
-      <div class="superpower">
-        <span class="emoji">🏗</span>
-        <h4>Мыслю системно</h4>
-        <p>Люблю дизайн-системы, устойчивые паттерны и решения, которые можно масштабировать</p>
-      </div>
-      <div class="superpower">
-        <span class="emoji">🚀</span>
-        <h4>Довожу до запуска</h4>
-        <p>Думаю не только про макет, но и про реализацию, тестирование и результат</p>
-      </div>
-    </div>
+    <details class="toggle reveal">
+      <summary>Мои суперсилы <span>✨</span></summary>
+      <ul class="toggle-list">
+        <li><span class="emoji">🧩</span><b>Распутываю сложные сценарии</b> — быстро нахожу, где пользователь теряется, и собираю понятный флоу</li>
+        <li><span class="emoji">🤝</span><b>Соединяю интересы</b> — помогаю бизнесу, разработке и дизайну двигаться в одну сторону</li>
+        <li><span class="emoji">🏗</span><b>Мыслю системно</b> — люблю дизайн-системы, устойчивые паттерны и решения, которые можно масштабировать</li>
+        <li><span class="emoji">🚀</span><b>Довожу до запуска</b> — думаю не только про макет, но и про реализацию, тестирование и результат</li>
+      </ul>
+    </details>
   </section>
 
   <section id="work">
-    <div class="section-head">
-      <h2 class="reveal">Кейсы</h2>
-      <div class="tag reveal">4 проекта</div>
-    </div>
+    <h2 class="section-title reveal">Кейсы</h2>
 
     <a href="case-alfa.html" class="case reveal">
-      <span class="corner tl"></span><span class="corner br"></span>
+      <h3>E-commerce • Альфа-Банк</h3>
+      <p class="desc">Запустили новый e-commerce продукт с нуля. Я проектировала корзину, видеоленту, профиль пользователя и сценарии офлайн-оплаты через BNPL.</p>
+      <span class="case-link">→ Смотреть кейс дизайна покупки</span>
       <div class="case-cover"><img src="images/home/cover-alfa.webp" alt="Альфа-Маркет — сценарий покупки" loading="lazy"></div>
-      <div class="case-top" style="margin-top:20px;">
-        <div>
-          <div class="case-tag">E-commerce</div>
-          <h3>Сценарий покупки — Альфа-Маркет</h3>
-          <p class="desc">Запустили новый e-commerce продукт с нуля. Я проектировала корзину, видеоленту, профиль пользователя и сценарии офлайн-оплаты через BNPL.</p>
-        </div>
-      </div>
-      <div class="case-meta mono">
-        <span><b>Роль</b> Продуктовый дизайнер</span>
-        <span><b>Срок</b> Июнь – август 2026</span>
-      </div>
-      <span class="case-link">Смотреть кейс <span class="arrow">→</span></span>
     </a>
 
     <a href="case-megafon.html" class="case reveal">
-      <span class="corner tl"></span><span class="corner br"></span>
+      <h3>Тарифы и голосовой помощник • МегаФон</h3>
+      <p class="desc">Улучшила метрики приложения и сайта с MAU 17 млн. Оптимизировала флоу выбора тарифов: конверсия +4%, время выбора сократилось с 18 до 15 минут, подключения домашнего интернета выросли на 70%.</p>
+      <span class="case-link">→ Смотреть кейс</span>
       <div class="case-cover"><img src="images/home/cover-megafon.webp" alt="МегаФон — редизайн тарифов" loading="lazy"></div>
-      <div class="case-top" style="margin-top:20px;">
-        <div>
-          <div class="case-tag">Telecom</div>
-          <h3>Тарифы и голосовой помощник — МегаФон</h3>
-          <p class="desc">Улучшила метрики приложения и сайта с MAU 17 млн. Оптимизировала флоу выбора тарифов: конверсия +4%, время выбора сократилось с 18 до 15 минут, подключения домашнего интернета выросли на 70%.</p>
-        </div>
-      </div>
-      <div class="case-meta mono">
-        <span><b>Роль</b> Продуктовый дизайнер</span>
-        <span><b>Срок</b> Февраль – май 2024</span>
-      </div>
-      <span class="case-link">Смотреть кейс <span class="arrow">→</span></span>
     </a>
 
     <a href="case-loyalty.html" class="case reveal">
-      <span class="corner tl"></span><span class="corner br"></span>
+      <h3>Запуск программы лояльности • Пятёрочка</h3>
+      <p class="desc">Проектировала сценарии программы лояльности в приложении «Пятёрочки»: баллы, карта, активация, персональные предложения, сторис. Новые фичи для X5 Club увеличили средний чек на 8%.</p>
+      <span class="case-link">→ Смотреть экраны</span>
       <div class="case-cover"><img src="images/home/cover-loyalty.webp" alt="Пятёрочка — программа лояльности" loading="lazy"></div>
-      <div class="case-top" style="margin-top:20px;">
-        <div>
-          <div class="case-tag">Retail · Loyalty</div>
-          <h3>Запуск программы лояльности — Пятёрочка</h3>
-          <p class="desc">Проектировала сценарии программы лояльности в приложении «Пятёрочки»: баллы, карта, активация, персональные предложения, сторис. Новые фичи для X5 Club увеличили средний чек на 8%.</p>
-        </div>
-      </div>
-      <div class="case-meta mono">
-        <span><b>Роль</b> Продуктовый дизайнер</span>
-        <span><b>Компания</b> X5</span>
-      </div>
-      <span class="case-link">Смотреть кейс <span class="arrow">→</span></span>
     </a>
 
     <a href="case-training.html" class="case reveal">
-      <span class="corner tl"></span><span class="corner br"></span>
+      <h3>Портал обучения • Пятёрочка</h3>
+      <p class="desc">Редизайн обучающего портала за год. Повысили ключевые метрики для сотрудников и менеджеров обучения, руководила командой из двух дизайнеров при рефакторинге дизайн-системы для HR-сервисов.</p>
+      <span class="case-link">→ Смотреть экраны</span>
       <div class="case-cover"><img src="images/home/cover-training.webp" alt="Пятёрочка — портал обучения" loading="lazy"></div>
-      <div class="case-top" style="margin-top:20px;">
-        <div>
-          <div class="case-tag">HR-tech</div>
-          <h3>Портал обучения — Пятёрочка</h3>
-          <p class="desc">Редизайн обучающего портала за год. Повысили ключевые метрики для сотрудников и менеджеров обучения, руководила командой из двух дизайнеров при рефакторинге дизайн-системы для HR-сервисов.</p>
-        </div>
-      </div>
-      <div class="case-meta mono">
-        <span><b>Роль</b> Product Designer, руководитель мини-команды</span>
-        <span><b>Компания</b> X5</span>
-      </div>
-      <span class="case-link">Смотреть кейс <span class="arrow">→</span></span>
     </a>
   </section>
 
   <section id="experience">
-    <div class="section-head">
-      <h2 class="reveal">Опыт — 9+ лет</h2>
-      <div class="tag reveal">6 компаний</div>
-    </div>
-
-    <img src="images/home/logos.webp" alt="Логотипы компаний" class="logos-strip reveal" style="margin-bottom:28px;">
-
-    <div class="reveal">
-      <div class="timeline-item">
-        <div class="timeline-role">
-          <div class="mono-role">Senior Product Designer</div>
-          <h4>Альфа-Банк</h4>
-          <div class="dates">Май 2025 — сейчас</div>
-        </div>
-        <div class="timeline-body">
-          <p>Развиваю новый e-commerce продукт с нуля, формируя пользовательский опыт на всех этапах — от исследования и проектирования сценариев до запуска продукта.</p>
-          <p>Проектирую и развиваю ключевые части продукта: корзину, видеоленту, профиль пользователя и сценарии офлайн-оплаты через BNPL.</p>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-role">
-          <div class="mono-role">Senior Product Designer</div>
-          <h4>МегаФон</h4>
-          <div class="dates">Июль 2023 — май 2025</div>
-        </div>
-        <div class="timeline-body">
-          <p>Улучшили метрики приложения и сайта с MAU 17 млн.</p>
-          <ul>
-            <li>Оптимизировала флоу выбора тарифов: конверсия +4%, время выбора сократилось с 18 до 15 минут, подключения домашнего интернета увеличились на 70%.</li>
-            <li>Переработала дизайн голосового помощника «Ева»: количество пользователей увеличилось на 6% в месяц, отключения снизились на 3% в месяц.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-role">
-          <div class="mono-role">Senior Product Designer</div>
-          <h4>X5</h4>
-          <div class="dates">Декабрь 2020 — июль 2023</div>
-        </div>
-        <div class="timeline-body">
-          <p>Перезапустили приложение «Пятёрочка» с MAU 10 млн.</p>
-          <ul>
-            <li>Проектировала систему лояльности: баллы, карта, активация, персональные предложения, сторис. Добавила новые фичи для X5 Club, что увеличило средний чек на 8%.</li>
-            <li>Проводила UX, A/B тесты с UX-лабораторией, построила систему метрик на базе Google HEART.</li>
-            <li>Развивала дизайн-систему с командой из четырёх дизайнеров.</li>
-          </ul>
-          <p style="margin-top:10px;"><b style="color:var(--ink);">Предыдущий проект в X5:</b></p>
-          <ul>
-            <li>Провела редизайн обучающего портала за год. Повысили ключевые метрики для сотрудников и менеджеров обучения.</li>
-            <li>Руководила командой из двух дизайнеров при рефакторинге дизайн-системы для HR-сервисов.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-role">
-          <div class="mono-role">Product Designer</div>
-          <h4>MedAcoustica</h4>
-          <div class="dates">Август 2018 — декабрь 2020</div>
-        </div>
-        <div class="timeline-body">
-          <p>С нуля спроектировала job board для врачей в Германии, Австрии и Швейцарии. Изучала потребности пользователей, проверяла гипотезы для флоу поиска работы, рецензий и описания больниц.</p>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-role">
-          <div class="mono-role">Product Designer</div>
-          <h4>Сбер</h4>
-          <div class="dates">Август 2016 — август 2018</div>
-        </div>
-        <div class="timeline-body">
-          <p>Создали дашборды для руководителей разного уровня. Спроектировала интерфейс с адаптацией под роль пользователя. Стоимость подготовки отчётов снизилась на 87%.</p>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-role">
-          <div class="mono-role">Analyst, UI Designer</div>
-          <h4>Citi</h4>
-          <div class="dates">Август 2013 — август 2016</div>
-        </div>
-        <div class="timeline-body">
-          <p>Запустили программу мотивации сотрудников и автоматизировали процессы отдела серверов и баз данных. Процессы ускорились, стало меньше ошибок.</p>
-        </div>
-      </div>
-    </div>
+    <h2 class="section-title reveal">Опыт — 9+ лет</h2>
+    <img src="images/home/logos.webp" alt="Логотипы компаний" class="logos-strip reveal">
+    <ul class="exp-list reveal">
+      <li><span class="exp-role">Senior Product Designer</span><span class="dot-sep">•</span><span class="exp-company">Альфа-Банк</span><span class="dot-sep">•</span><span class="exp-dates">май 2025 — сейчас</span></li>
+      <li><span class="exp-role">Senior Product Designer</span><span class="dot-sep">•</span><span class="exp-company">МегаФон</span><span class="dot-sep">•</span><span class="exp-dates">июль 2023 — май 2025</span></li>
+      <li><span class="exp-role">Senior Product Designer</span><span class="dot-sep">•</span><span class="exp-company">X5</span><span class="dot-sep">•</span><span class="exp-dates">декабрь 2020 — июль 2023</span></li>
+      <li><span class="exp-role">Product Designer</span><span class="dot-sep">•</span><span class="exp-company">MedAcoustica</span><span class="dot-sep">•</span><span class="exp-dates">август 2018 — декабрь 2020</span></li>
+      <li><span class="exp-role">Product Designer</span><span class="dot-sep">•</span><span class="exp-company">Сбер</span><span class="dot-sep">•</span><span class="exp-dates">август 2016 — август 2018</span></li>
+      <li><span class="exp-role">Analyst, UI Designer</span><span class="dot-sep">•</span><span class="exp-company">Citi</span><span class="dot-sep">•</span><span class="exp-dates">август 2013 — август 2016</span></li>
+    </ul>
   </section>
 
   <section id="education">
-    <div class="section-head">
-      <h2 class="reveal">Образование</h2>
-    </div>
-    <div class="edu-grid reveal">
-      <div class="edu-item">
+    <h2 class="section-title reveal">Образование</h2>
+    <ul class="edu-list reveal">
+      <li>
         <img src="images/home/edu-calarts.webp" alt="California Institute of Arts">
-        <p class="school">California Institute of Arts</p>
-        <p class="degree">UX/UI Design, Graphic Design</p>
-      </div>
-      <div class="edu-item">
+        <div>
+          <p class="school">California Institute of Arts</p>
+          <p class="degree">UX/UI Design, Graphic Design</p>
+        </div>
+      </li>
+      <li>
         <img src="images/home/edu-hse.webp" alt="Высшая Школа Экономики">
-        <p class="school">Высшая Школа Экономики</p>
-        <p class="degree">Master's degree, Бизнес-информатика</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="contact">
-    <h2 class="reveal">Открыта для новых проектов и знакомств.</h2>
-    <div class="contact-links reveal">
-      <a href="https://bit.ly/3iJdhfn" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://t.me/Maria_Vorobyeva" target="_blank" rel="noopener">Telegram · @Maria_Vorobyeva</a>
-    </div>
+        <div>
+          <p class="school">Высшая Школа Экономики</p>
+          <p class="degree">Master's degree, Бизнес-информатика</p>
+        </div>
+      </li>
+    </ul>
   </section>
 
 </div>
