@@ -1,29 +1,29 @@
 :root{
-  /* ---- surface ---- */
-  --paper: #ffffff;          /* canvas */
-  --paper-raised: #f7f7f7;   /* surface-soft */
-  --surface-strong: #f2f2f2;
+  /* ---- surface (dark) ---- */
+  --paper: #000000;          /* canvas — pure black, as requested */
+  --paper-raised: #141414;   /* surface-soft */
+  --surface-strong: #1e1e1e;
 
   /* ---- text ---- */
-  --ink: #222222;            /* primary text */
-  --ink-soft: #6a6a6a;       /* muted */
-  --ink-faint: #929292;      /* muted-soft */
-  --body-text: #3f3f3f;
+  --ink: #f2f2f0;            /* primary text */
+  --ink-soft: #9a9a95;       /* muted */
+  --ink-faint: #6b6b66;      /* muted-soft */
+  --body-text: #c6c5c0;
 
   /* ---- lines ---- */
-  --line: #dddddd;           /* hairline */
-  --line-soft: #ebebeb;
-  --line-strong: #c1c1c1;
+  --line: #2a2a27;           /* hairline */
+  --line-soft: #201f1c;
+  --line-strong: #46443e;
 
   /* ---- brand: single accent, used sparingly ---- */
   --accent: #ff385c;         /* rausch */
-  --accent-active: #e00b41;
-  --accent-disabled: #ffd1da;
+  --accent-active: #ff5776;  /* brighter on hover — dark surfaces need lift, not darkening */
+  --accent-disabled: #5c1f2b;
 
   /* legacy names kept for inline-style compatibility, repointed:
      --pine  -> confident/ink data (no separate "success" hue)
      --signal -> the rare, deliberate accent moment */
-  --pine: #222222;
+  --pine: #f2f2f0;
   --signal: #ff385c;
 
   --max: 680px;
@@ -33,7 +33,9 @@
   --radius-md: 14px;
   --radius-full: 999px;
 
-  --shadow-1: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.10) 0 4px 8px 0;
+  /* light-based shadows vanish on a black canvas — lift with a soft
+     white hairline + a deeper black falloff instead */
+  --shadow-1: 0 0 0 1px rgba(255,255,255,0.08), 0 10px 30px rgba(0,0,0,0.6);
 }
 
 *{ box-sizing: border-box; }
@@ -201,14 +203,14 @@ details.toggle[open] summary::before{ transform: rotate(90deg); }
   font-size: 13.5px;
   font-weight: 500;
   color: var(--ink);
-  background: #ffffff;
-  border: 1px solid var(--ink);
+  background: transparent;
+  border: 1px solid var(--line-strong);
   padding: 8px 16px;
   border-radius: var(--radius-full);
   margin-bottom: 22px;
-  transition: background .15s ease;
+  transition: background .15s ease, border-color .15s ease;
 }
-.case:hover .case-link{ background: var(--paper-raised); }
+.case:hover .case-link{ background: var(--paper-raised); border-color: var(--ink-soft); }
 .case-cover{ border-radius: var(--radius-md); overflow: hidden; transition: box-shadow .2s ease; }
 .case-cover img{ width: 100%; display: block; border: none; }
 .case:hover .case-cover{ box-shadow: var(--shadow-1); }
