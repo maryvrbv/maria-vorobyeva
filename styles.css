@@ -126,7 +126,7 @@ h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
 .hero-content{ flex: 1; min-width: 0; }
 .hero-actions{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
 
-.hero-photo{ flex-shrink: 0; position: relative; }
+.hero-photo{ flex-shrink: 0; position: relative; order: -1; }
 .hero-photo::before{
   content: "";
   position: absolute;
@@ -145,7 +145,7 @@ h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
 }
 
 @media (max-width: 720px){
-  .hero-grid{ flex-direction: column-reverse; align-items: flex-start; gap: 28px; }
+  .hero-grid{ flex-direction: column; align-items: flex-start; gap: 28px; }
   .avatar-lg{ width: 140px; height: 140px; }
 }
 
