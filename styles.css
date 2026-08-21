@@ -167,41 +167,43 @@ section:last-of-type{ border-bottom: none; }
 }
 .contact-row a:hover{ color: var(--ink); border-color: var(--ink); }
 
-/* ---------- toggle (superpowers) — minimal accordion card ---------- */
-details.toggle{
+/* ---------- superpowers — horizontal scroll cards ---------- */
+.power-wrap{ position: relative; margin-top: 22px; }
+.power-scroll{
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 2px 2px 14px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.power-scroll::-webkit-scrollbar{ display: none; }
+.power-wrap::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 14px;
+  width: 48px;
+  background: linear-gradient(to right, transparent, var(--paper));
+  pointer-events: none;
+}
+.power-card{
+  flex: 0 0 auto;
+  width: min(74vw, 250px);
+  scroll-snap-align: start;
   background: var(--paper-raised);
   border-radius: var(--radius-md);
-  padding: 4px 20px;
-}
-details.toggle summary{
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--ink);
-  list-style: none;
+  padding: 20px;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 18px 0;
+  flex-direction: column;
+  gap: 10px;
 }
-details.toggle summary::-webkit-details-marker{ display: none; }
-details.toggle summary::after{
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-right: 2px solid var(--ink-soft);
-  border-bottom: 2px solid var(--ink-soft);
-  transform: rotate(45deg);
-  transition: transform .2s ease;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-details.toggle[open] summary::after{ transform: rotate(225deg); }
-.toggle-list{ list-style: none; margin: 0; padding: 0 0 18px; color: var(--body-text); font-size: 14.5px; }
-.toggle-list li{ padding: 12px 0; border-top: 1px solid var(--line); }
-.toggle-list li:last-child{ padding-bottom: 0; }
-.toggle-list .emoji{ margin-right: 8px; }
-.toggle-list b{ color: var(--ink); font-weight: 600; }
+.power-emoji{ font-size: 26px; line-height: 1; }
+.power-card b{ font-size: 15px; color: var(--ink); font-weight: 600; }
+.power-card p{ margin: 0; font-size: 13.5px; color: var(--body-text); line-height: 1.5; }
 
 /* ---------- work cards (home page) — property-card style ---------- */
 .case{
