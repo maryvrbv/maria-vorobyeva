@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Style Guide — Маша Воробьева</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* page-local scaffolding for this catalog only — not part of the
+     shared design system, kept out of styles.css on purpose */
+  .sg-wrap{ max-width: 900px; }
+  .sg-intro{ color: var(--body-text); font-size: 15px; max-width: 560px; margin: 0 0 8px; }
+  .sg-section{ padding: 48px 0; border-bottom: 1px solid var(--line); }
+  .sg-section:last-child{ border-bottom: none; }
+  .sg-section > h2{ font-weight: 700; font-size: 22px; color: var(--ink); margin: 0 0 6px; letter-spacing: -0.01em; }
+  .sg-section > .sg-note{ color: var(--ink-soft); font-size: 13.5px; margin: 0 0 28px; max-width: 560px; }
+  .sg-block{ margin-bottom: 34px; }
+  .sg-block:last-child{ margin-bottom: 0; }
+  .sg-label{
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--ink-faint);
+    margin-bottom: 12px;
+  }
+  .sg-label code{ color: var(--ink-soft); text-transform: none; letter-spacing: 0; font-weight: 500; }
+  .sg-swatches{ display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+  .sg-swatch{ border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--line); }
+  .sg-swatch .fill{ height: 56px; }
+  .sg-swatch .meta{ padding: 8px 10px; background: var(--paper-raised); }
+  .sg-swatch .name{ font-size: 12.5px; font-weight: 600; color: var(--ink); display: block; }
+  .sg-swatch .hex{ font-size: 11px; color: var(--ink-soft); font-family: monospace; }
+  .sg-type-row{ display: flex; align-items: baseline; gap: 18px; padding: 14px 0; border-top: 1px solid var(--line); }
+  .sg-type-row:first-child{ border-top: none; }
+  .sg-type-row .tag{ flex: 0 0 90px; font-size: 11px; color: var(--ink-faint); font-family: monospace; }
+  .sg-flex{ display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .sg-grid-2{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px){ .sg-grid-2{ grid-template-columns: 1fr; } }
+  .sg-mini-nav{ background: var(--paper); border-bottom: 1px solid var(--line); }
+  .sg-mini-nav-inner{ max-width: 900px; margin: 0 auto; padding: 12px 28px; display: flex; gap: 18px; overflow-x: auto; }
+  .sg-mini-nav a{ font-size: 13px; color: var(--ink-soft); text-decoration: none; white-space: nowrap; }
+  .sg-mini-nav a:hover{ color: var(--ink); }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-name">Маша Воробьева</a>
+    <div class="nav-links">
+      <a href="index.html#work">Кейсы</a>
+      <a href="index.html#experience">Опыт</a>
+      <a href="index.html#contact">Контакты</a>
+      <span class="badge mono"><span class="dot"></span>Open to work</span>
+    </div>
+  </div>
+</header>
+
+<nav class="sg-mini-nav">
+  <div class="sg-mini-nav-inner">
+    <a href="#colors">Цвета</a>
+    <a href="#type">Типографика</a>
+    <a href="#buttons">Кнопки</a>
+    <a href="#badges">Бейджи</a>
+    <a href="#cards">Карточки</a>
+    <a href="#accordions">Аккордеоны</a>
+    <a href="#tables">Таблицы</a>
+    <a href="#figures">Изображения</a>
+  </div>
+</nav>
+
+<div class="wrap-wide sg-wrap">
+
+  <section class="hero" style="padding: 48px 0 40px;">
+    <h1 style="font-size: clamp(26px, 4vw, 34px);">Style Guide</h1>
+    <p class="sg-intro">Живой каталог всех компонентов сайта — токены, кнопки, карточки, аккордеоны, таблицы. Все примеры используют настоящие классы из <code>styles.css</code>, поэтому страница всегда отражает актуальное состояние дизайн-системы. Не привязана к навигации сайта — открывайте по прямой ссылке.</p>
+  </section>
+
+  <!-- ============ COLORS ============ -->
+  <section class="sg-section" id="colors">
+    <h2>Цвета</h2>
+    <p class="sg-note">Тёмная тема, фон #000000. Один акцент (Rausch) используется по минимуму — hero-кнопка, точка «Open to work», редкие смысловые акценты.</p>
+
+    <div class="sg-block">
+      <span class="sg-label">Поверхности</span>
+      <div class="sg-swatches">
+        <div class="sg-swatch"><div class="fill" style="background:var(--paper);"></div><div class="meta"><span class="name">canvas</span><span class="hex">--paper · #000000</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--paper-raised);"></div><div class="meta"><span class="name">raised</span><span class="hex">--paper-raised · #141414</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--surface-strong);"></div><div class="meta"><span class="name">strong</span><span class="hex">--surface-strong · #1e1e1e</span></div></div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label">Текст</span>
+      <div class="sg-swatches">
+        <div class="sg-swatch"><div class="fill" style="background:var(--ink);"></div><div class="meta"><span class="name">ink</span><span class="hex">--ink · #f2f2f0</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--body-text);"></div><div class="meta"><span class="name">body</span><span class="hex">--body-text · #c6c5c0</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--ink-soft);"></div><div class="meta"><span class="name">ink-soft</span><span class="hex">--ink-soft · #9a9a95</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--ink-faint);"></div><div class="meta"><span class="name">ink-faint</span><span class="hex">--ink-faint · #6b6b66</span></div></div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label">Линии</span>
+      <div class="sg-swatches">
+        <div class="sg-swatch"><div class="fill" style="background:var(--line);"></div><div class="meta"><span class="name">line</span><span class="hex">--line · #2a2a27</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--line-soft);"></div><div class="meta"><span class="name">line-soft</span><span class="hex">--line-soft · #201f1c</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--line-strong);"></div><div class="meta"><span class="name">line-strong</span><span class="hex">--line-strong · #46443e</span></div></div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label">Акцент (используется точечно)</span>
+      <div class="sg-swatches">
+        <div class="sg-swatch"><div class="fill" style="background:var(--accent);"></div><div class="meta"><span class="name">accent</span><span class="hex">--accent · #ff385c</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--accent-active);"></div><div class="meta"><span class="name">accent-active</span><span class="hex">--accent-active · #ff5776</span></div></div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label">Семантика карточек-инсайтов</span>
+      <div class="sg-swatches">
+        <div class="sg-swatch"><div class="fill" style="background:var(--success);"></div><div class="meta"><span class="name">success</span><span class="hex">--success · #6fbe9c</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--warning);"></div><div class="meta"><span class="name">warning</span><span class="hex">--warning · #ff6b81</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--note);"></div><div class="meta"><span class="name">note</span><span class="hex">--note · #b28dff</span></div></div>
+        <div class="sg-swatch"><div class="fill" style="background:var(--highlight);"></div><div class="meta"><span class="name">highlight</span><span class="hex">--highlight · #e8b854</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TYPOGRAPHY ============ -->
+  <section class="sg-section" id="type">
+    <h2>Типографика</h2>
+    <p class="sg-note">Одна гарнитура на весь сайт — Inter (замена Cereal/Circular).</p>
+
+    <div class="sg-type-row"><span class="tag">h1</span><h1 style="margin:0; font-size: clamp(28px,4.6vw,38px);">Привет! Я Маша</h1></div>
+    <div class="sg-type-row"><span class="tag">.section-title</span><h2 class="section-title" style="margin:0;">Кейсы</h2></div>
+    <div class="sg-type-row"><span class="tag">.case-h2</span><span class="case-h2" style="padding-top:0; border-top:none; margin:0;">1. О проекте</span></div>
+    <div class="sg-type-row"><span class="tag">.case-h3</span><span class="case-h3" style="margin:0;">Контекст</span></div>
+    <div class="sg-type-row"><span class="tag">.case-subhead</span><span class="case-subhead" style="margin:0;">Что получилось</span></div>
+    <div class="sg-type-row"><span class="tag">body</span><p style="margin:0; color:var(--body-text); font-size:15.5px; max-width:420px;">Обычный текст параграфа — используется во всех блоках кейсов.</p></div>
+    <div class="sg-type-row"><span class="tag">.case-lead</span><p class="case-lead" style="margin:0;">Жирный лид-абзац перед списком</p></div>
+    <div class="sg-type-row"><span class="tag">link</span><a href="#" style="color:var(--ink-soft); border-bottom:1px solid var(--ink-soft);">Инлайн-ссылка в тексте</a></div>
+  </section>
+
+  <!-- ============ BUTTONS ============ -->
+  <section class="sg-section" id="buttons">
+    <h2>Кнопки</h2>
+    <p class="sg-note">Один яркий акцентный CTA на страницу — остальное контурное.</p>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.btn-pill</code> — основной CTA (1 момент на странице)</span>
+      <div class="sg-flex">
+        <a href="#" class="btn-pill">↗ Написать в Telegram</a>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.case-link</code> — вторичная кнопка (контур)</span>
+      <div class="sg-flex">
+        <span class="case-link">→ Смотреть кейс</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BADGES ============ -->
+  <section class="sg-section" id="badges">
+    <h2>Бейджи и статусы</h2>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.badge</code> + <code>.dot</code> — статус-индикатор в навигации</span>
+      <div class="sg-flex">
+        <span class="badge"><span class="dot"></span>Open to work</span>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.case-tag</code> — нейтральный тег категории</span>
+      <div class="sg-flex">
+        <div class="case-tag">E-commerce</div>
+        <div class="case-tag">Retail · Loyalty</div>
+        <div class="case-tag">HR-tech</div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.status</code> — статус гипотезы в таблице исследований</span>
+      <div class="sg-flex">
+        <span class="status status--yes">Подтверждена</span>
+        <span class="status status--partial">Частично</span>
+        <span class="status status--no">Опровергнута</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CARDS ============ -->
+  <section class="sg-section" id="cards">
+    <h2>Карточки</h2>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.power-card</code> — горизонтальный скролл (главная страница)</span>
+      <div class="power-wrap">
+        <div class="power-scroll">
+          <div class="power-card"><span class="power-emoji">🧩</span><b>Распутываю сложные сценарии</b><p>Быстро нахожу, где пользователь теряется</p></div>
+          <div class="power-card"><span class="power-emoji">🚀</span><b>Довожу до запуска</b><p>Думаю не только про макет, но и про результат</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.icon-card--success</code> — успех / плюс / метрика</span>
+      <div class="icon-card icon-card--success"><span class="ic">✓</span><span class="tx">Дополнительные продажи с блока рекомендаций товаров</span></div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.icon-card--warning</code> — проблема / минус</span>
+      <div class="icon-card icon-card--warning"><span class="ic">⚠</span><span class="tx">При большом количестве продавцов навигация усложняется.</span></div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.icon-card--note</code> — JTBD / заметка</span>
+      <div class="icon-card icon-card--note"><span class="ic">💼</span><span class="tx"><b>JTBD:</b> когда я хочу что-то купить на маркетплейсе, я хочу получить самые выгодные условия.</span></div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.icon-card--highlight</code> — вывод / воронка результата</span>
+      <div class="icon-card icon-card--highlight"><span class="ic">💸</span><span class="tx">Меньше потерь → выше конверсия → больше заказов → рост GMV.</span></div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.card-grid-2</code> — плюсы/минусы парами</span>
+      <div class="card-grid-2">
+        <div class="icon-card icon-card--success"><span class="ic">✓</span><span class="tx">Вся корзина доступна в одном списке</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic">⚠</span><span class="tx">Повторяющиеся кнопки могут создавать визуальный шум</span></div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.subcard-grid</code> — нейтральные карточки без цвета</span>
+      <div class="subcard-grid">
+        <div class="subcard"><b>Вариант A — табы</b><p>Товары каждого продавца в отдельной вкладке.</p></div>
+        <div class="subcard"><b>Вариант B — единый список</b><p>Все товары видны на одном экране.</p></div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.stat-grid</code> / <code>.metric</code> — числовые плашки</span>
+      <div class="stat-grid">
+        <div class="metric"><span class="num-big">5</span><span class="lbl">участников</span></div>
+        <div class="metric"><span class="num-big">9</span><span class="lbl">проверенных гипотез</span></div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.quote-block</code> — акцентная цитата</span>
+      <div class="quote-block">100% участников теста предпочли единый список.<cite>UX-тестирование</cite></div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.gallery-note</code> — служебная сноска</span>
+      <div class="gallery-note">Этот кейс представлен как визуальный обзор ключевых экранов.</div>
+    </div>
+  </section>
+
+  <!-- ============ ACCORDIONS ============ -->
+  <section class="sg-section" id="accordions">
+    <h2>Аккордеоны</h2>
+    <p class="sg-note">Минималистичная карточка: кружок-иконка слева, шеврон справа вместо треугольника.</p>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.disclosure</code> — используется в кейсах (аудитории, исследование)</span>
+      <details class="disclosure">
+        <summary>Аудитория «Подели»</summary>
+        <div class="body">
+          <p>Женщины 25–45 лет, регулярно покупающие на маркетплейсах.</p>
+        </div>
+      </details>
+      <details class="disclosure">
+        <summary>Аудитория «Альфа-банка»</summary>
+        <div class="body">
+          <p>Уже была хорошо знакома с механикой кешбэка.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.exp-item</code> — используется в разделе «Опыт» на главной</span>
+      <div class="exp-list">
+        <details class="exp-item">
+          <summary><span class="exp-role">Senior Product Designer</span><span class="dot-sep">•</span><span class="exp-company">Alfa-Bank</span><span class="dot-sep">•</span><span class="exp-dates">май 2025 — сейчас</span></summary>
+          <div class="exp-body"><p>Развиваю новый e-commerce продукт с нуля.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TABLES ============ -->
+  <section class="sg-section" id="tables">
+    <h2>Таблицы</h2>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.meta-table</code> — строки label:value (метаданные кейса)</span>
+      <div class="meta-table">
+        <div class="row"><div class="k">Начало</div><div class="v">Июнь 2026</div></div>
+        <div class="row"><div class="k">Запуск</div><div class="v">Август 2026</div></div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.col-table</code> — 3-колоночное сравнение</span>
+      <div style="overflow-x:auto;">
+        <table class="col-table">
+          <tr><th>Критерий</th><th>Табы</th><th>Единый список</th></tr>
+          <tr><td>Видимость корзины</td><td>❌ Виден только активный таб</td><td>✅ Все товары видны сразу</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.data-table</code> — таблица с бейджами статуса</span>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <tr><th>№</th><th>Гипотеза</th><th>Результат</th></tr>
+          <tr><td>H4</td><td>Пользователи правильно понимают итоговую стоимость</td><td><span class="status status--yes">Подтверждена</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FIGURES ============ -->
+  <section class="sg-section" id="figures">
+    <h2>Изображения</h2>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.figure</code> — стандартный кадр (14px радиус)</span>
+      <div class="figure"><img src="images/alfa/cjm.webp" alt="Пример .figure" loading="lazy"></div>
+    </div>
+
+    <div class="sg-block">
+      <span class="sg-label"><code>.side-figure</code> — текст + картинка по высоте текста</span>
+      <div class="side-figure">
+        <div class="text">
+          <p>Текстовая колонка задаёт высоту, изображение справа подстраивается через <code>object-fit: cover</code>.</p>
+        </div>
+        <div class="img-col"><img src="images/alfa/refs.webp" alt="Пример .side-figure" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <span class="mono">© 2026 Маша Воробьева</span>
+  <span class="mono">Style Guide</span>
+</footer>
+
+</body>
+</html>
