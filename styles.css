@@ -342,8 +342,9 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 }
 .case-block h2{ font-weight: 700; font-size: 22px; margin: 0 0 14px; color: var(--ink); letter-spacing: -0.01em; }
 .case-block p{ color: var(--body-text); font-size: 15.5px; margin: 0 0 14px; }
-.case-block ul{ color: var(--body-text); font-size: 15.5px; padding-left: 20px; margin: 0 0 14px; }
-.case-block li{ margin-bottom: 6px; }
+.case-block ul{ color: var(--body-text); font-size: 15.5px; padding-left: 18px; margin: 0 0 14px; list-style: none; }
+.case-block li{ margin-bottom: 6px; position: relative; }
+.case-block li::before{ content: "–"; position: absolute; left: -18px; color: var(--ink-soft); }
 
 /* title-sm sub-headings inside a block (replaces old inline Fraunces h4s) */
 .case-subhead{ font-weight: 600; font-size: 15px; color: var(--ink); margin: 20px 0 8px; }
@@ -559,8 +560,47 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
    applied to a section wrapper instead of one block per numbered step */
 .case-section{ max-width: 620px; margin-bottom: 8px; }
 .case-section p{ color: var(--body-text); font-size: 15.5px; margin: 0 0 14px; }
-.case-section ul{ color: var(--body-text); font-size: 15.5px; padding-left: 20px; margin: 0 0 14px; }
-.case-section ul li{ margin-bottom: 6px; }
+.case-section ul{ color: var(--body-text); font-size: 15.5px; padding-left: 18px; margin: 0 0 14px; list-style: none; }
+.case-section ul li{ margin-bottom: 6px; position: relative; }
+.case-section ul li::before{ content: "–"; position: absolute; left: -18px; color: var(--ink-soft); }
 .case-section ol{ color: var(--body-text); font-size: 15.5px; padding-left: 20px; margin: 0 0 14px; }
 .case-section ol li{ margin-bottom: 10px; }
 .case-section ol li:last-child{ margin-bottom: 0; }
+
+/* text column + tall image column, image matches text-block height */
+.side-figure{ display: flex; gap: 24px; align-items: stretch; margin: 16px 0; }
+.side-figure .text{ flex: 1.4; min-width: 0; }
+.side-figure .text p{ margin: 0 0 14px; }
+.side-figure .text p:last-child{ margin-bottom: 0; }
+.side-figure .img-col{ flex: 1; min-width: 0; }
+.side-figure .img-col img{ width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md); display: block; }
+@media (max-width: 720px){
+  .side-figure{ flex-direction: column; }
+  .side-figure .img-col{ max-height: 340px; }
+}
+
+/* real link out to a detail page — replaces the fake toggle button */
+.research-link{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  background: var(--note-bg);
+  text-decoration: none;
+  margin: 4px 0 22px;
+  transition: background .15s ease;
+}
+.research-link:hover{ background: #221b38; }
+.research-link .ic{ font-size: 18px; flex-shrink: 0; }
+.research-link .body{ flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.research-link .title{ font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.research-link .sub{ font-size: 12.5px; color: var(--ink-soft); }
+.research-link .arrow{ font-size: 16px; color: var(--note); flex-shrink: 0; }
+
+/* comparison rows reusing the meta-table look — two labeled values per row */
+.compare-meta .v{ display: flex; flex-direction: column; gap: 5px; }
+.cmp-opt{ font-size: 13.5px; line-height: 1.4; }
+.cmp-opt--yes{ color: var(--ink); }
+.cmp-opt--no,
+.cmp-opt--warn{ color: var(--ink-soft); }
