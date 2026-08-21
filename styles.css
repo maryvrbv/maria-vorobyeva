@@ -121,8 +121,9 @@ h1{
 h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
 .hero h1{ margin: 0; }
 .hero p.sub{ max-width: 520px; font-size: 16px; color: var(--body-text); margin: 16px 0 0; }
-.hero-row{ display: flex; align-items: center; gap: 16px; margin-top: 26px; }
-.avatar{ width: 64px; height: 64px; border-radius: var(--radius-md); object-fit: cover; }
+.hero-row{ display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 26px; }
+.avatar{ width: 64px; height: 64px; border-radius: var(--radius-md); object-fit: cover; flex-shrink: 0; }
+.hero-actions{ display: flex; flex-wrap: wrap; gap: 10px; }
 
 /* button-pill-rausch: the one primary CTA moment */
 .btn-pill{
@@ -140,6 +141,23 @@ h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
   transition: background .15s ease, border-color .15s ease;
 }
 .btn-pill:hover{ background: var(--accent-active); border-color: var(--accent-active); }
+
+/* secondary hero action — same shape, quieter outline treatment */
+.btn-pill-secondary{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  padding: 12px 22px;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: background .15s ease, border-color .15s ease;
+}
+.btn-pill-secondary:hover{ background: var(--paper-raised); border-color: var(--ink-soft); }
 
 /* ---------- section shared ---------- */
 section{ padding: 64px 0; border-bottom: 1px solid var(--line); }
@@ -618,8 +636,30 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .side-figure .img-col{ flex: 1; min-width: 0; }
 .side-figure .img-col img{ width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md); display: block; }
 @media (max-width: 720px){
-  .side-figure{ flex-direction: column; }
-  .side-figure .img-col{ max-height: 340px; }
+  .side-figure{ flex-direction: column; gap: 16px; }
+  .side-figure .text,
+  .side-figure .img-col{ width: 100%; flex: none; }
+  /* a definite height (not max-height) so object-fit:cover has a real
+     box to fill instead of collapsing against an auto-height parent */
+  .side-figure .img-col{ height: 260px; }
+}
+
+/* image floats beside a short lead-in, text wraps around it, then
+   .float-figure-wrap clears so later full-width blocks (cards, lists)
+   drop below rather than squeezing into the narrow remaining column */
+.float-figure-wrap::after{ content: ""; display: table; clear: both; }
+.float-figure{
+  float: right;
+  width: 220px;
+  max-width: 42%;
+  margin: 4px 0 16px 20px;
+  border-radius: var(--radius-md);
+  display: block;
+}
+.float-figure-wrap p{ margin: 0 0 14px; }
+.float-figure-wrap p:last-child{ margin-bottom: 0; }
+@media (max-width: 640px){
+  .float-figure{ float: none; width: 100%; max-width: 100%; margin: 0 0 16px; }
 }
 
 /* real link out to a detail page — replaces the fake toggle button */
