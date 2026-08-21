@@ -525,6 +525,9 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .disclosure .body{ padding: 0 0 18px; color: var(--body-text); font-size: 14.5px; line-height: 1.6; }
 .disclosure .body p{ margin: 0 0 10px; }
 .disclosure .body p:last-child{ margin-bottom: 0; }
+.disclosure .body ul{ list-style: none; padding-left: 18px; margin: 0 0 14px; }
+.disclosure .body ul li{ position: relative; margin-bottom: 6px; }
+.disclosure .body ul li::before{ content: "–"; position: absolute; left: -18px; color: var(--ink-soft); }
 
 /* purple link-style toggle ("📄 Подробно про исследование") */
 .link-toggle{ border: none; margin: 4px 0 18px; }
@@ -604,3 +607,38 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .cmp-opt--yes{ color: var(--ink); }
 .cmp-opt--no,
 .cmp-opt--warn{ color: var(--ink-soft); }
+
+/* 3-column comparison table, meta-table look (rounded card + hairline rows) */
+.col-table{ width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 16px 0; border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; background: var(--paper-raised); }
+.col-table th{ text-align: left; padding: 10px 14px; color: var(--ink-soft); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em; }
+.col-table td{ padding: 10px 14px; border-top: 1px solid var(--line); color: var(--ink); }
+.col-table tr:first-child td{ border-top: none; }
+.col-table td:first-child{ color: var(--ink-soft); }
+
+/* 4-column data table (hypotheses) with a status pill */
+.data-table{ width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; }
+.data-table th{ text-align: left; padding: 10px 12px; background: var(--paper-raised); color: var(--ink-soft); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; }
+.data-table td{ padding: 10px 12px; border-top: 1px solid var(--line); color: var(--body-text); vertical-align: top; line-height: 1.45; }
+.data-table tr:first-child td{ border-top: none; }
+.data-table td:first-child{ color: var(--ink-soft); font-weight: 600; }
+.status{ display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: var(--radius-full); white-space: nowrap; }
+.status--yes{ color: var(--success); background: var(--success-bg); }
+.status--no{ color: var(--warning); background: var(--warning-bg); }
+.status--partial{ color: var(--highlight); background: var(--highlight-bg); }
+
+/* small stat tiles for the research summary (reuses .metric visuals) */
+.stat-grid{ display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.stat-grid .metric{ flex: 1; min-width: 130px; }
+
+/* neutral two-up subcards ("Вариант A" / "Вариант B") */
+.subcard-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+.subcard{ background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 14px 16px; }
+.subcard b{ display: block; margin-bottom: 6px; color: var(--ink); font-size: 14px; }
+.subcard p{ margin: 0; font-size: 13.5px; color: var(--body-text); line-height: 1.5; }
+@media (max-width: 640px){ .subcard-grid{ grid-template-columns: 1fr; } }
+
+.research-detail{ margin: 4px 0 24px; }
+.research-detail .lead-result{ font-size: 14.5px; color: var(--ink); margin: 0 0 6px; }
+.research-detail h4{ font-weight: 700; font-size: 15px; color: var(--ink); margin: 26px 0 4px; }
+.research-detail h4:first-of-type{ margin-top: 18px; }
+.research-detail .icon-card .direction{ display: block; margin-top: 6px; color: var(--ink-soft); font-size: 13px; font-style: italic; }
