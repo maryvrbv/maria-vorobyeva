@@ -121,9 +121,33 @@ h1{
 h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
 .hero h1{ margin: 0; }
 .hero p.sub{ max-width: 520px; font-size: 16px; color: var(--body-text); margin: 16px 0 0; }
-.hero-row{ display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 26px; }
-.avatar{ width: 64px; height: 64px; border-radius: var(--radius-md); object-fit: cover; flex-shrink: 0; }
-.hero-actions{ display: flex; flex-wrap: wrap; gap: 10px; }
+
+.hero-grid{ display: flex; align-items: center; justify-content: space-between; gap: 48px; }
+.hero-content{ flex: 1; min-width: 0; }
+.hero-actions{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+
+.hero-photo{ flex-shrink: 0; position: relative; }
+.hero-photo::before{
+  content: "";
+  position: absolute;
+  inset: -18px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  opacity: 0.16;
+  filter: blur(6px);
+  z-index: -1;
+}
+.avatar-lg{
+  width: 210px;
+  height: 210px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 720px){
+  .hero-grid{ flex-direction: column-reverse; align-items: flex-start; gap: 28px; }
+  .avatar-lg{ width: 140px; height: 140px; }
+}
 
 /* button-pill-rausch: the one primary CTA moment */
 .btn-pill{
@@ -207,7 +231,11 @@ section:last-of-type{ border-bottom: none; }
   width: 48px;
   background: linear-gradient(to right, transparent, var(--paper));
   pointer-events: none;
+  opacity: 1;
+  transition: opacity .2s ease;
 }
+/* toggled by script.js once the scroller is fully scrolled to the end */
+.power-wrap.at-end::after{ opacity: 0; }
 .power-card{
   flex: 0 0 auto;
   width: min(74vw, 250px);
@@ -323,7 +351,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 
 /* ================= CASE STUDY PAGE ================= */
 
-.case-hero{ padding: 48px 0 44px; border-bottom: 1px solid var(--line); }
+.case-hero{ padding: 48px 0 44px; }
 .back-link{
   display: inline-flex;
   align-items: center;
@@ -465,9 +493,8 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   letter-spacing: -0.01em;
   margin: 0 0 4px;
   padding-top: 56px;
-  border-top: 1px solid var(--line);
 }
-.case-section:first-child .case-h2{ padding-top: 0; border-top: none; }
+.case-section:first-child .case-h2{ padding-top: 0; }
 
 /* mid-level subheadings ("Summary", "Контекст", "CJM"…) */
 .case-h3{
@@ -553,8 +580,8 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   color: var(--ink);
 }
 .disclosure summary::-webkit-details-marker{ display: none; }
-.disclosure summary::before{
-  content: "+";
+/* real icon per topic (markup, not a generic ::before glyph) */
+.disc-icon{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -562,9 +589,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   height: 28px;
   border-radius: var(--radius-full);
   background: var(--surface-strong);
-  color: var(--ink-soft);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
   line-height: 1;
   flex-shrink: 0;
 }
@@ -586,25 +611,6 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .disclosure .body ul{ list-style: none; padding-left: 18px; margin: 0 0 14px; }
 .disclosure .body ul li{ position: relative; margin-bottom: 6px; }
 .disclosure .body ul li::before{ content: "–"; position: absolute; left: -18px; color: var(--ink-soft); }
-
-/* purple link-style toggle ("📄 Подробно про исследование") */
-.link-toggle{ border: none; margin: 4px 0 18px; }
-.link-toggle summary{
-  cursor: pointer;
-  list-style: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--note);
-}
-.link-toggle summary::-webkit-details-marker{ display: none; }
-.link-toggle summary::before{ content: none; }
-.link-toggle .body{ padding: 14px 0 0; color: var(--body-text); font-size: 14.5px; line-height: 1.6; }
-.link-toggle .body p{ margin: 0 0 10px; }
-.link-toggle .body p:last-child{ margin-bottom: 0; }
 
 /* ---------- comparison table ---------- */
 .compare-table{ width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 18px 0; border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; }
@@ -662,25 +668,6 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   .float-figure{ float: none; width: 100%; max-width: 100%; margin: 0 0 16px; }
 }
 
-/* real link out to a detail page — replaces the fake toggle button */
-.research-link{
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 18px;
-  border-radius: var(--radius-md);
-  background: var(--note-bg);
-  text-decoration: none;
-  margin: 4px 0 22px;
-  transition: background .15s ease;
-}
-.research-link:hover{ background: #221b38; }
-.research-link .ic{ font-size: 18px; flex-shrink: 0; }
-.research-link .body{ flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.research-link .title{ font-size: 14.5px; font-weight: 600; color: var(--ink); }
-.research-link .sub{ font-size: 12.5px; color: var(--ink-soft); }
-.research-link .arrow{ font-size: 16px; color: var(--note); flex-shrink: 0; }
-
 /* comparison rows reusing the meta-table look — two labeled values per row */
 .compare-meta .v{ display: flex; flex-direction: column; gap: 5px; }
 .cmp-opt{ font-size: 13.5px; line-height: 1.4; }
@@ -717,8 +704,4 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .subcard p{ margin: 0; font-size: 13.5px; color: var(--body-text); line-height: 1.5; }
 @media (max-width: 640px){ .subcard-grid{ grid-template-columns: 1fr; } }
 
-.research-detail{ margin: 4px 0 24px; }
-.research-detail .lead-result{ font-size: 14.5px; color: var(--ink); margin: 0 0 6px; }
-.research-detail h4{ font-weight: 700; font-size: 15px; color: var(--ink); margin: 26px 0 4px; }
-.research-detail h4:first-of-type{ margin-top: 18px; }
-.research-detail .icon-card .direction{ display: block; margin-top: 6px; color: var(--ink-soft); font-size: 13px; font-style: italic; }
+.icon-card .direction{ display: block; margin-top: 6px; color: var(--ink-soft); font-size: 13px; font-style: italic; }
