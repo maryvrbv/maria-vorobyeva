@@ -167,28 +167,38 @@ section:last-of-type{ border-bottom: none; }
 }
 .contact-row a:hover{ color: var(--ink); border-color: var(--ink); }
 
-/* ---------- toggle (superpowers) ---------- */
+/* ---------- toggle (superpowers) — minimal accordion card ---------- */
+details.toggle{
+  background: var(--paper-raised);
+  border-radius: var(--radius-md);
+  padding: 4px 20px;
+}
 details.toggle summary{
   cursor: pointer;
-  font-weight: 700;
-  font-size: 19px;
+  font-weight: 600;
+  font-size: 16px;
   color: var(--ink);
   list-style: none;
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 18px 0;
 }
 details.toggle summary::-webkit-details-marker{ display: none; }
-details.toggle summary::before{
-  content: "▸";
-  color: var(--ink-soft);
-  font-size: 15px;
-  display: inline-block;
-  transition: transform .15s ease;
+details.toggle summary::after{
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--ink-soft);
+  border-bottom: 2px solid var(--ink-soft);
+  transform: rotate(45deg);
+  transition: transform .2s ease;
+  margin-left: auto;
+  flex-shrink: 0;
 }
-details.toggle[open] summary::before{ transform: rotate(90deg); }
-.toggle-list{ list-style: none; margin: 18px 0 0; padding: 0; color: var(--body-text); font-size: 14.5px; }
-.toggle-list li{ padding: 10px 0; border-top: 1px solid var(--line); }
+details.toggle[open] summary::after{ transform: rotate(225deg); }
+.toggle-list{ list-style: none; margin: 0; padding: 0 0 18px; color: var(--body-text); font-size: 14.5px; }
+.toggle-list li{ padding: 12px 0; border-top: 1px solid var(--line); }
 .toggle-list li:last-child{ padding-bottom: 0; }
 .toggle-list .emoji{ margin-right: 8px; }
 .toggle-list b{ color: var(--ink); font-weight: 600; }
@@ -227,9 +237,12 @@ details.toggle[open] summary::before{ transform: rotate(90deg); }
 
 /* ---------- experience list (home page) ---------- */
 .logos-strip{ width: 100%; max-width: 460px; display: block; opacity: 0.85; margin: 24px 0 28px; }
-.exp-list{ margin: 0; padding: 0; }
-.exp-item{ border-top: 1px solid var(--line); }
-.exp-item:last-child{ border-bottom: 1px solid var(--line); }
+.exp-list{ margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.exp-item{
+  background: var(--paper-raised);
+  border-radius: var(--radius-md);
+  padding: 0 18px;
+}
 .exp-item summary{
   cursor: pointer;
   list-style: none;
@@ -237,26 +250,29 @@ details.toggle[open] summary::before{ transform: rotate(90deg); }
   flex-wrap: wrap;
   align-items: center;
   gap: 2px;
-  padding: 14px 0 14px 22px;
+  padding: 16px 26px 16px 0;
   position: relative;
   font-size: 14.5px;
   color: var(--ink-soft);
 }
 .exp-item summary::-webkit-details-marker{ display: none; }
-.exp-item summary::before{
-  content: "▸";
+.exp-item summary::after{
+  content: "";
   position: absolute;
-  left: 0;
-  color: var(--ink-soft);
-  font-size: 13px;
-  display: inline-block;
-  transition: transform .15s ease;
+  right: 0;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--ink-soft);
+  border-bottom: 2px solid var(--ink-soft);
+  transform: translateY(-65%) rotate(45deg);
+  transition: transform .2s ease;
 }
-.exp-item[open] summary::before{ transform: rotate(90deg); }
+.exp-item[open] summary::after{ transform: translateY(-35%) rotate(225deg); }
 .exp-role{ color: var(--ink); font-weight: 600; }
 .exp-company{ color: var(--ink); }
 .dot-sep{ color: var(--ink-soft); margin: 0 8px; }
-.exp-body{ padding: 0 0 20px 22px; color: var(--body-text); font-size: 14.5px; max-width: 620px; }
+.exp-body{ padding: 0 0 20px; color: var(--body-text); font-size: 14.5px; max-width: 620px; border-top: 1px solid var(--line); padding-top: 14px; }
 .exp-body p{ margin: 0 0 10px; }
 .exp-body p:last-child{ margin-bottom: 0; }
 .exp-body ul{ margin: 0 0 10px; padding-left: 18px; }
@@ -499,30 +515,52 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   .meta-table .k{ flex: none; }
 }
 
-/* ---------- disclosure toggle (collapsed detail) ---------- */
-.disclosure{ border-top: 1px solid var(--line); }
-.disclosure:last-of-type{ border-bottom: 1px solid var(--line); }
+/* ---------- disclosure toggle — minimal accordion card ---------- */
+.disclosure{
+  background: var(--paper-raised);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+}
 .disclosure summary{
   cursor: pointer;
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 13px 0;
+  gap: 12px;
+  padding: 14px 16px;
   font-size: 14.5px;
   font-weight: 600;
   color: var(--ink);
 }
 .disclosure summary::-webkit-details-marker{ display: none; }
 .disclosure summary::before{
-  content: "▸";
+  content: "+";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--surface-strong);
   color: var(--ink-soft);
-  font-size: 13px;
-  display: inline-block;
-  transition: transform .15s ease;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  flex-shrink: 0;
 }
-.disclosure[open] summary::before{ transform: rotate(90deg); }
-.disclosure .body{ padding: 0 0 18px; color: var(--body-text); font-size: 14.5px; line-height: 1.6; }
+.disclosure summary::after{
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--ink-soft);
+  border-bottom: 2px solid var(--ink-soft);
+  transform: rotate(45deg);
+  transition: transform .2s ease;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.disclosure[open] summary::after{ transform: rotate(225deg); }
+.disclosure .body{ padding: 0 16px 18px; margin-top: -2px; color: var(--body-text); font-size: 14.5px; line-height: 1.6; }
 .disclosure .body p{ margin: 0 0 10px; }
 .disclosure .body p:last-child{ margin-bottom: 0; }
 .disclosure .body ul{ list-style: none; padding-left: 18px; margin: 0 0 14px; }
