@@ -221,8 +221,32 @@ section:last-of-type{ border-bottom: none; }
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  cursor: grab;
 }
 .power-scroll::-webkit-scrollbar{ display: none; }
+/* while dragging with the mouse (see script.js): kill snap so the drag
+   tracks the cursor smoothly, and block text/image selection */
+.power-scroll.dragging{
+  scroll-snap-type: none;
+  cursor: grabbing;
+  user-select: none;
+}
+.power-scroll.dragging .power-card{ pointer-events: none; }
+
+/* ---------- superpowers — scroll position dots ---------- */
+.power-dots{ display: flex; justify-content: center; gap: 7px; margin-top: 4px; }
+.power-dot{
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--line-strong);
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.power-dot:hover{ background: var(--ink-soft); }
+.power-dot.active{ background: var(--ink); transform: scale(1.3); }
 .power-wrap::after{
   content: "";
   position: absolute;
