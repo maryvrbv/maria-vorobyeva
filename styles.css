@@ -16,15 +16,15 @@
   --line-strong: #46443e;
 
   /* ---- brand: single accent, used sparingly ---- */
-  --accent: #ff385c;         /* rausch */
-  --accent-active: #ff5776;  /* brighter on hover — dark surfaces need lift, not darkening */
-  --accent-disabled: #5c1f2b;
+  --accent: #7c3aed;         /* violet */
+  --accent-active: #9061f9;  /* brighter on hover — dark surfaces need lift, not darkening */
+  --accent-disabled: #3d2670;
 
   /* legacy names kept for inline-style compatibility, repointed:
      --pine  -> confident/ink data (no separate "success" hue)
      --signal -> the rare, deliberate accent moment */
   --pine: #f2f2f0;
-  --signal: #ff385c;
+  --signal: #7c3aed;
 
   /* ---- semantic accents for insight cards ---- */
   --success: #6fbe9c;
@@ -119,7 +119,7 @@ h1{
 }
 h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
 .hero h1{ margin: 0; font-size: clamp(32px, 7vw, 59px); text-align: center; }
-.hero h1 .wave{ font-weight: 400; }
+.hero h1 .wave{ font-weight: 400; font-size: 0.7em; vertical-align: -0.04em; display: inline-block; }
 .hero p.sub{ max-width: 620px; font-size: 22px; line-height: 1.45; color: var(--body-text); margin: 0; text-align: center; }
 
 .hero-grid{ display: flex; justify-content: center; }
@@ -181,8 +181,7 @@ h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
   transition: background .15s ease, border-color .15s ease;
 }
 .btn-pill-secondary:hover{ background: var(--paper-raised); border-color: var(--ink-soft); }
-.btn-pill-secondary:has(.btn-icon){ padding-left: 13px; }
-.btn-icon{ width: 18px; height: 18px; display: block; flex-shrink: 0; }
+.btn-icon{ font-size: 15px; line-height: 1; flex-shrink: 0; }
 
 /* ---------- section shared ---------- */
 section{ padding: 64px 0; border-bottom: 1px solid var(--line); }
@@ -477,6 +476,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 }
 .case-nav a:hover{ color: var(--ink); }
 .case-nav .dir{ font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.case-nav .dir i{ margin-left: 5px; font-size: 12px; vertical-align: -1px; }
 .case-nav .title{ font-weight: 600; font-size: 16px; color: var(--ink); }
 .case-nav .next-side{ text-align: right; align-items: flex-end; }
 
@@ -529,6 +529,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   margin: 40px 0 12px;
   letter-spacing: -0.005em;
 }
+.case-h3 > i.ph-fill{ margin-right: 8px; font-size: 0.9em; vertical-align: -0.05em; color: var(--ink-soft); }
 .case-h3:first-of-type{ margin-top: 28px; }
 
 .case-lead{ color: var(--ink); font-weight: 600; font-size: 15.5px; margin: 0 0 8px; }
@@ -542,7 +543,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   padding: 14px 18px;
   border-radius: var(--radius-md);
 }
-.icon-card .ic{ font-size: 16px; line-height: 1.5; flex-shrink: 0; }
+.icon-card .ic{ font-size: 16px; line-height: 1; flex-shrink: 0; }
 .icon-card .tx{ font-size: 14.5px; color: var(--ink); line-height: 1.5; }
 .icon-card .tx b{ color: var(--ink); font-weight: 600; }
 .icon-card .tx p{ margin: 0 0 8px; color: var(--ink); font-size: 14.5px; }
@@ -706,6 +707,8 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .col-table td{ padding: 10px 14px; border-top: 1px solid var(--line); color: var(--ink); }
 .col-table tr:first-child td{ border-top: none; }
 .col-table td:first-child{ color: var(--ink-soft); }
+/* inline status icon inside a table cell, e.g. <i class="ph-fill ph-check-circle td-icon"> Text */
+.td-icon{ margin-right: 6px; vertical-align: -2px; font-size: 14px; }
 
 /* 4-column data table (hypotheses) with a status pill */
 .data-table{ width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; }
