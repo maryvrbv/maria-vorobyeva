@@ -436,9 +436,9 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 }
 .case-block h2{ font-weight: 700; font-size: 22px; margin: 0 0 14px; color: var(--ink); letter-spacing: -0.01em; }
 .case-block p{ color: var(--body-text); font-size: 15.5px; margin: 0 0 14px; }
-.case-block ul{ color: var(--body-text); font-size: 15.5px; padding-left: 18px; margin: 0 0 14px; list-style: none; }
-.case-block li{ margin-bottom: 6px; position: relative; }
-.case-block li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; position: absolute; left: -18px; top: 0.5em; transform: translateY(-50%); color: var(--ink-soft); }
+.case-block ul{ color: var(--body-text); font-size: 15.5px; padding-left: 0; margin: 0 0 14px; list-style: none; }
+.case-block li{ margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+.case-block li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; flex-shrink: 0; color: var(--ink-soft); }
 
 /* title-sm sub-headings inside a block (replaces old inline Fraunces h4s) */
 .case-subhead{ font-weight: 600; font-size: 15px; color: var(--ink); margin: 20px 0 8px; }
@@ -640,9 +640,9 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .disclosure .body{ padding: 0 16px 18px; margin-top: -2px; color: var(--body-text); font-size: 14.5px; line-height: 1.6; }
 .disclosure .body p{ margin: 0 0 10px; }
 .disclosure .body p:last-child{ margin-bottom: 0; }
-.disclosure .body ul{ list-style: none; padding-left: 18px; margin: 0 0 14px; }
-.disclosure .body ul li{ position: relative; margin-bottom: 6px; }
-.disclosure .body ul li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; position: absolute; left: -18px; top: 0.5em; transform: translateY(-50%); color: var(--ink-soft); }
+.disclosure .body ul{ list-style: none; padding-left: 0; margin: 0 0 14px; }
+.disclosure .body ul li{ margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+.disclosure .body ul li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; flex-shrink: 0; color: var(--ink-soft); }
 
 /* ---------- comparison table ---------- */
 .compare-table{ width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 18px 0; border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; }
@@ -659,9 +659,9 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
    applied to a section wrapper instead of one block per numbered step */
 .case-section{ max-width: 620px; margin-bottom: 8px; }
 .case-section p{ color: var(--body-text); font-size: 15.5px; margin: 0 0 14px; }
-.case-section ul{ color: var(--body-text); font-size: 15.5px; padding-left: 18px; margin: 0 0 14px; list-style: none; }
-.case-section ul li{ margin-bottom: 6px; position: relative; }
-.case-section ul li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; position: absolute; left: -18px; top: 0.5em; transform: translateY(-50%); color: var(--ink-soft); }
+.case-section ul{ color: var(--body-text); font-size: 15.5px; padding-left: 0; margin: 0 0 14px; list-style: none; }
+.case-section ul li{ margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+.case-section ul li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; flex-shrink: 0; color: var(--ink-soft); }
 .case-section ol{ color: var(--body-text); font-size: 15.5px; padding-left: 20px; margin: 0 0 14px; }
 .case-section ol li{ margin-bottom: 10px; }
 .case-section ol li:last-child{ margin-bottom: 0; }
