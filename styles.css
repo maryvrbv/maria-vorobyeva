@@ -185,7 +185,7 @@ h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
   transition: background .15s ease, border-color .15s ease;
 }
 .btn-pill-secondary:hover{ background: var(--paper-raised); border-color: var(--ink-soft); }
-.btn-icon{ font-size: 24px; line-height: 1; flex-shrink: 0; }
+.btn-icon{ font-size: 18px; line-height: 1; flex-shrink: 0; }
 
 /* ---------- section shared ---------- */
 section{ padding: 64px 0; border-bottom: 1px solid var(--line); }
