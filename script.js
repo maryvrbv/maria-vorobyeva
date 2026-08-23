@@ -79,11 +79,10 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
 });
 
 // hero background: a field of dots that drift in a slow idle wave and
-// scatter away from the cursor — desktop only, paused off-screen/hidden tab
+// scatter away from touch/cursor — paused off-screen/hidden tab
 (() => {
   const canvas = document.getElementById('heroCanvas');
   if (!canvas) return;
-  if (window.matchMedia('(max-width: 720px)').matches) return;
 
   const ctx = canvas.getContext('2d');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -217,8 +216,10 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
   // now breaks out to full viewport width, wider than .hero's own box
   document.addEventListener('mousemove', onMove, { passive: true });
   document.addEventListener('mouseleave', onLeave);
+  document.addEventListener('touchstart', onMove, { passive: true });
   document.addEventListener('touchmove', onMove, { passive: true });
   document.addEventListener('touchend', onLeave);
+  document.addEventListener('touchcancel', onLeave);
   window.addEventListener('resize', resize);
 
   new IntersectionObserver(([entry]) => {

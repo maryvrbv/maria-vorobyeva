@@ -124,9 +124,6 @@ header.nav.nav-transparent{ background: transparent; }
    down through the hero buttons, with a fade tail (see script.js), then
    breaks out of .wrap-wide's max-width so it spans the full viewport */
 .hero-canvas{ position: absolute; top: 0; left: 50%; width: 100vw; transform: translateX(-50%); pointer-events: none; }
-@media (max-width: 720px){
-  .hero-canvas{ display: none; }
-}
 h1{
   font-weight: 700;
   font-size: clamp(28px, 4.6vw, 38px);
