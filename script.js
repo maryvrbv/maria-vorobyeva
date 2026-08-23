@@ -232,22 +232,31 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
     else if (isVisible) start();
   });
 
-  // nav starts transparent (blending with the hero effect behind it) and
-  // gets its background back once the hero buttons scroll out of view
-  const navEl = document.querySelector('header.nav');
-  const heroActionsEl = document.querySelector('.hero-actions');
-  let navObserver = null;
-  function setupNavObserver() {
-    if (!navEl || !heroActionsEl) return;
-    if (navObserver) navObserver.disconnect();
-    navObserver = new IntersectionObserver(([entry]) => {
-      navEl.classList.toggle('nav-transparent', entry.isIntersecting);
-    }, { rootMargin: `-${navEl.offsetHeight}px 0px 0px 0px`, threshold: 0 });
-    navObserver.observe(heroActionsEl);
+  // the real nav (.nav-hero) sits in normal flow and just scrolls away with
+  // the page; this fixed duplicate (.nav-reveal) stays hidden until that
+  // original nav has fully scrolled out of view, then fades smoothly into
+  // place — driven by scroll position rather than IntersectionObserver so
+  // mobile's dynamic address bar (which resizes the viewport mid-scroll)
+  // can't make it flicker
+  const navOriginal = document.querySelector('header.nav.nav-hero');
+  const navReveal = document.getElementById('navReveal');
+  if (navOriginal && navReveal) {
+    let navRevealTicking = false;
+    function updateNavReveal() {
+      navRevealTicking = false;
+      const show = (window.scrollY || window.pageYOffset) > navOriginal.offsetHeight;
+      navReveal.classList.toggle('visible', show);
+      navReveal.inert = !show;
+    }
+    function onScrollForNavReveal() {
+      if (navRevealTicking) return;
+      navRevealTicking = true;
+      requestAnimationFrame(updateNavReveal);
+    }
+    updateNavReveal(); // correct on load even if the browser restores a scroll position
+    window.addEventListener('scroll', onScrollForNavReveal, { passive: true });
+    window.addEventListener('resize', updateNavReveal);
   }
-  if (navEl) navEl.classList.add('nav-transparent');
-  setupNavObserver();
-  window.addEventListener('resize', setupNavObserver);
 
   resize();
   start();
