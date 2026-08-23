@@ -49,10 +49,11 @@
 }
 
 *{ box-sizing: border-box; }
-html{ scroll-behavior: smooth; }
+html{ scroll-behavior: smooth; zoom: 1.25; }
 
 body{
   margin: 0;
+  overflow-x: hidden;
   background: var(--paper);
   color: var(--ink);
   font-family: 'Inter', -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
