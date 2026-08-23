@@ -127,12 +127,14 @@ h1{
 }
 h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
 .hero h1{ margin: 0; font-size: clamp(32px, 7vw, 59px); text-align: center; }
-.hero h1 .wave{ font-weight: 400; font-size: 0.85em; vertical-align: -0.06em; display: inline-block; transform-origin: 70% 70%; animation: wave 2.5s ease-in-out infinite; }
+.hero h1 .wave{ font-weight: 400; font-size: 0.85em; vertical-align: -0.06em; display: inline-block; transform-origin: 70% 70%; animation: wave 1.4s ease-in-out 1; }
 @keyframes wave{
-  0%, 40%, 100%{ transform: rotate(0deg); }
-  10%{ transform: rotate(14deg); }
-  20%{ transform: rotate(-8deg); }
-  30%{ transform: rotate(14deg); }
+  0%, 100%{ transform: rotate(0deg); }
+  15%{ transform: rotate(14deg); }
+  30%{ transform: rotate(-8deg); }
+  45%{ transform: rotate(14deg); }
+  60%{ transform: rotate(-4deg); }
+  75%{ transform: rotate(10deg); }
 }
 @media (prefers-reduced-motion: reduce){
   .hero h1 .wave{ animation: none; }
