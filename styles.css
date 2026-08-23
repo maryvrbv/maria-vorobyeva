@@ -37,7 +37,7 @@
   --highlight-bg: #241d10;
 
   --max: 680px;
-  --max-wide: 720px;
+  --max-wide: 820px;
 
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -425,7 +425,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .meta-strip .v{ font-size: 13.5px; color: var(--ink); }
 
 .case-body{ padding: 56px 0; }
-.case-block{ max-width: 620px; margin-bottom: 48px; }
+.case-block{ max-width: 680px; margin-bottom: 48px; }
 .case-block:last-child{ margin-bottom: 0; }
 .case-block .num{
   font-size: 12px;
@@ -435,10 +435,10 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   display: block;
 }
 .case-block h2{ font-weight: 700; font-size: 22px; margin: 0 0 14px; color: var(--ink); letter-spacing: -0.01em; }
-.case-block p{ color: var(--body-text); font-size: 15.5px; margin: 0 0 14px; }
-.case-block ul{ color: var(--body-text); font-size: 15.5px; padding-left: 18px; margin: 0 0 14px; list-style: none; }
+.case-block p{ color: var(--body-text); font-size: 16.5px; margin: 0 0 14px; }
+.case-block ul{ color: var(--body-text); font-size: 16.5px; padding-left: 18px; margin: 0 0 14px; list-style: none; }
 .case-block li{ margin-bottom: 6px; position: relative; }
-.case-block li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; position: absolute; left: -18px; top: 12.4px; transform: translateY(-50%); color: var(--ink-soft); }
+.case-block li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; position: absolute; left: -18px; top: 13.2px; transform: translateY(-50%); color: var(--ink-soft); }
 
 /* title-sm sub-headings inside a block (replaces old inline Fraunces h4s) */
 .case-subhead{ font-weight: 600; font-size: 15px; color: var(--ink); margin: 20px 0 8px; }
@@ -537,7 +537,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 }
 .case-h3:first-of-type{ margin-top: 28px; }
 
-.case-lead{ color: var(--ink); font-weight: 600; font-size: 15.5px; margin: 0 0 8px; }
+.case-lead{ color: var(--ink); font-weight: 600; font-size: 16.5px; margin: 0 0 8px; }
 
 /* ---------- icon insight cards ---------- */
 .card-stack{ display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
@@ -650,18 +650,18 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .compare-table tr:first-child td{ border-top: none; }
 .compare-table td:first-child{ color: var(--ink-soft); }
 
-.case-block ol{ color: var(--body-text); font-size: 15.5px; padding-left: 20px; margin: 0 0 14px; }
+.case-block ol{ color: var(--body-text); font-size: 16.5px; padding-left: 20px; margin: 0 0 14px; }
 .case-block ol li{ margin-bottom: 10px; }
 .case-block ol li:last-child{ margin-bottom: 0; }
 
 /* sectioned case studies (v2) — same body typography as .case-block,
    applied to a section wrapper instead of one block per numbered step */
-.case-section{ max-width: 620px; margin-bottom: 8px; }
-.case-section p{ color: var(--body-text); font-size: 15.5px; margin: 0 0 14px; }
-.case-section ul{ color: var(--body-text); font-size: 15.5px; padding-left: 18px; margin: 0 0 14px; list-style: none; }
+.case-section{ max-width: 680px; margin-bottom: 8px; }
+.case-section p{ color: var(--body-text); font-size: 16.5px; margin: 0 0 14px; }
+.case-section ul{ color: var(--body-text); font-size: 16.5px; padding-left: 18px; margin: 0 0 14px; list-style: none; }
 .case-section ul li{ margin-bottom: 6px; position: relative; }
-.case-section ul li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; position: absolute; left: -18px; top: 12.4px; transform: translateY(-50%); color: var(--ink-soft); }
-.case-section ol{ color: var(--body-text); font-size: 15.5px; padding-left: 20px; margin: 0 0 14px; }
+.case-section ul li::before{ content: "\e6a4"; font-family: "Phosphor-Fill"; font-size: 10px; line-height: 1; position: absolute; left: -18px; top: 13.2px; transform: translateY(-50%); color: var(--ink-soft); }
+.case-section ol{ color: var(--body-text); font-size: 16.5px; padding-left: 20px; margin: 0 0 14px; }
 .case-section ol li{ margin-bottom: 10px; }
 .case-section ol li:last-child{ margin-bottom: 0; }
 
