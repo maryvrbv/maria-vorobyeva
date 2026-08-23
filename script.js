@@ -18,11 +18,14 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
     wrap.classList.toggle('at-end', atEnd);
 
     if (!dots.length) return;
-    let closest = 0, minDist = Infinity;
-    cards.forEach((card, i) => {
-      const dist = Math.abs(card.offsetLeft - scroller.scrollLeft);
-      if (dist < minDist) { minDist = dist; closest = i; }
-    });
+    let closest = cards.length - 1;
+    if (!atEnd) {
+      let minDist = Infinity;
+      cards.forEach((card, i) => {
+        const dist = Math.abs(card.offsetLeft - scroller.scrollLeft);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+    }
     dots.forEach((d, i) => d.classList.toggle('active', i === closest));
   };
   scroller.addEventListener('scroll', updateState, { passive: true });
