@@ -81,9 +81,24 @@ header.nav{
   background: var(--paper);
   transition: background .3s ease;
 }
-/* home page only: nav starts transparent over the hero effect, and gets
-   its background back once the hero has scrolled out of view (see script.js) */
-header.nav.nav-transparent{ background: transparent; }
+/* home page only: the real nav sits in normal flow (not sticky) over the
+   hero effect and simply scrolls away with the page like any other content;
+   a separate fixed bar (.nav-reveal, below) fades in once it's gone */
+header.nav.nav-hero{ position: static; background: transparent; }
+
+/* home page only: duplicate fixed bar, hidden until the in-flow nav above
+   has scrolled out of view, then fades smoothly into place (see script.js) */
+.nav-reveal{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  background: var(--paper);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.nav-reveal.visible{ opacity: 1; pointer-events: auto; transform: translateY(0); }
 .nav-inner{
   max-width: var(--max-wide);
   margin: 0 auto;
