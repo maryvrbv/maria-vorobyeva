@@ -13,7 +13,21 @@
 </head>
 <body>
 
-<header class="nav">
+<canvas class="case-hero-canvas" data-color="#00b956" aria-hidden="true"></canvas>
+
+<header class="nav nav-hero">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-name">Маша Воробьева</a>
+    <div class="nav-links">
+      <a href="index.html#work">Кейсы</a>
+      <a href="index.html#experience">Опыт</a>
+      <a href="https://drive.google.com/file/d/10_fquXlhycMouP7_rdW3-ti9RhZ9WVTn/view?usp=sharing" target="_blank" rel="noopener">CV</a>
+    </div>
+  </div>
+</header>
+
+<!-- fades in once the nav above has scrolled out of view (see script.js) -->
+<header class="nav-reveal" id="navReveal">
   <div class="nav-inner">
     <a href="index.html" class="nav-name">Маша Воробьева</a>
     <div class="nav-links">
@@ -26,7 +40,6 @@
 
 <div class="wrap-wide">
   <section class="case-hero">
-    <canvas class="case-hero-canvas" data-color="#00b956" aria-hidden="true"></canvas>
     <div class="case-hero-content">
       <a href="index.html#work" class="back-link"><i class="ph-bold ph-arrow-left"></i> Все кейсы</a>
       <h1>Редизайн тарифов • МегаФон</h1>
