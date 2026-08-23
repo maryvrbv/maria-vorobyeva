@@ -92,7 +92,7 @@ function pageOffsetTop(el) {
   return y;
 }
 
-function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight, setCanvasHeight = false }) {
+function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight, getFadeStart, setCanvasHeight = false }) {
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
@@ -109,7 +109,10 @@ function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight,
     w = canvas.offsetWidth;
     h = getHeight();
     if (setCanvasHeight) canvas.style.height = h + 'px';
-    fadeStart = Math.max(0, h - fadeTail); // smooth fade-out over the last fadeTail px, not a hard cutoff
+    // fade anchors to where the real content ends (getFadeStart), not an
+    // arbitrary "last fadeTail px of the canvas" — falls back to that only
+    // when the caller has no content edge to anchor to
+    fadeStart = Math.max(0, getFadeStart ? getFadeStart() : h - fadeTail);
 
     canvas.width = w * dpr;
     canvas.height = h * dpr;
@@ -245,11 +248,17 @@ function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight,
   // an auto-height positioned ancestor
   document.querySelectorAll('.case-hero-canvas').forEach((canvas) => {
     const heroSection = canvas.parentElement;
+    const content = heroSection.querySelector('.case-hero-content');
     createDotField(canvas, {
       color: canvas.dataset.color || '#7c3aed',
-      fadeTail: 50,
       setCanvasHeight: true,
       getHeight: () => heroSection.offsetHeight,
+      // fade starts right where the back-link/heading/description block
+      // ends, not an arbitrary distance from the section's bottom edge —
+      // content.offsetTop is measured against .case-hero itself (the
+      // nearest positioned ancestor), i.e. the same coordinate space the
+      // canvas draws in
+      getFadeStart: () => content ? content.offsetTop + content.offsetHeight : heroSection.offsetHeight,
     });
   });
 
