@@ -49,7 +49,10 @@
 }
 
 *{ box-sizing: border-box; }
-html{ scroll-behavior: smooth; zoom: 1.25; }
+html{ scroll-behavior: smooth; }
+@media (min-width: 900px){
+  html{ zoom: 1.25; }
+}
 
 body{
   margin: 0;
