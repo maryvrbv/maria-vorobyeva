@@ -116,7 +116,13 @@ header.nav{
 @keyframes pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.35 } }
 
 /* ---------- hero (home page) ---------- */
-.hero{ padding: 64px 0 80px; border-bottom: 1px solid var(--line); }
+.hero{ position: relative; padding: 64px 0 80px; border-bottom: none; }
+/* breaks out of .wrap-wide's max-width so the dot field spans the full
+   viewport, not just the centered content column */
+.hero-canvas{ position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); pointer-events: none; }
+@media (max-width: 720px){
+  .hero-canvas{ display: none; }
+}
 h1{
   font-weight: 700;
   font-size: clamp(28px, 4.6vw, 38px);
@@ -141,7 +147,7 @@ h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
 }
 .hero p.sub{ max-width: 620px; font-size: 22px; line-height: 1.45; color: var(--body-text); margin: 0; text-align: center; }
 
-.hero-grid{ display: flex; justify-content: center; }
+.hero-grid{ position: relative; z-index: 1; display: flex; justify-content: center; }
 .hero-content{ display: flex; flex-direction: column; align-items: center; gap: 23px; padding-top: 16px; min-width: 0; }
 .hero-actions{ display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 40px; }
 
