@@ -226,6 +226,13 @@ function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight,
 
   resize();
   start();
+
+  // re-measure once web fonts and images have actually settled — this runs
+  // before the page fully loads (script is the last tag in body), so a
+  // getHeight/getFadeStart anchored to something further down the page can
+  // be measured against fallback-font metrics and drift once Inter loads
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(resize);
+  window.addEventListener('load', resize);
 }
 
 (() => {
@@ -242,8 +249,11 @@ function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight,
   });
 
   // case page titles: spans the whole page top (behind the nav) down
-  // through the case title/description, fading out just before the first
-  // body heading — the same page-level pattern as the homepage hero
+  // through the case title/description, fading out a little past the first
+  // body heading so it grazes the text that follows — anchored to the
+  // heading rather than "the first <p>", since what directly follows a
+  // heading varies by page (paragraph, bullet list, stat grid…) and isn't
+  // reliably the nearest <p> in the DOM
   document.querySelectorAll('.case-hero-canvas').forEach((canvas) => {
     const heroSection = document.querySelector('.case-hero');
     const content = heroSection ? heroSection.querySelector('.case-hero-content') : null;
@@ -252,7 +262,7 @@ function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight,
       color: canvas.dataset.color || '#7c3aed',
       setCanvasHeight: true,
       getHeight: () => {
-        if (firstHeading) return Math.max(0, pageOffsetTop(firstHeading) - 20);
+        if (firstHeading) return pageOffsetTop(firstHeading) + firstHeading.offsetHeight + 110;
         return heroSection ? pageOffsetTop(heroSection) + heroSection.offsetHeight + 90 : 600;
       },
       getFadeStart: () => content ? pageOffsetTop(content) + content.offsetHeight : 0,
