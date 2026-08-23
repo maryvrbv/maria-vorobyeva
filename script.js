@@ -78,49 +78,38 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
   }, true);
 });
 
-// hero background: a field of dots that drift in a slow idle wave and
-// scatter away from touch/cursor — paused off-screen/hidden tab
-(() => {
-  const canvas = document.getElementById('heroCanvas');
+// dot field: a field of dots that drift in a slow idle wave and scatter
+// away from touch/cursor, paused off-screen/hidden tab. Shared engine
+// behind the homepage hero canvas and each case page's title canvas —
+// they only differ in size, color and how tall the canvas needs to be.
+
+// sums offsetTop up through the offsetParent chain — gives an element's
+// position relative to the page in the same pre-zoom layout space as
+// canvas.offsetWidth/Height, so no extra scale correction is needed
+function pageOffsetTop(el) {
+  let y = 0;
+  while (el) { y += el.offsetTop || 0; el = el.offsetParent; }
+  return y;
+}
+
+function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight, setCanvasHeight = false }) {
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const spacing = 26;
-  const fadeTail = 140; // px of smooth fade-out after the hero buttons
 
-  let w = 0, h = 0, cols = 0, rows = 0;
-  let fadeStart = 0, fadeEnd = 0;
+  let w = 0, h = 0, cols = 0, rows = 0, fadeStart = 0;
   let mouseX = -9999, mouseY = -9999;
   let pendingEvent = null;
   let rafId = null;
   let isVisible = true;
-  let color = readColor();
-
-  function readColor() {
-    return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#7c3aed';
-  }
-
-  // sums offsetTop up through the offsetParent chain — gives an element's
-  // position relative to the page in the same pre-zoom layout space as
-  // canvas.offsetWidth/Height, so no extra scale correction is needed
-  function pageOffsetTop(el) {
-    let y = 0;
-    while (el) { y += el.offsetTop || 0; el = el.offsetParent; }
-    return y;
-  }
 
   function resize() {
     const dpr = window.devicePixelRatio || 1;
     w = canvas.offsetWidth;
-
-    // the canvas now spans the whole page top (behind the nav) down through
-    // the hero buttons, with a fade tail — not the full .hero box anymore
-    const heroActions = document.querySelector('.hero-actions');
-    fadeStart = heroActions ? pageOffsetTop(heroActions) + heroActions.offsetHeight : canvas.offsetHeight;
-    fadeEnd = fadeStart + fadeTail;
-    h = fadeEnd;
-    canvas.style.height = h + 'px';
+    h = getHeight();
+    if (setCanvasHeight) canvas.style.height = h + 'px';
+    fadeStart = Math.max(0, h - fadeTail); // smooth fade-out over the last fadeTail px, not a hard cutoff
 
     canvas.width = w * dpr;
     canvas.height = h * dpr;
@@ -157,10 +146,10 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
     for (let row = 0; row < rows; row++) {
       const y = row * spacing;
 
-      // smooth fade-out below the hero buttons, instead of a hard cutoff
+      // smooth fade-out near the bottom edge, instead of a hard cutoff
       let rowFade = 1;
       if (y > fadeStart) {
-        const ft = Math.min(1, (y - fadeStart) / (fadeEnd - fadeStart || 1));
+        const ft = Math.min(1, (y - fadeStart) / (h - fadeStart || 1));
         rowFade = 1 - ft * ft * (3 - 2 * ft); // smoothstep
       }
       if (rowFade <= 0.01) continue;
@@ -191,7 +180,7 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
 
         // the idle/hover floor keeps dots visible in normal strength; rowFade
         // is applied last so it can still bring a dot all the way to 0 in
-        // the fade-out tail below the hero buttons
+        // the fade-out tail near the bottom edge
         ctx.globalAlpha = Math.max(0.15, Math.min(alpha, 1)) * rowFade;
         ctx.beginPath();
         ctx.arc(px, py, size / 2, 0, Math.PI * 2);
@@ -212,8 +201,8 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
   const onMove = (e) => { pendingEvent = e; };
   const onLeave = () => { mouseX = -9999; mouseY = -9999; pendingEvent = null; };
 
-  // tracked at the document level (not just over .hero) since the canvas
-  // now breaks out to full viewport width, wider than .hero's own box
+  // tracked at the document level (not just over the canvas's own element)
+  // since it breaks out to full viewport width, wider than its container
   document.addEventListener('mousemove', onMove, { passive: true });
   document.addEventListener('mouseleave', onLeave);
   document.addEventListener('touchstart', onMove, { passive: true });
@@ -230,6 +219,38 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stop();
     else if (isVisible) start();
+  });
+
+  resize();
+  start();
+}
+
+(() => {
+  // homepage hero: spans the whole page top (behind the nav) down through
+  // the hero buttons, with a long fade tail
+  createDotField(document.getElementById('heroCanvas'), {
+    color: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#7c3aed',
+    fadeTail: 140,
+    setCanvasHeight: true,
+    getHeight: () => {
+      const heroActions = document.querySelector('.hero-actions');
+      return heroActions ? pageOffsetTop(heroActions) + heroActions.offsetHeight + 140 : 600;
+    },
+  });
+
+  // case page titles: confined to their own (short) .case-hero section.
+  // Height is measured from the parent section and written back onto the
+  // canvas explicitly — .case-hero is auto-height (sized by its content),
+  // and top:0;bottom:0 doesn't reliably stretch a positioned child against
+  // an auto-height positioned ancestor
+  document.querySelectorAll('.case-hero-canvas').forEach((canvas) => {
+    const heroSection = canvas.parentElement;
+    createDotField(canvas, {
+      color: canvas.dataset.color || '#7c3aed',
+      fadeTail: 50,
+      setCanvasHeight: true,
+      getHeight: () => heroSection.offsetHeight,
+    });
   });
 
   // the real nav (.nav-hero) sits in normal flow and just scrolls away with
@@ -257,7 +278,4 @@ document.querySelectorAll('.power-scroll').forEach(scroller => {
     window.addEventListener('scroll', onScrollForNavReveal, { passive: true });
     window.addEventListener('resize', updateNavReveal);
   }
-
-  resize();
-  start();
 })();
