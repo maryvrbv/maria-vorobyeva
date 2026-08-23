@@ -129,6 +129,12 @@ header.nav.nav-hero{ position: static; background: transparent; }
 .nav-links a i{ font-size: 24px; }
 .nav-links a:hover{ color: var(--ink); }
 .nav-links a.active{ color: var(--ink); border-color: var(--ink); }
+@media (max-width: 480px){
+  .nav-inner{ padding: 18px 20px; }
+  .nav-name{ font-size: 14.5px; }
+  .nav-links{ gap: 14px; }
+  .nav-links a{ font-size: 12.5px; }
+}
 .badge{ font-size: 13px; font-weight: 500; color: var(--ink-soft); display: flex; align-items: center; gap: 7px; }
 .dot{ width: 7px; height: 7px; border-radius: var(--radius-full); background: var(--accent); display: inline-block; animation: pulse 2.4s ease-in-out infinite; }
 @keyframes pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.35 } }
@@ -162,6 +168,9 @@ h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
   .hero h1 .wave{ animation: none; }
 }
 .hero p.sub{ max-width: 620px; font-size: 22px; line-height: 1.45; color: var(--body-text); margin: 0; text-align: center; }
+@media (max-width: 640px){
+  .hero p.sub{ font-size: 17px; line-height: 1.5; }
+}
 
 .hero-grid{ position: relative; z-index: 1; display: flex; justify-content: center; }
 .hero-content{ display: flex; flex-direction: column; align-items: center; gap: 23px; padding-top: 16px; min-width: 0; }
@@ -232,6 +241,10 @@ section{ padding: 64px 0; }
   color: var(--ink);
   letter-spacing: -0.01em;
   margin: 0 0 22px;
+}
+@media (max-width: 640px){
+  section{ padding: 48px 0; }
+  .section-title{ font-size: 27px; margin-bottom: 18px; }
 }
 
 .reveal{ opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
@@ -325,6 +338,9 @@ section{ padding: 64px 0; }
 .case:last-child{ margin-bottom: 0; padding-bottom: 0; }
 .case h3{ font-weight: 600; font-size: 24px; margin: 0 0 16px; color: var(--ink); }
 .case p.desc{ color: var(--body-text); font-size: 14.5px; max-width: 560px; margin: 0 0 16px; }
+@media (max-width: 640px){
+  .case h3{ font-size: 20px; margin-bottom: 12px; }
+}
 
 /* button-secondary: repeated, quieter CTA — outline, not filled */
 .case-link{
@@ -401,7 +417,6 @@ section{ padding: 64px 0; }
 footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display: flex; justify-content: space-between; max-width: var(--max-wide); margin: 0 auto; padding-left: 28px; padding-right: 28px; margin-top: 0; }
 
 @media (max-width: 640px){
-  .nav-links a:not(.badge){ display: none; }
   .hero{ padding: 48px 0 40px; }
 }
 
@@ -478,6 +493,9 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   display: block;
 }
 .case-block h2{ font-weight: 700; font-size: 22px; margin: 0 0 14px; color: var(--ink); letter-spacing: -0.01em; }
+@media (max-width: 640px){
+  .case-block h2{ font-size: 20px; }
+}
 .case-block p{ color: var(--body-text); font-size: 15.5px; margin: 0 0 14px; }
 .case-block ul{ color: var(--body-text); font-size: 15.5px; padding-left: 18px; margin: 0 0 14px; list-style: none; }
 .case-block li{ margin-bottom: 6px; position: relative; }
@@ -578,6 +596,12 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   letter-spacing: -0.005em;
 }
 .case-h3:first-of-type{ margin-top: 28px; }
+
+@media (max-width: 640px){
+  .case-h2{ font-size: 21px; padding-top: 40px; }
+  .case-h3{ font-size: 16.5px; margin: 30px 0 10px; }
+  .case-h3:first-of-type{ margin-top: 22px; }
+}
 
 .case-lead{ color: var(--ink); font-weight: 600; font-size: 15.5px; margin: 0 0 8px; }
 
