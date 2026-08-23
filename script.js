@@ -241,24 +241,21 @@ function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight,
     },
   });
 
-  // case page titles: confined to their own (short) .case-hero section.
-  // Height is measured from the parent section and written back onto the
-  // canvas explicitly — .case-hero is auto-height (sized by its content),
-  // and top:0;bottom:0 doesn't reliably stretch a positioned child against
-  // an auto-height positioned ancestor
+  // case page titles: spans the whole page top (behind the nav) down
+  // through the case title/description, fading out just before the first
+  // body heading — the same page-level pattern as the homepage hero
   document.querySelectorAll('.case-hero-canvas').forEach((canvas) => {
-    const heroSection = canvas.parentElement;
-    const content = heroSection.querySelector('.case-hero-content');
+    const heroSection = document.querySelector('.case-hero');
+    const content = heroSection ? heroSection.querySelector('.case-hero-content') : null;
+    const firstHeading = document.querySelector('.case-body .case-h2, .case-body .case-h3');
     createDotField(canvas, {
       color: canvas.dataset.color || '#7c3aed',
       setCanvasHeight: true,
-      getHeight: () => heroSection.offsetHeight,
-      // fade starts right where the back-link/heading/description block
-      // ends, not an arbitrary distance from the section's bottom edge —
-      // content.offsetTop is measured against .case-hero itself (the
-      // nearest positioned ancestor), i.e. the same coordinate space the
-      // canvas draws in
-      getFadeStart: () => content ? content.offsetTop + content.offsetHeight : heroSection.offsetHeight,
+      getHeight: () => {
+        if (firstHeading) return Math.max(0, pageOffsetTop(firstHeading) - 20);
+        return heroSection ? pageOffsetTop(heroSection) + heroSection.offsetHeight + 90 : 600;
+      },
+      getFadeStart: () => content ? pageOffsetTop(content) + content.offsetHeight : 0,
     });
   });
 

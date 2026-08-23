@@ -416,11 +416,10 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 /* ================= CASE STUDY PAGE ================= */
 
 .case-hero{ position: relative; padding: 48px 0 44px; }
-/* breaks out of .wrap-wide's max-width so the dot field spans the full
-   viewport, sized to the section itself (see script.js) */
-/* height is set in JS (see script.js) — .case-hero is auto-height (sized by
-   its content), and top:0;bottom:0 doesn't stretch reliably against an
-   auto-height positioned ancestor */
+/* page-level, not scoped to .case-hero: spans from the very top (behind the
+   nav) down through the case title/description, fading out before the first
+   body heading — then breaks out of .wrap-wide's max-width to span the full
+   viewport (see script.js for sizing) */
 .case-hero-canvas{ position: absolute; top: 0; left: 50%; width: 100vw; transform: translateX(-50%); pointer-events: none; }
 /* lifts the real content above the canvas — position:relative elements with
    z-index:auto still paint after non-positioned in-flow content otherwise */
