@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purchase Flow • Alfa-Market — Maria Vorobyeva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<canvas class="case-hero-canvas" data-color="#ef3124" aria-hidden="true"></canvas>
+
+<header class="nav nav-hero">
+  <div class="nav-inner">
+    <a href="index-en.html" class="nav-name">Maria Vorobyeva</a>
+    <div class="nav-links">
+      <a href="index-en.html#work">Work</a>
+      <a href="index-en.html#experience">Experience</a>
+      <a href="https://drive.google.com/file/d/10_fquXlhycMouP7_rdW3-ti9RhZ9WVTn/view?usp=sharing" target="_blank" rel="noopener">CV</a><span class="lang-switch"><a href="case-alfa.html">RU</a><span class="sep">/</span><span class="current">EN</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- fades in once the nav above has scrolled out of view (see script.js) -->
+<header class="nav-reveal" id="navReveal">
+  <div class="nav-inner">
+    <a href="index-en.html" class="nav-name">Maria Vorobyeva</a>
+    <div class="nav-links">
+      <a href="index-en.html#work">Work</a>
+      <a href="index-en.html#experience">Experience</a>
+      <a href="https://drive.google.com/file/d/10_fquXlhycMouP7_rdW3-ti9RhZ9WVTn/view?usp=sharing" target="_blank" rel="noopener">CV</a><span class="lang-switch"><a href="case-alfa.html">RU</a><span class="sep">/</span><span class="current">EN</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap-wide">
+  <section class="case-hero">
+    <div class="case-hero-content">
+      <a href="index-en.html#work" class="back-link"><i class="ph-bold ph-arrow-left"></i> All case studies</a>
+      <h1>Purchase Flow • Alfa-Market</h1>
+    </div>
+  </section>
+
+  <section class="case-body" style="border-bottom:none;">
+
+    <!-- ============ 1. About the project ============ -->
+    <div class="case-section">
+      <h2 class="case-h2">1. About the project</h2>
+
+      <h3 class="case-h3">Summary</h3>
+      <p>Designed the in-app purchase flow for the Podeli app from scratch — from adding items from different sellers to the cart through order checkout and management.</p>
+      <p>Using CJM, competitive analysis, and UX testing, I found a clear structure for the multi-seller cart, accounted for the technical constraint of separate checkouts, and prepared the MVP for launch across two channels — Podeli and the Alfa-Bank app.</p>
+
+      <div class="figure">
+        <img src="images/alfa/summary.gif" alt="Purchase flow overview — empty cart, multi-seller cart, and the Purchases section" loading="lazy">
+      </div>
+
+      <p>The new flow let the product move from a clickout model to a full marketplace that earns commission on completed orders.</p>
+
+      <div class="meta-table">
+        <div class="row"><div class="k">Started</div><div class="v">June 2026</div></div>
+        <div class="row"><div class="k">Launched</div><div class="v">August 2026</div></div>
+        <div class="row"><div class="k">My role</div><div class="v">Product designer: discovery, JTBD, UX/UI solutions, prototyping, planning and running UX tests, dev support and design review</div></div>
+        <div class="row"><div class="k">Team</div><div class="v">Cart product manager, product designer, B2C CPO, analysts, developers, and QA engineers</div></div>
+        <div class="row"><div class="k">Scope</div><div class="v">The Podeli app for iOS and Android, plus a WebView inside the Alfa-Bank app</div></div>
+        <div class="row"><div class="k">Design system</div><div class="v">Alfa-Bank's design system plus custom product presets</div></div>
+      </div>
+
+      <h3 class="case-h3">Success metrics</h3>
+      <div class="stat-grid">
+        <div class="metric"><span class="num-big">GMV</span><span class="lbl">Gross Merchandise Value — total value of goods sold through the marketplace</span></div>
+        <div class="metric"><span class="num-big">MAU</span><span class="lbl">Monthly Active Users — number of active users per month</span></div>
+        <div class="metric"><span class="num-big">Conversion</span><span class="lbl">into adding to cart, starting checkout, and completed purchase</span></div>
+      </div>
+
+      <h3 class="case-h3">Context</h3>
+      <p>Alfa-Bank is Russia's largest private bank, building not just banking products but its own digital ecosystem — payments, installments, travel, and other services. <a href="https://alfabank.ru" target="_blank" rel="noopener">Alfa-Bank's official website</a></p>
+      <div class="figure">
+        <img src="images/alfa/ecom-context.webp" alt="Alfa-Bank's e-commerce ecosystem" loading="lazy">
+      </div>
+      <p>Alfa-Bank's strategy included a goal of claiming a place in the e-commerce market to diversify revenue streams. Since the food segment within the Alfa Group ecosystem was already covered by X5 Group, the new marketplace focused on clothing, electronics, cosmetics, and home goods.</p>
+
+      <details class="disclosure">
+        <summary><span class="disc-icon"><i class="ph-fill ph-buildings"></i></span>About the B2C and B2B tracks</summary>
+        <div class="body">
+          <p>The bank took a comprehensive approach. In 2025, a B2B track was created to build solutions for sellers:</p>
+          <ul>
+            <li>managing major marketplaces — Wildberries, Ozon, Lamoda, and others — from a single dashboard;</li>
+            <li>building the seller's own online store.</li>
+          </ul>
+          <p>For this ecosystem, an independent marketplace — Alfa-Market — was built to let sellers avoid the steep commissions charged by major marketplaces.</p>
+        </div>
+      </details>
+
+      <h3 class="case-h3">Business Challenge</h3>
+      <p>The bank already had a product called Podeli, which worked on a <b style="color:var(--ink);">clickout</b> model: users found a product in the app but completed the purchase on the partner's website.</p>
+      <p>The business decided to turn Podeli into a full marketplace and change the monetization model — moving from being paid for referral clicks to earning commission on completed orders. The marketplace also needed to become available in a WebView inside the Alfa-Bank app.</p>
+      <p>The shared value proposition across both channels: buy in installments with no markup and earn cashback through Alfa-Bank's loyalty program.</p>
+      <p>Launching in-app purchases required designing checkout and order-management flows from scratch. I owned this workstream.</p>
+
+      <h3 class="case-h3">User specifics</h3>
+      <details class="disclosure">
+        <summary><span class="disc-icon"><i class="ph-fill ph-shopping-bag"></i></span>The Podeli audience</summary>
+        <div class="body">
+          <p>Women aged 25–45 who shop on marketplaces regularly. Analytics revealed three segments:</p>
+          <ul>
+            <li><b style="color:var(--ink);">Shopper — 55%</b> — browse and buy products.</li>
+            <li><b style="color:var(--ink);">BNPL — 34%</b> — manage installments and payments.</li>
+            <li><b style="color:var(--ink);">Mixed — 11%</b> — do both.</li>
+          </ul>
+          <p>The cart was built primarily for Shoppers, but it couldn't break the familiar BNPL flows.</p>
+        </div>
+      </details>
+      <details class="disclosure">
+        <summary><span class="disc-icon"><i class="ph-fill ph-bank"></i></span>The Alfa-Bank audience</summary>
+        <div class="body">
+          <p>Already familiar with how cashback works and expected transparent terms for earning it. In the WebView, we emphasized the discount and the ability to make a good deal right inside the banking app they already used.</p>
+        </div>
+      </details>
+
+      <h3 class="case-h3">Constraints</h3>
+      <p>To shorten time to market, I designed the MVP and the target version in parallel. The main technical constraint early on: items from different sellers couldn't be checked out as a single order.</p>
+    </div>
+
+    <!-- ============ 2. Solving the problem ============ -->
+    <div class="case-section">
+      <h2 class="case-h2">2. Solving the problem</h2>
+
+      <h3 class="case-h3">Research before the redesign</h3>
+      <details class="disclosure">
+        <summary><span class="disc-icon"><i class="ph-fill ph-microphone"></i></span>Research with 11 respondents</summary>
+        <div class="body">
+          <p>We conducted interviews with 11 respondents:</p>
+          <ul>
+            <li><b style="color:var(--ink);">Age</b> — 6 people aged 25–34, 5 people aged 35–45.</li>
+            <li><b style="color:var(--ink);">Marketplace</b> — Wildberries (5), Ozon (4), Yandex Market (2).</li>
+          </ul>
+          <p>All shop online regularly, live in cities of different sizes, and don't work at Alfa-Bank.</p>
+        </div>
+      </details>
+
+      <h3 class="case-h3">High-priority problems found in the Podeli app</h3>
+      <div class="card-stack">
+        <div class="icon-card icon-card--warning">
+          <span class="ic"><i class="ph-fill ph-warning"></i></span>
+          <span class="tx"><b>Unclear CTA on the product page</b><br>The "View in store" button read as an ad link rather than a continuation of the purchase. Users expected a familiar action on the product page — "Buy" or "Add to cart" — so the handoff to the partner site felt uncertain and broke the flow. This lowered click-through and increased bounce rate.</span>
+        </div>
+        <div class="icon-card icon-card--warning">
+          <span class="ic"><i class="ph-fill ph-warning"></i></span>
+          <span class="tx"><b>Fragile handoff to the partner</b><br>Before leaving for the store's website, users worried about losing the selected item, price, variant, cashback, or the installment option. Not being sure the purchase terms would carry over made people abandon the handoff.</span>
+        </div>
+      </div>
+
+      <h3 class="case-h3">The solution</h3>
+      <div class="figure">
+        <img src="images/alfa/difference.webp" alt="Without in-app purchase (barriers) vs. with in-app purchase (what changes)" loading="lazy">
+      </div>
+
+      <div class="icon-card icon-card--note" style="margin: 16px 0;">
+        <span class="ic"><i class="ph-fill ph-briefcase"></i></span>
+        <span class="tx"><b>JTBD:</b> When I want to buy something on a marketplace, I want the best possible terms, so I can feel confident I made the right choice.</span>
+      </div>
+
+      <div class="icon-card icon-card--success" style="margin: 16px 0;">
+        <span class="ic"><i class="ph-fill ph-check-circle"></i></span>
+        <div class="tx">
+          <p><b>Growing orders, GMV, and commission revenue required an in-house cart.</b></p>
+          <p>This matched Alfa-Bank's marketplace goals. The main constraint was that items from different sellers couldn't be checked out as one order. I needed to design a multi-seller cart that clearly separates purchases by store and walks the user through multiple checkouts without hurting conversion.</p>
+        </div>
+      </div>
+
+      <h3 class="case-h3">CJM</h3>
+      <p>Based on the research, NN/g recommendations, and technical constraints, I mapped the target purchase journey.</p>
+      <div class="figure">
+        <img src="images/alfa/cjm.webp" alt="Purchase process CJM — focus: adding direct purchase" loading="lazy">
+      </div>
+      <p>The CJM helped treat the cart not as a standalone screen but as the connecting step between choosing a product and checking out with different sellers. It organized the known and potential barriers that the design needed to address and that UX testing needed to validate.</p>
+
+      <h3 class="case-h3">Competitive analysis</h3>
+      <div class="side-figure">
+        <div class="text">
+          <p>To make the cart feel intuitive, I studied patterns users already know from other marketplaces: Ozon, Wildberries, Yandex Market, US Mall, ASOS, Lamoda, Samokat, Lenta, Zolotoe Yabloko, Avito, Flowwow, AliExpress, Yandex Eda, and Shopify's Shop.</p>
+          <p>I compared add-to-cart flows, cart structure, the transition to checkout, guest (unauthenticated) behavior, and edge cases — like hitting an item limit.</p>
+          <p>Basic capabilities were similar across services: changing quantity, removing items, and moving them to favorites. I specifically looked for examples where items couldn't be checked out as a single order.</p>
+          <p>Relevant patterns turned up in Yandex Eda and Shopify's Shop. Yandex Eda split orders using tabs, while Shop kept items on one screen, each checked out through its own primary button per seller.</p>
+        </div>
+        <div class="img-col">
+          <img src="images/alfa/refs.webp" alt="Competitor references" loading="lazy">
+        </div>
+      </div>
+
+      <h3 class="case-h3">Solution options</h3>
+      <p>Because of the technical constraint, each seller's items had to be checked out as a separate order. At the sketch stage, I worked through two options for the multi-seller cart: one split items across store tabs, the other displayed them on a single page in separate blocks, each with its own checkout button.</p>
+      <div class="figure">
+        <img src="images/alfa/options.webp" alt="Two multi-seller cart options: tabs and a single screen" loading="lazy">
+      </div>
+      <p>Both approaches had their own advantages and risks that needed to be validated with users.</p>
+
+      <h3 class="case-h3">Option 1 — Tabs</h3>
+      <div class="figure"><video autoplay loop muted playsinline preload="metadata" aria-label="Animation of the tabs option"><source src="images/alfa/tabs.webm" type="video/webm"><source src="images/alfa/tabs.mp4" type="video/mp4"></video></div>
+      <p>Each seller's items live in their own tab. The user switches between stores and checks out the current order through a single primary button.</p>
+      <div class="card-grid-2">
+        <div class="icon-card icon-card--success"><span class="ic"><i class="ph-fill ph-check-circle"></i></span><span class="tx">Extra sales from the product recommendations block</span></div>
+        <div class="icon-card icon-card--success"><span class="ic"><i class="ph-fill ph-check-circle"></i></span><span class="tx">One clear checkout button</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">Navigation gets harder with many sellers.</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">No guarantee users notice the tabs</span></div>
+      </div>
+
+      <h3 class="case-h3">Option 2 — Single screen</h3>
+      <div class="figure"><img src="images/alfa/variant2.gif" alt="Animation of the single-screen cart option" loading="lazy"></div>
+      <p>Items are grouped into vertical blocks by seller. Each store has its own checkout button.</p>
+      <div class="card-grid-2">
+        <div class="icon-card icon-card--success"><span class="ic"><i class="ph-fill ph-check-circle"></i></span><span class="tx">The whole cart is visible in one list</span></div>
+        <div class="icon-card icon-card--success"><span class="ic"><i class="ph-fill ph-check-circle"></i></span><span class="tx">Separate CTAs explain the multi-order mechanic</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">Repeated buttons can add visual noise</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">No product recommendations from stores</span></div>
+      </div>
+
+      <h3 class="case-h3" id="research">Research to choose an option</h3>
+      <p>We ran moderated UX testing of both multi-seller cart options. Participants were asked to build a cart and check out; on entering the cart, they saw the two concepts — seller tabs and a single-page layout — in a randomized order.</p>
+      <p>We observed how easily users found items they'd added, changed quantities, understood the seller split, and moved on to checkout.</p>
+
+      <div class="figure"><video controls muted playsinline preload="metadata" aria-label="Recording of the multi-seller cart UX test"><source src="images/alfa/research-demo.webm" type="video/webm"><source src="images/alfa/research-demo.mp4" type="video/mp4"></video></div>
+
+      <p><b style="color:var(--ink);">Key result:</b> 100% of comparison-test participants preferred the unified list split by seller. The tabs option hid part of the cart and caused people to lose items they'd added.</p>
+
+      <div style="overflow-x:auto;">
+        <table class="col-table">
+          <tr><th>Criterion</th><th>Tabs</th><th>Unified list</th></tr>
+          <tr><td>Cart visibility</td><td><span class="td-cell"><i class="ph-fill ph-x-circle td-icon" style="color:var(--warning)"></i><span class="td-text">Only the active tab is visible</span></span></td><td><span class="td-cell"><i class="ph-fill ph-check-circle td-icon" style="color:var(--success)"></i><span class="td-text">All items visible at once</span></span></td></tr>
+          <tr><td>Risk of losing an item</td><td><span class="td-cell"><i class="ph-fill ph-x-circle td-icon" style="color:var(--warning)"></i><span class="td-text">Three participants lost an item</span></span></td><td><span class="td-cell"><i class="ph-fill ph-check-circle td-icon" style="color:var(--success)"></i><span class="td-text">No issue occurred</span></span></td></tr>
+          <tr><td>Understanding separate checkout</td><td><span class="td-cell"><i class="ph-fill ph-warning td-icon" style="color:var(--highlight)"></i><span class="td-text">Usually only after a hint</span></span></td><td><span class="td-cell"><i class="ph-fill ph-check-circle td-icon" style="color:var(--success)"></i><span class="td-text">Without a hint</span></span></td></tr>
+          <tr><td>Total-to-order connection</td><td><span class="td-cell"><i class="ph-fill ph-warning td-icon" style="color:var(--highlight)"></i><span class="td-text">Weaker due to hidden tabs</span></span></td><td><span class="td-cell"><i class="ph-fill ph-check-circle td-icon" style="color:var(--success)"></i><span class="td-text">The total sits right inside the seller's block</span></span></td></tr>
+          <tr><td>Navigation load</td><td><span class="td-cell"><i class="ph-fill ph-x-circle td-icon" style="color:var(--warning)"></i><span class="td-text">Requires switching between tabs</span></span></td><td><span class="td-cell"><i class="ph-fill ph-check-circle td-icon" style="color:var(--success)"></i><span class="td-text">Just one scroll is enough</span></span></td></tr>
+          <tr><td>Test participants' preference</td><td><span class="td-cell"><i class="ph-fill ph-x-circle td-icon" style="color:var(--warning)"></i><span class="td-text">Chosen by no one</span></span></td><td><span class="td-cell"><i class="ph-fill ph-check-circle td-icon" style="color:var(--success)"></i><span class="td-text">100% chose this option</span></span></td></tr>
+        </table>
+      </div>
+
+      <a href="case-alfa-research-en.html" class="btn-pill-secondary" style="margin-top: 20px;">Read the full research <i class="ph-bold ph-arrow-right btn-icon"></i></a>
+
+      <h3 class="case-h3">Working through additional states</h3>
+      <p class="case-lead">On the product card, I accounted for</p>
+      <ul>
+        <li>links to the product and the seller,</li>
+        <li>showing unit price when quantity changes,</li>
+        <li>a low-stock warning.</li>
+      </ul>
+      <p>For the empty cart, I designed a way forward: the user can return to shopping or see personalized recommendations. This keeps the screen from becoming a dead end and helps them get back to browsing.</p>
+      <div class="figure"><img src="images/alfa/details.webp" alt="Working through additional states" loading="lazy"></div>
+
+      <h3 class="case-h3">Removing items</h3>
+      <p>I analyzed how competitors handle removing items and saving them to favorites. For quick actions, I added swipe — a familiar mobile gesture.</p>
+      <p class="case-lead">To let users undo an accidental removal, I considered three solutions:</p>
+      <ol>
+        <li><b style="color:var(--ink);">An "Undo" button with a timer</b> keeps the removed item's context visible and clearly shows how much time is left to cancel.</li>
+        <li><b style="color:var(--ink);">A snackbar with an "Undo" action</b> doesn't block the interface, but the pattern itself often reads as a system message or error.</li>
+        <li><b style="color:var(--ink);">A confirmation modal</b> prevents accidental removal but interrupts the flow and requires an extra action every time.</li>
+      </ol>
+      <p>In the end I went with the "Undo" button with a countdown. It doesn't slow down intentional removal, stays visible in the item's context, and gives users a predictable way to fix a mistake.</p>
+      <div class="figure"><img src="images/alfa/removing.gif" alt="Removing an item with the Undo button" loading="lazy"></div>
+
+      <h3 class="case-h3">Purchases and payments in one section</h3>
+      <p>Previously, the "Purchases" section only showed installment orders. With the marketplace launch, I needed to add delivery information while keeping the familiar payment-tracking flow.</p>
+      <p>I considered splitting it into two separate items — "Orders" and "Payments" — but that complicated navigation and broke the familiar flow. So I merged deliveries and payments inside "Purchases".</p>
+      <p>I placed deliveries in a horizontal scroll above payments. Users immediately see the status of current orders without it crowding out upcoming payment info. Order details include a pickup QR code, pickup point address, order number, payment method, and any required actions.</p>
+      <div class="figure"><img src="images/alfa/profile-purchases.webp" alt="The Purchases section with deliveries and payments" loading="lazy"></div>
+    </div>
+
+    <!-- ============ 4. Results after launch ============ -->
+    <div class="case-section">
+      <h2 class="case-h2">4. Results after launch</h2>
+
+      <div class="float-figure-wrap">
+        <img class="float-figure" src="images/alfa/results.gif" alt="Cart screen after the purchase flow launched" loading="lazy">
+        <h3 class="case-h3" style="margin-top:0;">Impact on business metrics</h3>
+        <p>The purchase and order-management flows are built and live. Not enough time has passed since launch to gather a statistically significant amount of data.</p>
+        <p class="case-lead">Expected results:</p>
+        <p>A shorter path and dropping the webview should reduce drop-off after the main CTA.</p>
+        <div class="icon-card icon-card--highlight" style="margin: 16px 0 24px;">
+          <span class="ic"><i class="ph-fill ph-coins"></i></span>
+          <span class="tx">Fewer drop-offs → higher conversion → more orders → GMV growth → combined with a growing take rate, revenue increases.</span>
+        </div>
+      </div>
+
+      <p class="case-lead">Metrics we're tracking:</p>
+      <ul>
+        <li>increased conversion into add-to-cart, checkout start, and completed purchase.</li>
+        <li>MAU growth;</li>
+        <li>GMV and commission revenue growth;</li>
+      </ul>
+      <p>We're continuing to gather data to assess the new flow's impact on user activity and business metrics.</p>
+    </div>
+
+    <!-- ============ Key Learnings & Reflection ============ -->
+    <div class="case-section">
+      <h2 class="case-h2">Key Learnings &amp; Reflection</h2>
+
+      <h4 class="case-subhead">What worked</h4>
+      <ul>
+        <li>Found the right cart structure. UX testing showed the unified list was clearer than tabs: users saw all items and understood the seller split better.</li>
+        <li>Accounted for real user behavior. Since the cart is often used to store items, I added partial selection — users can check out the items they want and keep the rest.</li>
+      </ul>
+
+      <h4 class="case-subhead">What's outside the MVP scope</h4>
+      <ul>
+        <li>A single checkout across sellers. Due to technical constraints, each order was checked out separately. Users understood the mechanic but experienced it as extra friction.</li>
+        <li>Part of the target flow. To shorten time to market, the first version shipped the core functionality, leaving the rest of the improvements in the backlog.</li>
+      </ul>
+
+      <h4 class="case-subhead">What I'll carry into future projects</h4>
+      <ul>
+        <li>Test information architecture against real content: a familiar pattern may not fit a different user context.</li>
+        <li>Sync with engineering on technical constraints earlier, and split the MVP from the target flow from the start.</li>
+      </ul>
+
+      <h4 class="case-subhead">Next steps</h4>
+      <ul>
+        <li>Merge checkout across different sellers into a single flow.</li>
+        <li>More actively communicate the loyalty program's benefits to Alfa-Bank customers in the marketplace.</li>
+        <li>Measure how changes affect conversion, repeat purchases, MAU, GMV, and product revenue.</li>
+      </ul>
+    </div>
+
+  </section>
+</div>
+
+<div class="case-nav">
+  <a href="index-en.html#work"><span class="dir"><i class="ph-bold ph-arrow-left"></i> Back</span><span class="title">All case studies</span></a>
+  <a href="case-megafon-en.html" class="next-side"><span class="dir">Next case <i class="ph-bold ph-arrow-right"></i></span><span class="title">MegaFon</span></a>
+</div>
+
+<footer>
+  <span class="mono">© 2026 Maria Vorobyeva</span>
+  <span class="mono">Senior Product Designer</span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
