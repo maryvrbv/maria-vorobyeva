@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX research: multi-seller cart — Maria Vorobyeva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<canvas class="case-hero-canvas" data-color="#ef3124" aria-hidden="true"></canvas>
+
+<header class="nav nav-hero">
+  <div class="nav-inner">
+    <a href="index-en.html" class="nav-name">Maria Vorobyeva</a>
+    <div class="nav-links">
+      <a href="index-en.html#work">Work</a>
+      <a href="index-en.html#experience">Experience</a>
+      <a href="https://drive.google.com/file/d/10_fquXlhycMouP7_rdW3-ti9RhZ9WVTn/view?usp=sharing" target="_blank" rel="noopener">CV</a><span class="lang-switch"><a href="case-alfa-research.html">RU</a><span class="sep">/</span><span class="current">EN</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- fades in once the nav above has scrolled out of view (see script.js) -->
+<header class="nav-reveal" id="navReveal">
+  <div class="nav-inner">
+    <a href="index-en.html" class="nav-name">Maria Vorobyeva</a>
+    <div class="nav-links">
+      <a href="index-en.html#work">Work</a>
+      <a href="index-en.html#experience">Experience</a>
+      <a href="https://drive.google.com/file/d/10_fquXlhycMouP7_rdW3-ti9RhZ9WVTn/view?usp=sharing" target="_blank" rel="noopener">CV</a><span class="lang-switch"><a href="case-alfa-research.html">RU</a><span class="sep">/</span><span class="current">EN</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap-wide">
+  <section class="case-hero">
+    <div class="case-hero-content">
+      <a href="case-alfa-en.html#research" class="back-link"><i class="ph-bold ph-arrow-left"></i> "Alfa-Market" case</a>
+      <h1>UX research: multi-seller cart</h1>
+      <p class="desc">A comparative test of two cart concepts — seller tabs vs. a single combined list. Full methodology, 9 tested hypotheses, key insights, and recommendations.</p>
+    </div>
+  </section>
+
+  <section class="case-body" style="border-bottom:none;">
+    <div class="case-section">
+
+      <div class="stat-grid">
+        <div class="metric"><span class="num-big">5</span><span class="lbl">participants</span></div>
+        <div class="metric"><span class="num-big">5</span><span class="lbl">in-depth tests of both concepts</span></div>
+        <div class="metric"><span class="num-big">9</span><span class="lbl">hypotheses tested</span></div>
+        <div class="metric"><span class="num-big">10</span><span class="lbl">problem areas found</span></div>
+      </div>
+
+      <h3 class="case-h3">Research goal</h3>
+      <p>Determine which cart concept better helps users manage items and understand that orders from different sellers are checked out separately.</p>
+
+      <h3 class="case-h3">What we tested</h3>
+      <div class="subcard-grid">
+        <div class="subcard"><b>Option A — tabs</b><p>Each seller's items live on their own tab. Seeing the whole cart means switching between stores.</p></div>
+        <div class="subcard"><b>Option B — single list</b><p>All items are visible on one screen, grouped by seller. Each block has its own checkout button.</p></div>
+      </div>
+
+      <h3 class="case-h3">Methodology</h3>
+      <div class="meta-table">
+        <div class="row"><div class="k">Method</div><div class="v">In-depth interviews and moderated testing of an interactive prototype</div></div>
+        <div class="row"><div class="k">Format</div><div class="v">Online, one-on-one, with screen sharing</div></div>
+        <div class="row"><div class="k">Sample</div><div class="v">11 active marketplace users</div></div>
+        <div class="row"><div class="k">Comparative test</div><div class="v">5 participants tested both cart options</div></div>
+        <div class="row"><div class="k">Rotation</div><div class="v">Three started with tabs, two started with the single list</div></div>
+        <div class="row"><div class="k">Completion date</div><div class="v">June 17, 2026</div></div>
+        <div class="row"><div class="k">Team</div><div class="v">Designer — Maria Vorobyeva, product owner — Alexander Kimaev</div></div>
+      </div>
+
+      <h3 class="case-h3">Hypotheses and results</h3>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <tr><th>#</th><th>Hypothesis</th><th>Result</th><th>What we saw in testing</th></tr>
+          <tr><td>H1</td><td>Tabs make the cart's structure clearer and help users perceive each order separately</td><td><span class="status status--no">Rejected</span></td><td>Three participants missed the other tab or lost an item. Grouping by seller was hard to read.</td></tr>
+          <tr><td>H2</td><td>Tabs reduce visual load by showing one order at a time</td><td><span class="status status--no">Rejected</span></td><td>The hidden part of the cart felt like a drawback. Switching between tabs added extra load.</td></tr>
+          <tr><td>H3</td><td>Users notice other orders and understand each seller must be checked out separately</td><td><span class="status status--partial">Partial</span></td><td>Separate checkout was understood mainly thanks to each seller's own button, not the tabs.</td></tr>
+          <tr><td>H4</td><td>Users correctly understand the total cost and what it's made up of</td><td><span class="status status--yes">Confirmed</span></td><td>Per-seller totals were read correctly, but participants missed a total for the whole cart.</td></tr>
+          <tr><td>H5</td><td>Users notice and correctly interpret discounts and savings</td><td><span class="status status--partial">Partial</span></td><td>After a follow-up question the savings were understood, but spontaneous attention to discounts was low.</td></tr>
+          <tr><td>H6</td><td>Basic item actions are easy to find</td><td><span class="status status--yes">Confirmed</span></td><td>Favoriting, removing, and changing quantity were found on the first try. Selecting items for a partial order was missing.</td></tr>
+          <tr><td>H7</td><td>Users correctly relate price, discount, and actions to a specific order</td><td><span class="status status--partial">Partial</span></td><td>The connection was clearer in the single list. In the tabbed version, hidden content and unclear grouping caused confusion.</td></tr>
+          <tr><td>H8</td><td>The single list lets users see the whole cart and all sellers at once</td><td><span class="status status--yes">Confirmed</span></td><td>All sellers and items were visible without switching. No items were lost in this version.</td></tr>
+          <tr><td>H9</td><td>Visual separation of orders in the list is enough without tabs</td><td><span class="status status--yes">Confirmed</span></td><td>Block borders and separate checkout buttons helped users perceive items as distinct orders.</td></tr>
+        </table>
+      </div>
+
+      <h3 class="case-h3">Key insights</h3>
+      <div class="card-stack">
+        <div class="icon-card icon-card--warning">
+          <span class="ic"><i class="ph-fill ph-warning"></i></span>
+          <span class="tx"><b>Tabs hide part of the cart.</b><br>Three participants concluded that a third item hadn't been added, because it was sitting on another seller's inactive tab. They went back to the product card and tried adding it again.<span class="direction">Direction: drop the tabs; the cart counter should match what's actually visible.</span></span>
+        </div>
+        <div class="icon-card icon-card--warning">
+          <span class="ic"><i class="ph-fill ph-warning"></i></span>
+          <span class="tx"><b>The cart doubles as a wishlist.</b><br>Four comparative-test participants kept items in the cart "for later" and bought them in batches. When asked to check out a single item, they looked for checkboxes. The workaround via favorites and removal was frustrating.<span class="direction">Direction: add item selection and a "Check out selected" action.</span></span>
+        </div>
+        <div class="icon-card icon-card--warning">
+          <span class="ic"><i class="ph-fill ph-warning"></i></span>
+          <span class="tx"><b>Split checkout goes against the familiar model.</b><br>Participants expected a "one cart — one order" scenario, even when items belonged to different sellers. A separate button in each block helped explain the new mechanic, but didn't remove the friction entirely.<span class="direction">Direction: show the seller, order number, per-order total, and a dedicated CTA clearly and up front.</span></span>
+        </div>
+        <div class="icon-card icon-card--warning">
+          <span class="ic"><i class="ph-fill ph-warning"></i></span>
+          <span class="tx"><b>Seller isn't always read as the grouping principle.</b><br>Some participants explained the item split by category instead — e.g., "electronics" vs. "clothing." For most, seller wasn't the main mental anchor when picking a product.<span class="direction">Direction: strengthen the visual boundaries of each block and the link between seller, items, total, and checkout button.</span></span>
+        </div>
+      </div>
+
+      <div class="icon-card icon-card--highlight" style="margin: 16px 0;">
+        <span class="ic"><i class="ph-fill ph-trophy"></i></span>
+        <span class="tx"><b>Final decision:</b> use the single list as the base and carry over the tabbed version's main advantage — a summary block with the cart's total amount and total savings.</span>
+      </div>
+
+      <h3 class="case-h3">What already works</h3>
+      <ul>
+        <li>Showing the unit price when quantity changes helps prevent mistakes.</li>
+        <li>The order total recalculates immediately after a quantity change.</li>
+        <li>Favoriting, removing, and changing quantity feel familiar.</li>
+        <li>A separate checkout button per seller explains the split checkout.</li>
+        <li>A summary block with the total and total savings helps users assess the whole cart.</li>
+      </ul>
+
+      <h3 class="case-h3">Recommendations</h3>
+      <p class="case-lead">Must — before launch</p>
+      <ul>
+        <li>Drop the tabs and show all orders as a single list grouped by seller.</li>
+        <li>Add item-selection checkboxes and a "Check out selected" action.</li>
+      </ul>
+      <p class="case-lead">Nice to have — a noticeable improvement</p>
+      <ul>
+        <li>Show an estimated delivery window or date on the product card and in the seller block.</li>
+        <li>Consider search and filtering inside the cart for users with many items.</li>
+        <li>On the checkout screen, show the pickup-point address as a list selection, revisit the "Recipient" field, and move the delivery date higher.</li>
+        <li>Show savings in rubles without an aggressive "before / after" comparison.</li>
+        <li>Separately improve the home screen: add search and balance the amount of ads and promo blocks.</li>
+      </ul>
+
+      <h3 class="case-h3">Product impact</h3>
+      <p>The research helped us choose the single list as the foundation for the multi-seller cart and shape the requirements for refining it. This approach keeps every item visible, lowers the risk of duplicate adds, and better explains the link between seller, total, and separate checkout — while still giving users control over which items to buy now and which to leave for later.</p>
+
+    </div>
+  </section>
+</div>
+
+<div class="case-nav">
+  <a href="case-alfa-en.html#research"><span class="dir"><i class="ph-bold ph-arrow-left"></i> Back</span><span class="title">"Alfa-Market" case</span></a>
+  <a href="index-en.html#work" class="next-side"><span class="dir">All case studies <i class="ph-bold ph-arrow-right"></i></span><span class="title">Portfolio</span></a>
+</div>
+
+<footer>
+  <span class="mono">© 2026 Maria Vorobyeva</span>
+  <span class="mono">Senior Product Designer</span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

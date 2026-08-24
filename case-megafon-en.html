@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plans redesign • MegaFon — Maria Vorobyeva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<canvas class="case-hero-canvas" data-color="#00b956" aria-hidden="true"></canvas>
+
+<header class="nav nav-hero">
+  <div class="nav-inner">
+    <a href="index-en.html" class="nav-name">Maria Vorobyeva</a>
+    <div class="nav-links">
+      <a href="index-en.html#work">Work</a>
+      <a href="index-en.html#experience">Experience</a>
+      <a href="https://drive.google.com/file/d/10_fquXlhycMouP7_rdW3-ti9RhZ9WVTn/view?usp=sharing" target="_blank" rel="noopener">CV</a><span class="lang-switch"><a href="case-megafon.html">RU</a><span class="sep">/</span><span class="current">EN</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- fades in once the nav above has scrolled out of view (see script.js) -->
+<header class="nav-reveal" id="navReveal">
+  <div class="nav-inner">
+    <a href="index-en.html" class="nav-name">Maria Vorobyeva</a>
+    <div class="nav-links">
+      <a href="index-en.html#work">Work</a>
+      <a href="index-en.html#experience">Experience</a>
+      <a href="https://drive.google.com/file/d/10_fquXlhycMouP7_rdW3-ti9RhZ9WVTn/view?usp=sharing" target="_blank" rel="noopener">CV</a><span class="lang-switch"><a href="case-megafon.html">RU</a><span class="sep">/</span><span class="current">EN</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap-wide">
+  <section class="case-hero">
+    <div class="case-hero-content">
+      <a href="index-en.html#work" class="back-link"><i class="ph-bold ph-arrow-left"></i> All case studies</a>
+      <h1>Plans redesign • MegaFon</h1>
+    </div>
+  </section>
+
+  <section class="case-body" style="border-bottom:none;">
+
+    <!-- ============ 1. Summary ============ -->
+    <div class="case-section">
+      <h2 class="case-h2">1. Summary</h2>
+
+      <p>A redesign of MegaFon's plans showcase for the website and mobile app. The goal was to make it easier for customers to choose a plan and increase sign-up conversion through a clearer plan card, filters, and transparent presentation of add-on options.</p>
+
+      <div class="figure">
+        <img src="images/megafon/summary.webp" alt="Overview of the MegaFon plans showcase redesign" loading="lazy">
+      </div>
+
+      <div class="meta-table">
+        <div class="row"><div class="k">Project start</div><div class="v">February 2024</div></div>
+        <div class="row"><div class="k">Launched to production</div><div class="v">May 2024</div></div>
+        <div class="row"><div class="k">My role</div><div class="v">Product designer: discovery, CJM, hypotheses, UX/UI solutions, prototypes, UX testing together with a researcher, preparing solutions for launch</div></div>
+        <div class="row"><div class="k">Team</div><div class="v">Plans showcase product owner, 5 business teams, project manager, product designer, UX researcher, analysts, engineers, QA</div></div>
+        <div class="row"><div class="k">Scope</div><div class="v">MegaFon's homepage, plans showcase, promo pages. Second stage — a mobile app update</div></div>
+        <div class="row"><div class="k">Users</div><div class="v">MegaFon's retail customers: for themselves, family, or home</div></div>
+        <div class="row"><div class="k">Design system</div><div class="v">MegaFon's internal design system</div></div>
+      </div>
+
+      <h3 class="case-h3">Success metrics</h3>
+      <div class="stat-grid">
+        <div class="metric"><span class="num-big">9% → 13%</span><span class="lbl">plan purchase conversion</span></div>
+        <div class="metric"><span class="num-big">3.4 → 4.2</span><span class="lbl">Customer Effort Score</span></div>
+        <div class="metric"><span class="num-big">18 → 15 min</span><span class="lbl">average time to choose a plan</span></div>
+        <div class="metric"><span class="num-big">745 → 1,283</span><span class="lbl">home internet sign-ups per month</span></div>
+        <div class="metric"><span class="num-big">44% → 21%</span><span class="lbl">conversion gap between site and online store</span></div>
+        <div class="metric"><span class="num-big">+11%</span><span class="lbl">MegaSily add-on uptake</span></div>
+      </div>
+    </div>
+
+    <!-- ============ 2. Context ============ -->
+    <div class="case-section">
+      <h2 class="case-h2">2. Context</h2>
+
+      <h3 class="case-h3">About the company</h3>
+      <p>MegaFon is one of Russia's largest mobile carriers. In 2024 the team set out to rethink the digital experience: make choosing a plan simpler, faster, and clearer for millions of users.</p>
+      <div class="figure">
+        <img src="images/megafon/bento.webp" alt="MegaFon's product landscape" loading="lazy">
+      </div>
+
+      <h3 class="case-h3">Business challenge: what was hurting the product</h3>
+      <p>Interviews with the business and an audit of the existing showcase showed that the plan card in the online store converted better than the card on the main website. On the main site, users ran into a lot of distracting blocks: home internet, MegaSemya (family plans), pre-5G, and other offers competed for attention and made choosing harder.</p>
+      <p>Why this mattered: the plans showcase is one of the key entry points into signing up. If it's hard for a user to compare plans and understand the value of add-on options, they take longer to decide, hesitate more, and convert worse.</p>
+      <div class="figure">
+        <img src="images/megafon/before-shop-vs-site.webp" alt="Conversion gap between the online store and the main site" loading="lazy">
+      </div>
+
+      <p>UX testing of the old MegaFon plans showcase helped us pin down the key problems that shaped the redesign decisions:</p>
+      <div class="card-stack">
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">"MegaSily" don't spark interest, even though the business planned to position them as plan customization and an alternative to a plan builder.</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">Users don't understand what "MegaFon 3.0" means — this especially hurts navigation.</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">Users are skeptical of pre-5G — they don't understand why it matters.</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">Cards feel overloaded and too long — hard to compare.</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">The gradient banner reads as an ad — it breaks the structure and gets ignored.</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">It's unclear whether extra GB are already included in the plan — this raises doubts.</span></div>
+      </div>
+      <p>These findings shaped the redesign: a focus on transparency, priority information, and easy choices without extra noise.</p>
+    </div>
+
+    <!-- ============ 3. Solving the problem ============ -->
+    <div class="case-section">
+      <h2 class="case-h2">3. Solving the problem</h2>
+
+      <h3 class="case-h3">Defining the problem</h3>
+      <p>Before jumping into UI, I mapped out the plan-selection scenario through a CJM and formulated a JTBD, hypotheses, and success metrics. This helped separate real user problems from business wishes and focus the redesign on choosing, comparing, and signing up.</p>
+
+      <div class="icon-card icon-card--note" style="margin: 16px 0;">
+        <span class="ic"><i class="ph-fill ph-briefcase"></i></span>
+        <span class="tx"><b style="color:var(--ink);">JTBD:</b> when I'm choosing a plan, I want to quickly understand which one suits me best, so I can be confident I made the right choice and I'm not overpaying.</span>
+      </div>
+
+      <h3 class="case-h3">Simplified CJM</h3>
+      <div class="figure">
+        <img src="images/megafon/cjm.webp" alt="Simplified CJM for choosing a plan" loading="lazy">
+      </div>
+
+      <h3 class="case-h3">Competitive analysis</h3>
+      <div class="side-figure">
+        <div class="text">
+          <p>Before redesigning MegaFon's plan card, I studied how competitors and partners solve this — Tele2, Yota, MTS, Tinkoff Mobile, SberMobile, and others.</p>
+          <p>I compared the presentation: what's in focus, how it's visually structured.</p>
+          <p>In the end I formulated the redesign directions: clear hierarchy, flexible customization, and less visual noise at the moment of choice.</p>
+        </div>
+        <div class="img-col">
+          <img src="images/megafon/competitors.webp" alt="Competitor references" loading="lazy">
+        </div>
+      </div>
+
+      <h3 class="case-h3">Redesign brief</h3>
+      <p>Simplify the visual and informational load of the plan card, while making it more adaptive to the user's context and goals.</p>
+
+      <h3 class="case-h3">Success metrics</h3>
+      <ul>
+        <li>Plan purchase conversion</li>
+        <li>Customer Effort Score</li>
+        <li>Gap with the MegaFon online store</li>
+        <li>Time to complete plan sign-up</li>
+      </ul>
+
+      <h3 class="case-h3">Hypotheses</h3>
+      <ul>
+        <li>If we simplify the plan card and leave only the key parameters (GB, minutes, price), users will find it easier to orient themselves, speeding up plan selection.</li>
+        <li>If we put more emphasis on MegaSily, users will be able to adapt a plan to themselves without a plan builder, reducing the need to build one and increasing purchase conversion.</li>
+        <li>If we add filters that dynamically adapt the cards to user behavior and needs, it will improve navigation, speed up selection, and positively affect conversion.</li>
+        <li>If we move home internet into a separate section and reposition the mobile plan cards, it will reduce cognitive load when evaluating bonus GB and minutes, and make the plan visually and substantively clearer and more appealing.</li>
+        <li>If we add the ability to customize home internet speed, plans will become more flexible and relevant — broadening the audience and boosting conversion.</li>
+      </ul>
+
+      <h3 class="case-h3">Option 1 — the business proposal</h3>
+      <p>Make the first filtering level based on usage scenarios:</p>
+      <ul>
+        <li>For myself</li>
+        <li>For family</li>
+        <li>Home internet, calls, and TV</li>
+        <li>For modems</li>
+        <li>For feature phones</li>
+      </ul>
+      <p>Selecting a given filter surfaces information about MegaSemya (family plans) and home internet. The second filtering level was inspired by the online store's plans showcase — showing hints about the internet and minutes package.</p>
+      <div class="figure">
+        <img src="images/megafon/before-after.webp" alt="Version with first-level filters" loading="lazy">
+      </div>
+      <div class="card-grid-2">
+        <div class="icon-card icon-card--success"><span class="ic"><i class="ph-fill ph-check-circle"></i></span><span class="tx">Emphasis on family plans, since they're surfaced as a first-level filter</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">The filter works, but it's visually unnoticeable: the card barely changes, and the user loses the sense of being in control</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">The card is lighter, but MegaSily still doesn't register — visually it gets lost against the main content</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">A large number of first-level filters makes navigation harder — users get lost in the choice</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">MegaSemya information isn't revealed on the card — users don't know how many numbers can be added or on what terms</span></div>
+        <div class="icon-card icon-card--warning"><span class="ic"><i class="ph-fill ph-warning"></i></span><span class="tx">MegaSemya and MegaSily look and sound similar — placed next to each other on the card they blur together and hurt comprehension</span></div>
+      </div>
+
+      <h3 class="case-h3">Option 2 — rethinking the plan card and filters</h3>
+      <p>In this version, I proposed rethinking the plan card design and filter logic. We removed everything that was distracting and reinforced what helps users decide.</p>
+      <div class="figure">
+        <img src="images/megafon/card-redesign.webp" alt="Redesigned plan card" loading="lazy">
+      </div>
+      <div class="card-grid-2">
+        <div class="icon-card icon-card--success"><span class="ic"><i class="ph-fill ph-check-circle"></i></span><span class="tx">Emphasis on core parameters — GB, minutes, MegaSily, price</span></div>
+        <div class="icon-card icon-card--success"><span class="ic"><i class="ph-fill ph-check-circle"></i></span><span class="tx">MegaSily became more noticeable: now with icons, they draw interest and engagement</span></div>
+        <div class="icon-card icon-card--success"><span class="ic"><i class="ph-fill ph-check-circle"></i></span><span class="tx">The wording "up to 70 GB with MegaSila" doesn't confuse users: extra detail is available via the "i" icon</span></div>
+        <div class="icon-card icon-card--success"><span class="ic"><i class="ph-fill ph-check-circle"></i></span><span class="tx">The card is shorter, making plans easier to compare</span></div>
+      </div>
+      <p>The first choice step became simpler. Cutting filters from 5 to 3 and adding illustrations improved focus and interest.</p>
+
+      <h3 class="case-h3">MegaSemya (family plans)</h3>
+      <p>We added a "Plans with MegaSemya" chip — tapping it opens a bottom sheet where users pick the number of extra lines. Terms vary by plan.</p>
+      <ul>
+        <li>Cards adapt to the user's needs: depending on the number of extra lines, plan order changes and an "Optimal" badge appears, helping users decide.</li>
+        <li>Below the price, the plan's cost with extra lines is shown, so users don't have to calculate it themselves.</li>
+      </ul>
+      <div class="figure">
+        <img src="images/megafon/megasemya.webp" alt="MegaSemya selection screen" loading="lazy">
+      </div>
+
+      <h3 class="case-h3">A new focus — home internet</h3>
+      <p>We shifted the emphasis in how plans are presented:</p>
+      <ul>
+        <li>Home internet speed is now in the foreground.</li>
+        <li>Mobile service remains, but is now secondary.</li>
+      </ul>
+      <p>What else we did:</p>
+      <ul>
+        <li>Added chips for quickly choosing the speed you need.</li>
+        <li>Introduced home-internet-only plans for the first time.</li>
+      </ul>
+      <p>This approach highlights the main thing — home internet — and broadens choice without overloading the showcase.</p>
+      <div class="figure">
+        <img src="images/megafon/more-internet.webp" alt="Plans with a home internet focus" loading="lazy">
+      </div>
+
+      <h3 class="case-h3">MegaSily</h3>
+      <p>Users now better understand how extra GB are credited. For remaining questions, they can go to the service's landing page and check the FAQ.</p>
+      <ul>
+        <li>MegaSily became visually clearer: icons for included services now appear.</li>
+        <li>Each MegaSila is clickable — users can see the details.</li>
+        <li>Added a price comparison — users see how much they save thanks to the MegaSila included in their plan.</li>
+      </ul>
+      <div class="figure">
+        <img src="images/megafon/megasily.webp" alt="MegaSily cards" loading="lazy">
+      </div>
+
+      <h3 class="case-h3">Signing up for home internet — simpler and clearer</h3>
+      <p>Previously, trying to add home internet opened a modal window. It interrupted navigation and appeared on every interaction. At the same time, the modal held terms unique to each plan for bonus minutes and GB.</p>
+      <p>Now:</p>
+      <ul>
+        <li>Home internet has its own dedicated tab.</li>
+        <li>The savings are already baked into the plan price.</li>
+      </ul>
+      <p>We cut unnecessary clicks and made the value of signing up immediately visible.</p>
+      <div class="figure">
+        <img src="images/megafon/home-internet-tab.webp" alt="Home internet tab" loading="lazy">
+      </div>
+      <div class="figure">
+        <img src="images/megafon/home-internet-card.webp" alt="Home internet card" loading="lazy">
+      </div>
+    </div>
+
+    <!-- ============ 4. Results ============ -->
+    <div class="case-section">
+      <h2 class="case-h2">4. Results</h2>
+
+      <h3 class="case-h3">Post-redesign research</h3>
+      <p>After finalizing the design, we tested the updated showcase with real users: how clear were the filters, MegaSemya, MegaSily, plan categories, and home internet scenarios.</p>
+
+      <h3 class="case-h3" id="research">UX tests with users</h3>
+      <p>After finalizing the design, together with the product owner and UX researchers we formulated a list of hypotheses and built testing scenarios to assess how users perceived the updated plans showcase.</p>
+
+      <a href="case-megafon-research-en.html" class="btn-pill-secondary" style="margin-top: 4px;">More about the research <i class="ph-bold ph-arrow-right btn-icon"></i></a>
+
+      <h3 class="case-h3">Metrics after launch</h3>
+      <div class="stat-grid">
+        <div class="metric"><span class="num-big">9% → 13%</span><span class="lbl">plan purchase conversion</span></div>
+        <div class="metric"><span class="num-big">44% → 21%</span><span class="lbl">conversion gap between site and online store</span></div>
+        <div class="metric"><span class="num-big">3.4 → 4.2</span><span class="lbl">Customer Effort Score</span></div>
+        <div class="metric"><span class="num-big">745 → 1,283</span><span class="lbl">home internet sign-ups per month</span></div>
+        <div class="metric"><span class="num-big">+11%</span><span class="lbl">MegaSily add-on uptake</span></div>
+        <div class="metric"><span class="num-big">18 → 15 min</span><span class="lbl">average time to choose a plan</span></div>
+      </div>
+
+      <h3 class="case-h3">Key Insights</h3>
+      <div class="card-stack">
+        <div class="icon-card icon-card--success">
+          <span class="ic"><i class="ph-fill ph-check-circle"></i></span>
+          <span class="tx"><b style="color:var(--ink);">The showcase redesign had a positive effect on metrics.</b> Conversion improved, engagement rose, and cognitive load while choosing a plan went down.</span>
+        </div>
+        <div class="icon-card icon-card--warning">
+          <span class="ic"><i class="ph-fill ph-warning"></i></span>
+          <span class="tx"><b style="color:var(--ink);">MegaSily can't fully replace a plan builder.</b> Research showed that some users have a clear motivation not to pay for anything extra — they want to manually tailor a plan to themselves rather than choose among ready-made options.</span>
+        </div>
+        <div class="icon-card icon-card--note">
+          <span class="ic"><i class="ph-fill ph-wrench"></i></span>
+          <span class="tx"><b style="color:var(--ink);">The rest of the sign-up flow needs optimizing.</b> Users want to choose MegaSily while comparing plans, not in a separate step. There's a request to revisit the plan page's logic.</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<div class="case-nav">
+  <a href="index-en.html#work"><span class="dir"><i class="ph-bold ph-arrow-left"></i> Back</span><span class="title">All case studies</span></a>
+  <a href="case-loyalty-en.html" class="next-side"><span class="dir">Next case <i class="ph-bold ph-arrow-right"></i></span><span class="title">Loyalty program</span></a>
+</div>
+
+<footer>
+  <span class="mono">© 2026 Maria Vorobyeva</span>
+  <span class="mono">Senior Product Designer</span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
