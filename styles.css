@@ -157,7 +157,7 @@ header.nav.nav-hero{ position: static; background: transparent; }
      keep only the logo and the language switch in the mobile nav. The
      switch is itself a direct-child <a> now too, so it's explicitly excluded */
   .nav-links > a:not(.lang-switch){ display: none; }
-  .lang-switch{ padding: 8px; }
+  .lang-switch{ padding: 11px; }
 }
 .badge{ font-size: 13px; font-weight: 500; color: var(--ink-soft); display: flex; align-items: center; gap: 7px; }
 .dot{ width: 7px; height: 7px; border-radius: var(--radius-full); background: var(--accent); display: inline-block; animation: pulse 2.4s ease-in-out infinite; }

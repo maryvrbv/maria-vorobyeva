@@ -264,7 +264,8 @@ function initLangSwitchDots() {
   const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const cols = 11, rows = 7, cell = 3.4, cssW = 44, cssH = 26;
+  // sized to sit level with the nav text next to it, not dominate it
+  const cols = 11, rows = 7, cell = 1.7, cssW = 22, cssH = 13, dotRadius = 0.6;
   const padX = (cssW - (cols - 1) * cell) / 2;
   const padY = (cssH - (rows - 1) * cell) / 2;
   const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#f2f2f0';
@@ -306,7 +307,7 @@ function initLangSwitchDots() {
         if (d.opacity <= 0.02) return;
         ctx.globalAlpha = Math.min(1, d.opacity) * 0.92;
         ctx.beginPath();
-        ctx.arc(padX + d.col * cell, padY + d.row * cell, 1.15, 0, Math.PI * 2);
+        ctx.arc(padX + d.col * cell, padY + d.row * cell, dotRadius, 0, Math.PI * 2);
         ctx.fill();
       });
       ctx.globalAlpha = 1;
