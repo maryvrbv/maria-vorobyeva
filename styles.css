@@ -140,9 +140,14 @@ header.nav.nav-hero{ position: static; background: transparent; }
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  padding: 2px 6px 6px;
+  padding: 4px 6px; /* symmetric, so the hover rectangle sits even around the dots */
   border-radius: var(--radius-sm);
   transition: background .2s ease;
+  /* nudges the whole box (hover background included) up to the nav text's
+     baseline — position:relative keeps the padding/hover box symmetric and
+     doesn't disturb flex centering the way asymmetric padding would */
+  position: relative;
+  top: -2.6px;
 }
 .lang-switch:hover,
 .lang-switch:focus-visible{ background: var(--paper-raised); }
