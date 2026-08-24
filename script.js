@@ -235,7 +235,134 @@ function createDotField(canvas, { color, spacing = 26, fadeTail = 60, getHeight,
   window.addEventListener('load', resize);
 }
 
+// ru/en language switch: a tiny dot-matrix glyph (same idea as the hero dot
+// fields, but a static letter shape instead of a drifting wave). At rest it
+// spells out the current language; hovering/focusing morphs the dots into
+// the other language as a preview, then the click just follows the href —
+// each language lives on its own static HTML page, there's no in-page
+// state to restore, so the morph only ever needs to run one-way at a time.
+function initLangSwitchDots() {
+  const GLYPHS = {
+    R: ['####.', '#...#', '#...#', '####.', '#.#..', '#..#.', '#...#'],
+    U: ['#...#', '#...#', '#...#', '#...#', '#...#', '#...#', '.###.'],
+    E: ['#####', '#....', '#....', '####.', '#....', '#....', '#####'],
+    N: ['#...#', '##..#', '#.#.#', '#.#.#', '#..##', '#...#', '#...#'],
+  };
+  function glyphPoints(letter, offsetCol) {
+    const pts = [];
+    GLYPHS[letter].forEach((row, r) => {
+      for (let c = 0; c < row.length; c++) if (row[c] === '#') pts.push({ col: offsetCol + c, row: r });
+    });
+    return pts;
+  }
+  function wordPoints(word) {
+    let pts = [];
+    word.split('').forEach((letter, i) => { pts = pts.concat(glyphPoints(letter, i * 6)); });
+    return pts;
+  }
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cols = 11, rows = 7, cell = 3.4, cssW = 44, cssH = 26;
+  const padX = (cssW - (cols - 1) * cell) / 2;
+  const padY = (cssH - (rows - 1) * cell) / 2;
+  const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#f2f2f0';
+
+  document.querySelectorAll('.lang-switch[data-lang]').forEach((link) => {
+    const canvas = link.querySelector('.ls-canvas');
+    const fallback = link.querySelector('.ls-fallback');
+    if (!canvas || !canvas.getContext) return;
+
+    const currentWord = link.dataset.lang === 'ru' ? 'RU' : 'EN';
+    const targetWord = link.dataset.targetLang === 'ru' ? 'RU' : 'EN';
+
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = cssW * dpr;
+    canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    ctx.scale(dpr, dpr);
+
+    const ptsCurrent = wordPoints(currentWord);
+    const ptsTarget = wordPoints(targetWord);
+    const total = Math.max(ptsCurrent.length, ptsTarget.length);
+    const dots = [];
+    for (let i = 0; i < total; i++) {
+      const a = ptsCurrent[i] || ptsTarget[i];
+      const b = ptsTarget[i] || ptsCurrent[i];
+      dots.push({
+        aCol: a.col, aRow: a.row, aOn: i < ptsCurrent.length,
+        bCol: b.col, bRow: b.row, bOn: i < ptsTarget.length,
+        col: a.col, row: a.row, opacity: i < ptsCurrent.length ? 1 : 0,
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, cssW, cssH);
+      ctx.fillStyle = ink;
+      dots.forEach((d) => {
+        if (d.opacity <= 0.02) return;
+        ctx.globalAlpha = Math.min(1, d.opacity) * 0.92;
+        ctx.beginPath();
+        ctx.arc(padX + d.col * cell, padY + d.row * cell, 1.15, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    let animId = null;
+    function goTo(next) {
+      const toTarget = next === 'target';
+      if (reduceMotion) {
+        dots.forEach((d) => {
+          d.col = toTarget ? d.bCol : d.aCol;
+          d.row = toTarget ? d.bRow : d.aRow;
+          d.opacity = (toTarget ? d.bOn : d.aOn) ? 1 : 0;
+        });
+        draw();
+        return;
+      }
+      if (animId) cancelAnimationFrame(animId);
+      const froms = dots.map((d) => ({ col: d.col, row: d.row, opacity: d.opacity }));
+      let start = null;
+      const duration = 420;
+      function frame(now) {
+        if (start === null) start = now;
+        const t = Math.min(1, (now - start) / duration);
+        dots.forEach((d, i) => {
+          const targetCol = toTarget ? d.bCol : d.aCol;
+          const targetRow = toTarget ? d.bRow : d.aRow;
+          const targetOn = toTarget ? d.bOn : d.aOn;
+          const delay = (targetCol / (cols - 1)) * 0.18;
+          const lt = Math.max(0, Math.min(1, (t - delay) / (1 - delay)));
+          const ease = easeOutCubic(lt);
+          d.col = lerp(froms[i].col, targetCol, ease);
+          d.row = lerp(froms[i].row, targetRow, ease);
+          d.opacity = lerp(froms[i].opacity, targetOn ? 1 : 0, ease);
+        });
+        draw();
+        if (t < 1) animId = requestAnimationFrame(frame);
+      }
+      animId = requestAnimationFrame(frame);
+    }
+
+    draw();
+    canvas.style.display = 'block';
+    if (fallback) fallback.style.display = 'none';
+
+    link.addEventListener('mouseenter', () => goTo('target'));
+    link.addEventListener('mouseleave', () => goTo('current'));
+    link.addEventListener('focus', () => goTo('target'));
+    link.addEventListener('blur', () => goTo('current'));
+    link.addEventListener('touchstart', () => goTo('target'), { passive: true });
+  });
+}
+
 (() => {
+  initLangSwitchDots();
+
   // homepage hero: spans the whole page top (behind the nav) down through
   // the hero buttons, with a long fade tail
   createDotField(document.getElementById('heroCanvas'), {

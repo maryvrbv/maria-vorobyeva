@@ -130,41 +130,34 @@ header.nav.nav-hero{ position: static; background: transparent; }
 .nav-links a:hover{ color: var(--ink); }
 .nav-links a.active{ color: var(--ink); border-color: var(--ink); }
 
-/* ru/en language switch, right end of the nav links — capsule toggle:
-   a pill track with the current language shown as a solid chip */
+/* ru/en language switch, right end of the nav links — a small dot-matrix
+   glyph, built from the same dot engine as the hero canvases. At rest it
+   shows the current language; hover/focus morphs the dots into a preview
+   of the other one before the click actually navigates there (script.js).
+   .ls-fallback is the plain-text link shown until that script runs. */
 .lang-switch{
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-full);
-  line-height: 1;
-}
-.lang-switch .current,
-.lang-switch a{
-  display: inline-flex;
-  align-items: center;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  padding: 5px 10px;
-  border-radius: var(--radius-full);
+  justify-content: center;
   text-decoration: none;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  transition: background .2s ease;
 }
-.lang-switch .current{ background: var(--ink); color: var(--paper); }
-.lang-switch a{ color: var(--ink-soft); background: transparent; transition: color .2s ease, background .2s ease; }
-.lang-switch a:hover{ color: var(--ink); background: var(--paper-raised); }
+.lang-switch:hover,
+.lang-switch:focus-visible{ background: var(--paper-raised); }
+.ls-fallback{ font-size: 12px; font-weight: 600; letter-spacing: 0.02em; color: var(--ink-soft); }
+.ls-canvas{ display: none; }
 
 @media (max-width: 480px){
   .nav-inner{ padding: 18px 20px; }
   .nav-name{ font-size: 14.5px; }
   .nav-links{ gap: 14px; }
   /* Кейсы/Опыт/CV don't fit comfortably next to the switch on small screens —
-     keep only the logo and the language toggle in the mobile nav */
-  .nav-links > a{ display: none; }
-  .lang-switch .current,
-  .lang-switch a{ font-size: 12.5px; padding: 6px 12px; }
+     keep only the logo and the language switch in the mobile nav. The
+     switch is itself a direct-child <a> now too, so it's explicitly excluded */
+  .nav-links > a:not(.lang-switch){ display: none; }
+  .lang-switch{ padding: 8px; }
 }
 .badge{ font-size: 13px; font-weight: 500; color: var(--ink-soft); display: flex; align-items: center; gap: 7px; }
 .dot{ width: 7px; height: 7px; border-radius: var(--radius-full); background: var(--accent); display: inline-block; animation: pulse 2.4s ease-in-out infinite; }
