@@ -155,14 +155,17 @@ h1{
 }
 h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
 .hero h1{ margin: 0; font-size: clamp(32px, 7vw, 59px); text-align: center; }
-.hero h1 .wave{ font-weight: 400; font-size: 0.85em; vertical-align: -0.06em; display: inline-block; transform-origin: 70% 70%; animation: wave 1.4s ease-in-out 1; }
+.hero h1 .wave{ font-weight: 400; font-size: 0.85em; vertical-align: -0.06em; display: inline-block; transform-origin: 70% 70%; animation: wave 10s ease-in-out infinite; }
+/* the actual wave motion is squeezed into the first 1.4s of a 10s cycle
+   (same relative timing as before, just scaled by 1.4/10), then holds flat
+   for the rest — so it plays once on load and repeats every 10s */
 @keyframes wave{
-  0%, 100%{ transform: rotate(0deg); }
-  15%{ transform: rotate(14deg); }
-  30%{ transform: rotate(-8deg); }
-  45%{ transform: rotate(14deg); }
-  60%{ transform: rotate(-4deg); }
-  75%{ transform: rotate(10deg); }
+  0%, 14%, 100%{ transform: rotate(0deg); }
+  2.1%{ transform: rotate(14deg); }
+  4.2%{ transform: rotate(-8deg); }
+  6.3%{ transform: rotate(14deg); }
+  8.4%{ transform: rotate(-4deg); }
+  10.5%{ transform: rotate(10deg); }
 }
 @media (prefers-reduced-motion: reduce){
   .hero h1 .wave{ animation: none; }
