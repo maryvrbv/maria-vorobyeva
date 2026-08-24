@@ -140,7 +140,7 @@ header.nav.nav-hero{ position: static; background: transparent; }
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  padding: 4px 6px;
+  padding: 2px 6px 6px;
   border-radius: var(--radius-sm);
   transition: background .2s ease;
 }
