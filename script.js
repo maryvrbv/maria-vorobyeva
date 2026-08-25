@@ -368,7 +368,25 @@ function hexToRgb01(hex) {
   return [((num >> 16) & 255) / 255, ((num >> 8) & 255) / 255, (num & 255) / 255];
 }
 
-// mesh-heading hover (case-h2 preview): warps a section heading across a
+// greedy word-wrap for a canvas 2D context — ctx.font must already be set
+function wrapTextLines(ctx, text, maxWidth) {
+  const words = text.split(' ');
+  const lines = [];
+  let current = '';
+  for (const word of words) {
+    const test = current ? current + ' ' + word : word;
+    if (current && ctx.measureText(test).width > maxWidth) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = test;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+// mesh-heading hover (case hero title): warps a case page's <h1> across a
 // WebGL2 grid that drags along with the cursor's motion and springs back,
 // with a colour-split fringe on the displaced glyph edges — ported from
 // the Originkit MeshTextHover physics (proximity-based drag, not a fixed
@@ -387,6 +405,20 @@ function initMeshHeading(el) {
   const w = el.offsetWidth, h = el.offsetHeight;
   if (!w || !h) return;
 
+  // several case titles wrap onto 2 lines at this container's width — count
+  // the wrapped line fragments via Range.getClientRects() rather than an
+  // offsetHeight/line-height ratio (the site's desktop zoom:1.25 scales
+  // those two measurements inconsistently, which made a ratio unreliable;
+  // a rect count isn't affected by the scale it's read at)
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const numLines = Math.max(1, range.getClientRects().length);
+
+  // pin the span's own box to its current (wrapped) width — turning it into
+  // a shrink-to-fit inline-block below would otherwise size it to the
+  // text's unwrapped width and push it past the container edge
+  el.style.width = w + 'px';
+
   const pad = 28;
   const paddedW = w + pad * 2, paddedH = h + pad * 2;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -400,7 +432,13 @@ function initMeshHeading(el) {
   tctx.fillStyle = cs.color;
   tctx.textBaseline = 'middle';
   tctx.textAlign = 'left';
-  tctx.fillText(text, pad, paddedH / 2);
+
+  // re-wrap the words ourselves at the pinned width — canvas text has no
+  // native wrapping, and this only needs to be close enough to the real
+  // layout to read cleanly, not pixel-identical to it
+  const lines = numLines === 1 ? [text] : wrapTextLines(tctx, text, w);
+  const lineH = h / lines.length;
+  lines.forEach((line, i) => tctx.fillText(line, pad, pad + lineH * (i + 0.5)));
 
   const canvas = document.createElement('canvas');
   canvas.className = 'mesh-canvas';

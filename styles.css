@@ -613,10 +613,10 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 
 /* major numbered sections ("1. О проекте") */
 .case-h2{
-  font-weight: 800;
-  font-size: 38px;
+  font-weight: 700;
+  font-size: 24px;
   color: var(--ink);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   margin: 0 0 4px;
   padding-top: 56px;
 }
@@ -633,16 +633,19 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .case-h3:first-of-type{ margin-top: 28px; }
 
 @media (max-width: 640px){
-  .case-h2{ font-size: 27px; padding-top: 40px; }
+  .case-h2{ font-size: 21px; padding-top: 40px; }
   .case-h3{ font-size: 16.5px; margin: 30px 0 10px; }
   .case-h3:first-of-type{ margin-top: 22px; }
 }
 
-/* mesh-heading hover (case-h2 preview) — the heading stays real text in
-   the DOM; it only turns transparent once script.js has a WebGL canvas
-   ready to draw the warped, colour-split version on top of it */
-.mesh-heading{ position: relative; display: inline-block; }
-.mesh-heading.mesh-ready{ color: transparent; }
+/* mesh-heading hover (case hero title preview) — the heading stays real
+   text in the DOM; it only turns transparent once script.js has a WebGL
+   canvas ready to draw the warped, colour-split version on top of it */
+/* plain inline by default so long titles keep wrapping normally on
+   mobile/no-JS, where the effect never activates; only becomes a sized
+   inline-block box once JS has measured a stable single-line box and is
+   ready to position the canvas over it */
+.mesh-heading.mesh-ready{ position: relative; display: inline-block; color: transparent; }
 .mesh-canvas{ position: absolute; pointer-events: none; }
 
 .case-lead{ color: var(--ink); font-weight: 600; font-size: 15.5px; margin: 0 0 8px; }
