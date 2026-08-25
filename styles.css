@@ -465,7 +465,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 
 /* ================= CASE STUDY PAGE ================= */
 
-.case-hero{ position: relative; padding: 48px 0 31px; }
+.case-hero{ position: relative; padding: 48px 0 22px; }
 /* page-level, not scoped to .case-hero: spans from the very top (behind the
    nav) down through the case title/description, fading out before the first
    body heading — then breaks out of .wrap-wide's max-width to span the full
@@ -487,7 +487,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 }
 .back-link:hover{ color: var(--ink); }
 .back-link i{ font-size: 24px; }
-.case-hero h1{ font-size: clamp(24px, 3.6vw, 34px); max-width: 640px; margin-bottom: 15px; }
+.case-hero h1{ font-size: clamp(24px, 3.6vw, 34px); max-width: 640px; margin-bottom: 11px; }
 .case-hero .desc{ font-size: 16px; color: var(--body-text); max-width: 560px; margin-bottom: 30px; }
 
 /* neutral category pill — not an accent color */
@@ -517,7 +517,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .meta-strip .k{ font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
 .meta-strip .v{ font-size: 13.5px; color: var(--ink); }
 
-.case-body{ padding: 39px 0 56px; }
+.case-body{ padding: 27px 0 56px; }
 .case-block{ max-width: 620px; margin-bottom: 48px; }
 .case-block:last-child{ margin-bottom: 0; }
 .case-block .num{
@@ -637,6 +637,16 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
   .case-h3{ font-size: 16.5px; margin: 30px 0 10px; }
   .case-h3:first-of-type{ margin-top: 22px; }
 }
+
+/* mesh-heading hover (case hero title preview) — the heading stays real
+   text in the DOM; it only turns transparent once script.js has a WebGL
+   canvas ready to draw the warped, colour-split version on top of it */
+/* plain inline by default so long titles keep wrapping normally on
+   mobile/no-JS, where the effect never activates; only becomes a sized
+   inline-block box once JS has measured a stable single-line box and is
+   ready to position the canvas over it */
+.mesh-heading.mesh-ready{ position: relative; display: inline-block; color: transparent; }
+.mesh-canvas{ position: absolute; pointer-events: none; }
 
 .case-lead{ color: var(--ink); font-weight: 600; font-size: 15.5px; margin: 0 0 8px; }
 

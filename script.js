@@ -361,8 +361,347 @@ function initLangSwitchDots() {
   });
 }
 
+function hexToRgb01(hex) {
+  const raw = hex.replace('#', '');
+  const h = raw.length === 3 ? raw.split('').map((c) => c + c).join('') : raw;
+  const num = parseInt(h, 16);
+  return [((num >> 16) & 255) / 255, ((num >> 8) & 255) / 255, (num & 255) / 255];
+}
+
+// greedy word-wrap for a canvas 2D context — ctx.font must already be set
+function wrapTextLines(ctx, text, maxWidth) {
+  const words = text.split(' ');
+  const lines = [];
+  let current = '';
+  for (const word of words) {
+    const test = current ? current + ' ' + word : word;
+    if (current && ctx.measureText(test).width > maxWidth) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = test;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+// mesh-heading hover (case hero title): warps a case page's <h1> across a
+// WebGL2 grid that drags along with the cursor's motion and springs back,
+// with a colour-split fringe on the displaced glyph edges — ported from
+// the Originkit MeshTextHover physics (proximity-based drag, not a fixed
+// repel radius), adapted for a left-aligned in-page heading rather than a
+// centered full-bleed hero word: per-instance grid sized to the actual
+// element instead of a fixed 96x40, and colours pulled from constants
+// below instead of Framer controls. Gated the same way as the rest of the
+// site's hover flourishes: hover-capable desktop only, off under
+// prefers-reduced-motion, real text stays in the DOM throughout.
+function initMeshHeading(el) {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const text = el.textContent;
+  const cs = getComputedStyle(el);
+  const w = el.offsetWidth, h = el.offsetHeight;
+  if (!w || !h) return;
+
+  // several case titles wrap onto 2 lines at this container's width — count
+  // the wrapped line fragments via Range.getClientRects() rather than an
+  // offsetHeight/line-height ratio (the site's desktop zoom:1.25 scales
+  // those two measurements inconsistently, which made a ratio unreliable;
+  // a rect count isn't affected by the scale it's read at)
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const numLines = Math.max(1, range.getClientRects().length);
+
+  // pin the span's own box to its current (wrapped) width — turning it into
+  // a shrink-to-fit inline-block below would otherwise size it to the
+  // text's unwrapped width and push it past the container edge
+  el.style.width = w + 'px';
+
+  const pad = 28;
+  const paddedW = w + pad * 2, paddedH = h + pad * 2;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  const texCanvas = document.createElement('canvas');
+  texCanvas.width = paddedW * dpr;
+  texCanvas.height = paddedH * dpr;
+  const tctx = texCanvas.getContext('2d');
+  tctx.scale(dpr, dpr);
+  tctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  tctx.fillStyle = cs.color;
+  tctx.textBaseline = 'middle';
+  tctx.textAlign = 'left';
+
+  // re-wrap the words ourselves at the pinned width — canvas text has no
+  // native wrapping, and this only needs to be close enough to the real
+  // layout to read cleanly, not pixel-identical to it
+  const lines = numLines === 1 ? [text] : wrapTextLines(tctx, text, w);
+  const lineH = h / lines.length;
+  lines.forEach((line, i) => tctx.fillText(line, pad, pad + lineH * (i + 0.5)));
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'mesh-canvas';
+  canvas.setAttribute('aria-hidden', 'true');
+  canvas.style.left = -pad + 'px';
+  canvas.style.top = -pad + 'px';
+  canvas.style.width = paddedW + 'px';
+  canvas.style.height = paddedH + 'px';
+  canvas.width = paddedW * dpr;
+  canvas.height = paddedH * dpr;
+
+  const gl = canvas.getContext('webgl2', { alpha: true, antialias: true, premultipliedAlpha: true });
+  if (!gl) return;
+
+  const VERT_SRC = `#version 300 es
+in vec2 aPos;
+in vec2 aUv;
+in vec2 aDisp;
+out vec2 vUv;
+out float vMag;
+void main() {
+  gl_Position = vec4(aPos + aDisp, 0.0, 1.0);
+  vUv = aUv;
+  vMag = length(aDisp);
+}`;
+
+  const FRAG_SRC = `#version 300 es
+precision highp float;
+in vec2 vUv;
+in float vMag;
+out vec4 outColor;
+uniform sampler2D uTex;
+uniform vec3 uColorA;
+uniform vec3 uColorB;
+void main() {
+  vec4 base = texture(uTex, vUv);
+  float o = 0.005 * clamp(vMag * 8.0, 0.0, 1.0);
+  float aOff = texture(uTex, vUv + vec2(o, 0.0)).a;
+  float bOff = texture(uTex, vUv - vec2(o, 0.0)).a;
+  vec3 col = base.rgb * base.a;
+  col += uColorA * max(0.0, aOff - base.a);
+  col += uColorB * max(0.0, bOff - base.a);
+  float aMax = max(base.a, max(aOff, bOff));
+  outColor = vec4(col, aMax);
+}`;
+
+  function compile(type, src) {
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+      console.error('mesh-heading shader error:', gl.getShaderInfoLog(sh));
+      gl.deleteShader(sh);
+      return null;
+    }
+    return sh;
+  }
+  const vs = compile(gl.VERTEX_SHADER, VERT_SRC);
+  const fs = compile(gl.FRAGMENT_SHADER, FRAG_SRC);
+  if (!vs || !fs) return;
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.error('mesh-heading link error:', gl.getProgramInfoLog(prog));
+    return;
+  }
+
+  // grid density scaled to the heading's own size (the reference component
+  // uses a fixed 96x40 sized for a full-bleed hero word; a section heading
+  // is smaller and several can be on one page, so this keeps the vertex
+  // count — and GPU cost — proportional instead)
+  const cell = 11;
+  const cols = Math.min(90, Math.max(24, Math.round(paddedW / cell)));
+  const rows = Math.min(26, Math.max(7, Math.round(paddedH / cell)));
+  const vertCount = (cols + 1) * (rows + 1);
+
+  const positions = new Float32Array(vertCount * 2);
+  const uvs = new Float32Array(vertCount * 2);
+  const disp = new Float32Array(vertCount * 2);
+  const vel = new Float32Array(vertCount * 2);
+
+  let vi = 0;
+  for (let row = 0; row <= rows; row++) {
+    for (let col = 0; col <= cols; col++) {
+      const u = col / cols, v = row / rows;
+      positions[vi * 2] = u * 2 - 1;
+      positions[vi * 2 + 1] = (1 - v) * 2 - 1;
+      uvs[vi * 2] = u;
+      uvs[vi * 2 + 1] = v;
+      vi++;
+    }
+  }
+
+  const indices = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const i0 = row * (cols + 1) + col;
+      const i1 = i0 + 1;
+      const i2 = i0 + cols + 1;
+      const i3 = i2 + 1;
+      indices.push(i0, i2, i1, i1, i2, i3);
+    }
+  }
+  const indexArray = new Uint16Array(indices);
+
+  const posBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+  const aPos = gl.getAttribLocation(prog, 'aPos');
+
+  const uvBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, uvs, gl.STATIC_DRAW);
+  const aUv = gl.getAttribLocation(prog, 'aUv');
+
+  const dispBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, dispBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, disp, gl.DYNAMIC_DRAW);
+  const aDisp = gl.getAttribLocation(prog, 'aDisp');
+
+  const idxBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idxBuf);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf);
+  gl.enableVertexAttribArray(aUv);
+  gl.vertexAttribPointer(aUv, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, dispBuf);
+  gl.enableVertexAttribArray(aDisp);
+  gl.vertexAttribPointer(aDisp, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idxBuf);
+
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+  // no FLIP_Y: texture v=0 samples the canvas's own row 0 (its top)
+  // directly, matching the vertex grid's row=0 -> v=0 -> clip-top mapping
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texCanvas);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); // premultiplied
+
+  const uTexLoc = gl.getUniformLocation(prog, 'uTex');
+  const uColorALoc = gl.getUniformLocation(prog, 'uColorA');
+  const uColorBLoc = gl.getUniformLocation(prog, 'uColorB');
+  // colour split — on by default, matching the reference component's
+  // COMPONENT_DEFAULTS (customColors: ["#ff40c0", "#40ff80"])
+  const colorA = hexToRgb01('#ff40c0');
+  const colorB = hexToRgb01('#40ff80');
+
+  // physics constants, close to the reference (DRAG/SPRING_K/DAMPING/DT) —
+  // proximity is a smooth 1/(1+d) falloff rather than a hard radius, so a
+  // vertex right under the cursor gets far more pull than one at the edge
+  const FORCE = 1.6, SPRING_K = 0.08, DAMPING = 0.9, DT = 0.1, PROX_SOFTNESS = 0.09;
+  const WAKE_EPS = 0.0006;
+  let curX = 99, curY = 99, prevX = 99, prevY = 99, velX = 0, velY = 0, inside = false;
+  let pendingEvent = null, rafId = null, hovering = false;
+
+  function applyPointer() {
+    if (!pendingEvent) return;
+    const rect = canvas.getBoundingClientRect();
+    const e = pendingEvent;
+    const scaleX = rect.width ? paddedW / rect.width : 1;
+    const scaleY = rect.height ? paddedH / rect.height : 1;
+    const localX = (e.clientX - rect.left) * scaleX;
+    const localY = (e.clientY - rect.top) * scaleY;
+    const nx = (localX / paddedW) * 2 - 1;
+    const ny = 1 - (localY / paddedH) * 2;
+    if (!inside) { prevX = nx; prevY = ny; inside = true; }
+    curX = nx; curY = ny;
+    pendingEvent = null;
+  }
+
+  function step() {
+    applyPointer();
+    velX = curX - prevX;
+    velY = curY - prevY;
+    const vmag = Math.hypot(velX, velY);
+    if (vmag > 0.3) { velX = 0; velY = 0; } // ignore first-frame teleport jump
+    prevX = curX; prevY = curY;
+
+    let maxMag = 0;
+    for (let i = 0; i < vertCount; i++) {
+      const i2 = i * 2;
+      const px = positions[i2], py = positions[i2 + 1];
+      const dx = disp[i2], dy = disp[i2 + 1];
+
+      const cx = curX - (px + dx), cy = curY - (py + dy);
+      const cd = Math.hypot(cx, cy);
+      const proximity = Math.max(0, 1 / (1 + cd / PROX_SOFTNESS) - 0.1);
+
+      let vx = vel[i2], vy = vel[i2 + 1];
+      vx += velX * FORCE * proximity;
+      vy += velY * FORCE * proximity;
+      vx -= dx * SPRING_K;
+      vy -= dy * SPRING_K;
+      vx *= DAMPING;
+      vy *= DAMPING;
+      vel[i2] = vx; vel[i2 + 1] = vy;
+
+      let ndx = dx + vx * DT, ndy = dy + vy * DT;
+      if (ndx > 1) ndx = 1; else if (ndx < -1) ndx = -1;
+      if (ndy > 1) ndy = 1; else if (ndy < -1) ndy = -1;
+      disp[i2] = ndx; disp[i2 + 1] = ndy;
+
+      const mag = Math.hypot(ndx, ndy);
+      if (mag > maxMag) maxMag = mag;
+    }
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, dispBuf);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, disp);
+
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(prog);
+    gl.bindVertexArray(vao);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.uniform1i(uTexLoc, 0);
+    gl.uniform3f(uColorALoc, colorA[0], colorA[1], colorA[2]);
+    gl.uniform3f(uColorBLoc, colorB[0], colorB[1], colorB[2]);
+    gl.drawElements(gl.TRIANGLES, indexArray.length, gl.UNSIGNED_SHORT, 0);
+
+    if (maxMag > WAKE_EPS || hovering) {
+      rafId = requestAnimationFrame(step);
+    } else {
+      rafId = null;
+    }
+  }
+
+  function wake() {
+    if (rafId === null) rafId = requestAnimationFrame(step);
+  }
+
+  el.classList.add('mesh-ready');
+  el.appendChild(canvas);
+
+  el.addEventListener('mousemove', (e) => { pendingEvent = e; wake(); }, { passive: true });
+  el.addEventListener('mouseenter', () => { hovering = true; wake(); });
+  el.addEventListener('mouseleave', () => {
+    hovering = false;
+    inside = false; curX = 99; curY = 99; prevX = 99; prevY = 99;
+    wake();
+  });
+
+  step(); // paint the at-rest (zero-displacement) heading immediately
+}
+
 (() => {
   initLangSwitchDots();
+  document.querySelectorAll('.mesh-heading').forEach(initMeshHeading);
 
   // homepage hero: spans the whole page top (behind the nav) down through
   // the hero buttons, with a long fade tail
