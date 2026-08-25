@@ -37,7 +37,7 @@
   --highlight-bg: #241d10;
 
   --max: 680px;
-  --max-wide: 720px;
+  --max-wide: 1080px;
 
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -370,6 +370,11 @@ section{ padding: 64px 0; }
 .case:last-child{ margin-bottom: 0; padding-bottom: 0; }
 .case h3{ font-weight: 600; font-size: 24px; margin: 0 0 16px; color: var(--ink); }
 .case p.desc{ color: var(--body-text); font-size: 14.5px; max-width: 560px; margin: 0 0 16px; }
+/* wider container gives the cover image a lot more presence — bump the
+   heading to match, otherwise it reads too small next to a bigger image */
+@media (min-width: 900px){
+  .case h3{ font-size: 28px; }
+}
 @media (max-width: 640px){
   .case h3{ font-size: 20px; margin-bottom: 12px; }
 }
@@ -392,7 +397,8 @@ section{ padding: 64px 0; }
 .case:hover .case-link{ background: var(--paper-raised); border-color: var(--ink-soft); }
 .case-link i{ font-size: 24px; }
 .case-cover{ border-radius: var(--radius-md); overflow: hidden; transition: box-shadow .2s ease; }
-.case-cover img{ width: 100%; display: block; border: none; }
+.case-cover img{ width: 100%; display: block; border: none; transition: transform .5s ease; }
+.case:hover .case-cover img{ transform: scale(1.025); }
 .case:hover .case-cover{ box-shadow: var(--shadow-1); }
 
 /* ---------- experience list (home page) ---------- */
