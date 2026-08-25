@@ -265,6 +265,14 @@ h1 em{ font-style: normal; font-weight: 700; color: var(--accent); }
 .btn-pill-secondary:hover{ background: var(--paper-raised); border-color: var(--ink-soft); }
 .btn-icon{ font-size: 18px; line-height: 1; flex-shrink: 0; }
 
+/* mesh-text hover on the hero buttons — the label stays real text in the
+   DOM (layout, SEO, screen readers all unaffected); it only turns
+   transparent once script.js has a WebGL canvas ready to draw the
+   warped version on top of it */
+.mesh-text{ position: relative; display: inline-block; }
+.mesh-text.mesh-ready{ color: transparent; }
+.mesh-canvas{ position: absolute; pointer-events: none; }
+
 /* ---------- section shared ---------- */
 section{ padding: 64px 0; }
 .section-title{

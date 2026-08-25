@@ -361,8 +361,291 @@ function initLangSwitchDots() {
   });
 }
 
+function hexToRgb01(hex) {
+  const raw = hex.replace('#', '');
+  const h = raw.length === 3 ? raw.split('').map((c) => c + c).join('') : raw;
+  const num = parseInt(h, 16);
+  return [((num >> 16) & 255) / 255, ((num >> 8) & 255) / 255, (num & 255) / 255];
+}
+
+// mesh-text hover: warps a short button label across a fine WebGL2 grid
+// that drags toward the cursor and springs back — an accent touch on the
+// hero buttons. Gated to hover-capable desktops and off under
+// prefers-reduced-motion; falls back to the plain (real, still-in-DOM)
+// text label if WebGL2 isn't available at all.
+function initMeshText(el) {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const text = el.textContent;
+  const cs = getComputedStyle(el);
+  const w = el.offsetWidth, h = el.offsetHeight;
+  if (!w || !h) return;
+
+  const pad = 16;
+  const paddedW = w + pad * 2, paddedH = h + pad * 2;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  // render the label onto a plain 2D canvas (never inserted in the page) —
+  // its alpha channel becomes the glyph mask the shader reads
+  const texCanvas = document.createElement('canvas');
+  texCanvas.width = paddedW * dpr;
+  texCanvas.height = paddedH * dpr;
+  const tctx = texCanvas.getContext('2d');
+  tctx.scale(dpr, dpr);
+  tctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  tctx.fillStyle = cs.color;
+  tctx.textBaseline = 'middle';
+  tctx.textAlign = 'left';
+  tctx.fillText(text, pad, paddedH / 2);
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'mesh-canvas';
+  canvas.setAttribute('aria-hidden', 'true');
+  canvas.style.left = -pad + 'px';
+  canvas.style.top = -pad + 'px';
+  canvas.style.width = paddedW + 'px';
+  canvas.style.height = paddedH + 'px';
+  canvas.width = paddedW * dpr;
+  canvas.height = paddedH * dpr;
+
+  const gl = canvas.getContext('webgl2', { alpha: true, antialias: true, premultipliedAlpha: false });
+  if (!gl) return;
+
+  const VERT_SRC = `#version 300 es
+in vec2 aPos;
+in vec2 aUv;
+in vec2 aDisp;
+out vec2 vUv;
+out float vMag;
+void main() {
+  gl_Position = vec4(aPos + aDisp, 0.0, 1.0);
+  vUv = aUv;
+  vMag = length(aDisp);
+}`;
+
+  const FRAG_SRC = `#version 300 es
+precision highp float;
+in vec2 vUv;
+in float vMag;
+out vec4 outColor;
+uniform sampler2D uTex;
+uniform vec3 uFringe;
+void main() {
+  vec4 base = texture(uTex, vUv);
+  float o = clamp(vMag * 6.0, 0.0, 1.0) * 0.006;
+  float a1 = texture(uTex, vUv + vec2(o, 0.0)).a;
+  float a2 = texture(uTex, vUv - vec2(o, 0.0)).a;
+  vec3 col = base.rgb * base.a;
+  col += uFringe * max(0.0, a1 - base.a) * 0.9;
+  col += (vec3(1.0) - uFringe) * max(0.0, a2 - base.a) * 0.35;
+  float alpha = max(base.a, max(a1, a2));
+  outColor = vec4(col, alpha);
+}`;
+
+  function compile(type, src) {
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+      console.error('mesh-text shader error:', gl.getShaderInfoLog(sh));
+      gl.deleteShader(sh);
+      return null;
+    }
+    return sh;
+  }
+  const vs = compile(gl.VERTEX_SHADER, VERT_SRC);
+  const fs = compile(gl.FRAGMENT_SHADER, FRAG_SRC);
+  if (!vs || !fs) return;
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.error('mesh-text link error:', gl.getProgramInfoLog(prog));
+    return;
+  }
+
+  // one vertex roughly every 6px
+  const cell = 6;
+  const cols = Math.max(6, Math.round(paddedW / cell));
+  const rows = Math.max(3, Math.round(paddedH / cell));
+  const vertCount = (cols + 1) * (rows + 1);
+
+  const positions = new Float32Array(vertCount * 2);
+  const uvs = new Float32Array(vertCount * 2);
+  const disp = new Float32Array(vertCount * 2);
+  const vel = new Float32Array(vertCount * 2);
+  const clipDisp = new Float32Array(vertCount * 2);
+
+  let vi = 0;
+  for (let row = 0; row <= rows; row++) {
+    for (let col = 0; col <= cols; col++) {
+      const u = col / cols, v = row / rows;
+      positions[vi * 2] = u * 2 - 1;
+      positions[vi * 2 + 1] = (1 - v) * 2 - 1;
+      uvs[vi * 2] = u;
+      uvs[vi * 2 + 1] = v;
+      vi++;
+    }
+  }
+
+  const indices = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const i0 = row * (cols + 1) + col;
+      const i1 = i0 + 1;
+      const i2 = i0 + cols + 1;
+      const i3 = i2 + 1;
+      indices.push(i0, i2, i1, i1, i2, i3);
+    }
+  }
+  const indexArray = new Uint16Array(indices);
+
+  const posBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+  const aPos = gl.getAttribLocation(prog, 'aPos');
+
+  const uvBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, uvs, gl.STATIC_DRAW);
+  const aUv = gl.getAttribLocation(prog, 'aUv');
+
+  const dispBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, dispBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, disp, gl.DYNAMIC_DRAW);
+  const aDisp = gl.getAttribLocation(prog, 'aDisp');
+
+  const idxBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idxBuf);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf);
+  gl.enableVertexAttribArray(aUv);
+  gl.vertexAttribPointer(aUv, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, dispBuf);
+  gl.enableVertexAttribArray(aDisp);
+  gl.vertexAttribPointer(aDisp, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idxBuf);
+
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  // no FLIP_Y: texture v=0 samples the canvas's own row 0 (its top) directly,
+  // matching the vertex grid's row=0 -> v=0 -> clip-space top mapping below
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texCanvas);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  const uTexLoc = gl.getUniformLocation(prog, 'uTex');
+  const uFringeLoc = gl.getUniformLocation(prog, 'uFringe');
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#7c3aed';
+  const fringe = hexToRgb01(accent);
+
+  const RADIUS = 46, DRAG = 0.9, DAMPING = 0.86, SPRING = 0.13, MAX_DISP = 22, WAKE_EPS = 0.02;
+  let mouseX = -9999, mouseY = -9999, lastX = -9999, lastY = -9999;
+  let pendingEvent = null, rafId = null, hovering = false;
+
+  function applyPointer() {
+    if (!pendingEvent) return;
+    const rect = canvas.getBoundingClientRect();
+    const e = pendingEvent;
+    const scaleX = rect.width ? paddedW / rect.width : 1;
+    const scaleY = rect.height ? paddedH / rect.height : 1;
+    lastX = mouseX; lastY = mouseY;
+    mouseX = (e.clientX - rect.left) * scaleX;
+    mouseY = (e.clientY - rect.top) * scaleY;
+    pendingEvent = null;
+  }
+
+  function step() {
+    applyPointer();
+    const dx = lastX > -9000 ? mouseX - lastX : 0;
+    const dy = lastY > -9000 ? mouseY - lastY : 0;
+    let maxMag = 0;
+
+    for (let i = 0; i < vertCount; i++) {
+      if (mouseX > -9000 && (dx || dy)) {
+        const px = (i % (cols + 1)) / cols * paddedW;
+        const py = Math.floor(i / (cols + 1)) / rows * paddedH;
+        const ddx = px - mouseX, ddy = py - mouseY;
+        const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+        if (dist < RADIUS) {
+          const inf = 1 - dist / RADIUS;
+          vel[i * 2] += dx * DRAG * inf * inf;
+          vel[i * 2 + 1] += dy * DRAG * inf * inf;
+        }
+      }
+      vel[i * 2] *= DAMPING;
+      vel[i * 2 + 1] *= DAMPING;
+      disp[i * 2] += vel[i * 2];
+      disp[i * 2 + 1] += vel[i * 2 + 1];
+      disp[i * 2] *= (1 - SPRING);
+      disp[i * 2 + 1] *= (1 - SPRING);
+      const mag = Math.hypot(disp[i * 2], disp[i * 2 + 1]);
+      if (mag > MAX_DISP) {
+        const s = MAX_DISP / mag;
+        disp[i * 2] *= s; disp[i * 2 + 1] *= s;
+      }
+      if (mag > maxMag) maxMag = mag;
+      clipDisp[i * 2] = disp[i * 2] / paddedW * 2;
+      clipDisp[i * 2 + 1] = -disp[i * 2 + 1] / paddedH * 2;
+    }
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, dispBuf);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, clipDisp);
+
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(prog);
+    gl.bindVertexArray(vao);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.uniform1i(uTexLoc, 0);
+    gl.uniform3f(uFringeLoc, fringe[0], fringe[1], fringe[2]);
+    gl.drawElements(gl.TRIANGLES, indexArray.length, gl.UNSIGNED_SHORT, 0);
+
+    if (maxMag > WAKE_EPS || hovering) {
+      rafId = requestAnimationFrame(step);
+    } else {
+      rafId = null;
+    }
+  }
+
+  function wake() {
+    if (rafId === null) rafId = requestAnimationFrame(step);
+  }
+
+  el.classList.add('mesh-ready');
+  el.appendChild(canvas);
+
+  const btn = el.closest('a') || el.parentElement;
+  btn.addEventListener('mousemove', (e) => { pendingEvent = e; wake(); }, { passive: true });
+  btn.addEventListener('mouseenter', () => { hovering = true; wake(); });
+  btn.addEventListener('mouseleave', () => {
+    hovering = false;
+    mouseX = -9999; mouseY = -9999; lastX = -9999; lastY = -9999;
+    wake();
+  });
+
+  step(); // paint the at-rest (zero-displacement) label immediately —
+          // otherwise the canvas stays blank until the first hover event
+}
+
 (() => {
   initLangSwitchDots();
+  document.querySelectorAll('.hero-actions .mesh-text').forEach(initMeshText);
 
   // homepage hero: spans the whole page top (behind the nav) down through
   // the hero buttons, with a long fade tail
