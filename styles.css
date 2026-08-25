@@ -465,7 +465,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 
 /* ================= CASE STUDY PAGE ================= */
 
-.case-hero{ position: relative; padding: 48px 0 44px; }
+.case-hero{ position: relative; padding: 48px 0 31px; }
 /* page-level, not scoped to .case-hero: spans from the very top (behind the
    nav) down through the case title/description, fading out before the first
    body heading — then breaks out of .wrap-wide's max-width to span the full
@@ -487,7 +487,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 }
 .back-link:hover{ color: var(--ink); }
 .back-link i{ font-size: 24px; }
-.case-hero h1{ font-size: clamp(24px, 3.6vw, 34px); max-width: 640px; }
+.case-hero h1{ font-size: clamp(24px, 3.6vw, 34px); max-width: 640px; margin-bottom: 15px; }
 .case-hero .desc{ font-size: 16px; color: var(--body-text); max-width: 560px; margin-bottom: 30px; }
 
 /* neutral category pill — not an accent color */
@@ -517,7 +517,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .meta-strip .k{ font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
 .meta-strip .v{ font-size: 13.5px; color: var(--ink); }
 
-.case-body{ padding: 56px 0; }
+.case-body{ padding: 39px 0 56px; }
 .case-block{ max-width: 620px; margin-bottom: 48px; }
 .case-block:last-child{ margin-bottom: 0; }
 .case-block .num{
