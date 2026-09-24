@@ -714,9 +714,70 @@ function initClickTracking() {
   });
 }
 
+let toastEl = null;
+let toastHideTimer = null;
+// positions itself just above anchorEl (the clicked button), clamped to stay
+// on-screen, rather than sitting at a fixed spot that can overlap content
+function showToast(message, anchorEl) {
+  if (!toastEl) {
+    toastEl = document.createElement('div');
+    toastEl.className = 'copy-toast';
+    toastEl.setAttribute('role', 'status');
+    toastEl.setAttribute('aria-live', 'polite');
+    toastEl.innerHTML = '<i class="ph-fill ph-check-circle"></i><span></span>';
+    document.body.appendChild(toastEl);
+  }
+  toastEl.querySelector('span').textContent = message;
+
+  const anchorRect = anchorEl.getBoundingClientRect();
+  const toastRect = toastEl.getBoundingClientRect(); // measurable even at opacity:0
+  // getBoundingClientRect() is in post-zoom physical px, but inline
+  // top/left on a fixed element are interpreted in pre-zoom logical px
+  // (same mismatch as applyPointer() above, desktop `zoom: 1.25`) — rescale
+  // using the anchor's own offsetWidth as the pre-zoom reference
+  const zoomRatio = (anchorEl.offsetWidth && anchorRect.width) ? anchorRect.width / anchorEl.offsetWidth : 1;
+  const aLeft = anchorRect.left / zoomRatio;
+  const aTop = anchorRect.top / zoomRatio;
+  const aWidth = anchorRect.width / zoomRatio;
+  const tWidth = toastRect.width / zoomRatio;
+  const tHeight = toastRect.height / zoomRatio;
+  const gap = 12;
+  const left = Math.max(12, Math.min(
+    aLeft + aWidth / 2 - tWidth / 2,
+    window.innerWidth - tWidth - 12
+  ));
+  const top = Math.max(12, aTop - tHeight - gap);
+  toastEl.style.left = `${left}px`;
+  toastEl.style.top = `${top}px`;
+
+  toastEl.classList.add('visible');
+  clearTimeout(toastHideTimer);
+  toastHideTimer = setTimeout(() => toastEl.classList.remove('visible'), 2200);
+}
+
+// clicking an Email CTA copies the address instead of relying on a mailto:
+// handler being configured on the visitor's device (a common dead end) —
+// falls back to letting the mailto: link through if the Clipboard API is
+// unavailable or denied
+function initEmailCopy() {
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('a[href^="mailto:"]');
+    if (!el) return;
+    e.preventDefault();
+    const email = el.href.replace(/^mailto:/, '').split('?')[0];
+    const isRu = document.documentElement.lang === 'ru';
+    navigator.clipboard.writeText(email).then(() => {
+      showToast(isRu ? `Email ${email} скопирован в буфер обмена` : `Email ${email} copied to clipboard`, el);
+    }).catch(() => {
+      window.location.href = el.href; // Clipboard API unavailable — fall back to opening mail client
+    });
+  });
+}
+
 (() => {
   initLangSwitchDots();
   initClickTracking();
+  initEmailCopy();
   document.querySelectorAll('.mesh-heading').forEach(initMeshHeading);
 
   // homepage hero: spans the whole page top (behind the nav) down through
