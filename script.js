@@ -699,8 +699,24 @@ void main() {
   step(); // paint the at-rest (zero-displacement) heading immediately
 }
 
+// GA4 click tracking for CTA links (CV, email, socials, case cards) — one
+// delegated listener instead of a per-link handler, so links added later
+// just need the data-track/data-place attributes, no JS changes
+function initClickTracking() {
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-track]');
+    if (!el || typeof gtag !== 'function') return;
+    gtag('event', el.dataset.track, {
+      link_place: el.dataset.place || '',
+      page_lang: document.documentElement.lang || '',
+      transport_type: 'beacon', // event still sends even if the click opens a new tab
+    });
+  });
+}
+
 (() => {
   initLangSwitchDots();
+  initClickTracking();
   document.querySelectorAll('.mesh-heading').forEach(initMeshHeading);
 
   // homepage hero: spans the whole page top (behind the nav) down through
