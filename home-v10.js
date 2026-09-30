@@ -256,7 +256,7 @@ void main(){
     if (!gl) { rig.remove(); return; }
     const FRAG = `
 precision highp float;
-uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough; uniform float uAno; uniform float uObj; uniform float uEnamel; uniform float uCap; uniform float uTime;
+uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough; uniform float uAno; uniform float uObj; uniform float uEnamel; uniform float uCap; uniform float uTime; uniform float uSpin;
 vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
 vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
 float sdSeg(vec2 p, vec2 a, vec2 b){ vec2 pa=p-a, ba=b-a; float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0); return length(pa-ba*h); }
@@ -291,18 +291,25 @@ void main(){
   p *= 0.92;
   float c=cos(uObj), s=sin(uObj); p = vec2(c*p.x + s*p.y, -s*p.x + c*p.y);
   p.y += 0.06;
+  // axial spin: turning the pen about its long axis foreshortens its width
+  float cs = cos(uSpin), sn = sin(uSpin), k = max(abs(cs), 0.08);
+  p.x /= k;
   float dn = sdNib(p), dc = sdCap(p);
   int m = dn < dc ? 0 : 1; float d = min(dn, dc);
-  float px = 1.5 / min(uRes.x, uRes.y);
+  float px = 1.5 / min(uRes.x, uRes.y) / mix(1.0, k, 0.7);
   float cov = 1.0 - smoothstep(-px, px, d);
   if (cov <= 0.0) { gl_FragColor = vec4(0.0); return; }
   float e = 0.0015;
   vec2 g = vec2(sdAny(m, p+vec2(e,0.0)) - sdAny(m,p), sdAny(m, p+vec2(0.0,e)) - sdAny(m,p));
+  g.x /= k;
   vec2 G = length(g) > 1e-6 ? normalize(g) : vec2(0.0,1.0);
   // bevelled slab: rounded edge of radius B, flat face inside
   float B = m==0 ? 0.09 : 0.12;
   float ud = clamp(-d, 0.0, B);
   vec3 n = normalize(vec3(G*(B - ud), sqrt(max(ud*(2.0*B-ud), 0.0))));
+  // tip the normal with the axial spin; past 90° we see the other face
+  n = vec3(n.x*cs + n.z*sn, n.y, -n.x*sn + n.z*cs);
+  if (n.z < 0.0) n = -n;
   // un-rotate the in-plane normal so lighting stays fixed to the studio
   n.xy = vec2(c*n.x - s*n.y, s*n.x + c*n.y);
   vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), n), uTiltX), uRotY);
@@ -329,15 +336,16 @@ void main(){
     const uRes = gl.getUniformLocation(prog, 'uRes');
     const uRot = gl.getUniformLocation(prog, 'uRotY');
     const uTilt = gl.getUniformLocation(prog, 'uTiltX');
-    // look tuned in the Pen Rig console: finish 0.84, studio -172°,
-    // chrome nib (enamel 0, tint 0), silver cap 0.84, auto-spin on;
-    // pen turned 135° so its tip points to the upper right
-    gl.uniform1f(gl.getUniformLocation(prog, 'uRough'), 0.84);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uAno'), 0.0);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uEnamel'), 0.0);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uCap'), 0.84);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uObj'), 135 * Math.PI / 180);
-    const BASE = -172 * Math.PI / 180;
+    // look tuned in the Pen Rig console: finish 0.76, studio 13°,
+    // pen tilt 138° (tip to the upper right), enamel 0.21, nib tint 0.23,
+    // cap 0.52, auto-spin off; the pen turns about its own axis on scroll
+    gl.uniform1f(gl.getUniformLocation(prog, 'uRough'), 0.76);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uAno'), 0.23);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uEnamel'), 0.21);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uCap'), 0.52);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uObj'), 138 * Math.PI / 180);
+    const uSpin = gl.getUniformLocation(prog, 'uSpin');
+    const BASE = 13 * Math.PI / 180;
     gl.clearColor(0, 0, 0, 0);
 
     const resize = () => {
@@ -346,18 +354,20 @@ void main(){
       rig.height = Math.max(1, Math.round(rig.clientHeight * dpr));
       gl.viewport(0, 0, rig.width, rig.height);
     };
-    let tx = 0, ty = 0, ox = 0, oy = 0, t0 = performance.now(), raf = 0, visible = false;
+    let tx = 0, ty = 0, ox = 0, oy = 0, raf = 0, visible = false, spin = 0;
+    // one full turn per ~1000px of scroll, eased so it glides to a stop
+    const scrollSpin = () => (window.scrollY || 0) * 0.0063;
     const draw = (rot, tilt) => {
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.uniform2f(uRes, rig.width, rig.height);
       gl.uniform1f(uRot, rot); gl.uniform1f(uTilt, tilt);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
-    const loop = (now) => {
-      const t = (now - t0) / 1000;
+    const loop = () => {
       ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
-      // auto-spin: the studio turns slowly around the mark
-      draw(BASE + t * 0.4 + ox * 0.6, -0.17 + oy * 0.35);
+      spin += (scrollSpin() - spin) * 0.12;
+      gl.uniform1f(uSpin, spin);
+      draw(BASE + ox * 0.6, -0.17 + oy * 0.35);
       raf = visible ? requestAnimationFrame(loop) : 0;
     };
     resize();
