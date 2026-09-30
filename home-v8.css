@@ -335,7 +335,6 @@ img{ max-width: 100%; height: auto; display: block; }
   display: flex;
   flex-wrap: wrap;
   gap: 12px 32px;
-  margin-top: 12px;
 }
 .kpi{
   flex: 1 1 0;
@@ -355,6 +354,7 @@ img{ max-width: 100%; height: auto; display: block; }
 .case-link{
   display: inline-flex; align-items: center; gap: 8px;
   align-self: flex-start;
+  margin-top: 12px;
   font-weight: 500; font-size: 15px;
   color: var(--ink);
 }
