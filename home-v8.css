@@ -183,9 +183,23 @@ img{ max-width: 100%; height: auto; display: block; }
 .hero-bottom{ display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 40px; }
 .hero-sub{ margin: 0; max-width: 460px; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.5; color: rgba(255,255,255,.92); }
 .hero-actions{ display: flex; flex-wrap: wrap; gap: 10px; }
-.hero-face{
+.hero-objects{
   position: absolute; z-index: 1;
   right: clamp(24px, 4vw, 56px); top: clamp(24px, 4vw, 56px);
+  display: flex; align-items: center;
+}
+/* the chrome mark tucks in at the portrait's lower-left, slightly overlapping */
+.figma-rig{
+  display: block;
+  width: clamp(76px, 8.4vw, 124px); aspect-ratio: 2 / 3;
+  margin-right: calc(clamp(76px, 8.4vw, 124px) * -0.22);
+  position: relative; z-index: 2;
+  rotate: -8deg;
+  filter: drop-shadow(0 18px 24px rgba(20, 10, 60, .45));
+  animation: face-in 1s .45s var(--ease-out) both;
+}
+.hero-face{
+  position: relative;
   width: clamp(110px, 14vw, 200px); aspect-ratio: 1;
   margin: 0;
   border-radius: 50%;
@@ -199,6 +213,7 @@ img{ max-width: 100%; height: auto; display: block; }
   .hero-panel{ min-height: 0; }
   .hero-in{ padding-top: 140px; }
   .hero-face{ width: 96px; }
+  .figma-rig{ width: 58px; margin-right: -12px; }
 }
 
 /* buttons on the gradient */
@@ -624,7 +639,7 @@ img{ max-width: 100%; height: auto; display: block; }
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   .reveal, .blur-seg{ opacity: 1; transform: none; filter: none; transition: none; }
-  .hero-row, .hero-face{ animation: none; }
+  .hero-row, .hero-face, .figma-rig{ animation: none; }
   .postcards .postcard{ opacity: 1; translate: none; transform: rotate(var(--r)); transition: none; }
   .exp-float{ display: none; }
   .pill-cycle img{ transition: none; }
