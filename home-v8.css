@@ -568,8 +568,8 @@ img{ max-width: 100%; height: auto; display: block; }
   max-width: 16ch;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(48px, 8vw, 120px);
-  line-height: .95;
+  font-size: clamp(36px, 5.2vw, 76px);
+  line-height: 1;
   letter-spacing: -0.015em;
   font-variation-settings: 'opsz' 48;
   text-wrap: balance;
