@@ -188,13 +188,13 @@ img{ max-width: 100%; height: auto; display: block; }
   right: clamp(24px, 4vw, 56px); top: clamp(24px, 4vw, 56px);
   display: flex; align-items: center;
 }
-/* the chrome mark tucks in at the portrait's lower-left, slightly overlapping */
+/* the chrome mark sits at the portrait's right, slightly overlapping */
 .figma-rig{
   display: block;
   width: clamp(76px, 8.4vw, 124px); aspect-ratio: 2 / 3;
-  margin-right: calc(clamp(76px, 8.4vw, 124px) * -0.22);
+  margin-left: calc(clamp(76px, 8.4vw, 124px) * -0.22);
   position: relative; z-index: 2;
-  rotate: -8deg;
+  rotate: 8deg;
   filter: drop-shadow(0 18px 24px rgba(20, 10, 60, .45));
   animation: face-in 1s .45s var(--ease-out) both;
 }
@@ -213,7 +213,7 @@ img{ max-width: 100%; height: auto; display: block; }
   .hero-panel{ min-height: 0; }
   .hero-in{ padding-top: 140px; }
   .hero-face{ width: 96px; }
-  .figma-rig{ width: 58px; margin-right: -12px; }
+  .figma-rig{ width: 58px; margin-left: -12px; }
 }
 
 /* buttons on the gradient */
