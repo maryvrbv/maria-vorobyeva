@@ -89,4 +89,27 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
   });
+
+  // ---- case covers: short looping videos (WebM) instead of heavy GIFs;
+  // nothing downloads until a card is about to scroll into view, and
+  // playback pauses off-screen. Without JS or WebM support the static
+  // poster image stays in place.
+  const lazyVideos = document.querySelectorAll('video[data-lazy-video]');
+  if ('IntersectionObserver' in window) {
+    const vidIO = new IntersectionObserver((entries) => {
+      entries.forEach(({ target: v, isIntersecting }) => {
+        if (isIntersecting) {
+          if (!v.dataset.loaded) {
+            v.querySelectorAll('source[data-src]').forEach((s) => { s.src = s.dataset.src; });
+            v.load();
+            v.dataset.loaded = '1';
+          }
+          if (!reduceMotion) v.play().catch(() => {});
+        } else if (!v.paused) {
+          v.pause();
+        }
+      });
+    }, { rootMargin: '300px 0px' });
+    lazyVideos.forEach((v) => vidIO.observe(v));
+  }
 })();

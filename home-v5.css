@@ -313,8 +313,10 @@ img{ max-width: 100%; height: auto; display: block; }
   max-height: calc(100svh - 230px);
   width: 100%;
 }
-.case-cover img{ width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease-out); }
-.case-card:hover .case-cover img{ transform: scale(1.03); }
+.case-cover img,
+.case-cover video{ width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease-out); }
+.case-card:hover .case-cover img,
+.case-card:hover .case-cover video{ transform: scale(1.03); }
 
 @media (max-width: 900px){
   .stack-item{ top: calc(72px + var(--i, 0) * 12px); padding-bottom: 20px; }
