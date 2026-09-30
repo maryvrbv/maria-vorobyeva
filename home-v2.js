@@ -1,4 +1,4 @@
-// Alternative EN homepage (index-en-new.html) — page-only behaviour on top
+// Alternative EN homepage (index-en-v2.html) — page-only behaviour on top
 // of the shared script.js (reveal, nav, lang switch, email copy, tracking).
 (() => {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

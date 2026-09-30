@@ -37,7 +37,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
-<link rel="stylesheet" href="home-new.css">
+<link rel="stylesheet" href="home-v1.css">
 </head>
 <body>
 
@@ -47,7 +47,7 @@
 
 <header class="nav nav-hero">
   <div class="nav-inner">
-    <a href="index-en-new.html" class="nav-name">Maria Vorobyeva</a>
+    <a href="index-en-v1.html" class="nav-name">Maria Vorobyeva</a>
     <nav class="nav-links" aria-label="Main">
       <a href="#work">Work</a>
       <a href="#impact">Impact</a>
@@ -60,7 +60,7 @@
 <!-- fades in once the nav above has scrolled out of view (see script.js) -->
 <header class="nav-reveal" id="navReveal">
   <div class="nav-inner">
-    <a href="index-en-new.html" class="nav-name">Maria Vorobyeva</a>
+    <a href="index-en-v1.html" class="nav-name">Maria Vorobyeva</a>
     <nav class="nav-links" aria-label="Main (sticky)">
       <a href="#work">Work</a>
       <a href="#impact">Impact</a>
@@ -72,34 +72,27 @@
 
 <main id="top">
 
-  <!-- hero: name and intro on the left, a large portrait on the right;
-       letters blur in one by one (BlurText from 21st.dev "Portfolio Hero") -->
+  <!-- hero: oversized name with the photo set into it, letters blur in
+       one by one (adapted from 21st.dev "Portfolio Hero") -->
   <section class="hero" aria-labelledby="heroName">
-    <div class="hero-grid">
-      <div class="hero-copy">
-        <p class="hero-kicker blur-in" data-blur="words">Senior Product Designer</p>
-        <h1 class="hero-name" id="heroName" aria-label="Maria Vorobyeva">
-          <span class="hero-line blur-in" data-blur="letters" aria-hidden="true">Maria</span>
-          <span class="hero-line blur-in" data-blur="letters" data-blur-delay="200" aria-hidden="true">Vorobyeva</span>
-        </h1>
-        <p class="hero-sub reveal">9+ years designing B2C and B2B products for millions of users across e‑commerce, telecom, fintech, and HR‑tech</p>
-        <div class="hero-actions reveal">
-          <a href="mailto:maryvrbv@gmail.com" class="btn btn-primary" data-track="email_click" data-place="hero"><i class="ph-fill ph-envelope-simple" aria-hidden="true"></i> Email</a>
-          <a href="https://www.linkedin.com/in/marydis/" target="_blank" rel="noopener" class="btn" data-track="linkedin_click" data-place="hero"><i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i> LinkedIn</a>
-          <a href="files/CV_Vorobyeva_Mariia_EN.pdf" target="_blank" rel="noopener" class="btn" data-track="cv_click" data-place="hero"><i class="ph-fill ph-download-simple" aria-hidden="true"></i> Download CV</a>
-        </div>
-      </div>
+    <p class="hero-kicker blur-in" data-blur="words">Senior Product Designer</p>
 
-      <figure class="hero-portrait">
-        <div class="hero-photo">
-          <img src="images/home/photo.webp" alt="Maria Vorobyeva" width="1151" height="1053">
-        </div>
-        <figcaption class="hero-chip hero-chip-logos">
-          <span>Where I’ve worked</span>
-          <img src="images/home/logos.webp" alt="Alfa-Bank, MegaFon, X5, Sber, Citi" width="699" height="124">
-        </figcaption>
-        <p class="hero-chip hero-chip-mau" aria-hidden="true"><b>17M</b> MAU at MegaFon</p>
-      </figure>
+    <div class="hero-name-wrap">
+      <h1 class="hero-name" id="heroName" aria-label="Maria Vorobyeva">
+        <span class="hero-line blur-in" data-blur="letters" aria-hidden="true">Maria</span>
+        <span class="hero-line blur-in" data-blur="letters" data-blur-delay="250" aria-hidden="true">Vorobyeva</span>
+      </h1>
+      <div class="hero-photo">
+        <img src="images/home/photo.webp" alt="" width="1151" height="1053">
+      </div>
+    </div>
+
+    <p class="hero-sub reveal">9+ years designing B2C and B2B products for millions of users across e‑commerce, telecom, fintech, and HR‑tech</p>
+
+    <div class="hero-actions reveal">
+      <a href="mailto:maryvrbv@gmail.com" class="btn btn-primary" data-track="email_click" data-place="hero"><i class="ph-fill ph-envelope-simple" aria-hidden="true"></i> Email</a>
+      <a href="https://www.linkedin.com/in/marydis/" target="_blank" rel="noopener" class="btn" data-track="linkedin_click" data-place="hero"><i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i> LinkedIn</a>
+      <a href="files/CV_Vorobyeva_Mariia_EN.pdf" target="_blank" rel="noopener" class="btn" data-track="cv_click" data-place="hero"><i class="ph-fill ph-download-simple" aria-hidden="true"></i> Download CV</a>
     </div>
 
     <a href="#impact" class="scroll-cue" aria-label="Scroll to impact"><i class="ph-bold ph-arrow-down" aria-hidden="true"></i></a>
@@ -363,6 +356,6 @@
 </footer>
 
 <script src="script.js"></script>
-<script src="home-new.js"></script>
+<script src="home-v1.js"></script>
 </body>
 </html>
