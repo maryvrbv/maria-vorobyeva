@@ -254,7 +254,7 @@ void main(){
     if (!gl) { rig.remove(); return; }
     const FRAG = `
 precision highp float;
-uniform vec2 uRes; uniform float uRotY; uniform float uTiltX;
+uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough; uniform float uAno;
 const float H = 0.285714; const vec2 CELL = vec2(0.285714);
 vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
 vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
@@ -273,11 +273,12 @@ vec3 tintOf(int i){
   if(i==3) return vec3(0.102,0.737,0.996);
   return vec3(0.039,0.812,0.514);
 }
-vec3 env(vec3 R){
+vec3 env(vec3 R, float rough){
+  float soft = mix(0.05, 0.55, rough), softK = mix(0.015, 0.25, rough);
   vec3 c = vec3(0.02,0.021,0.024) + vec3(0.014,0.015,0.019)*clamp(R.y*0.5+0.5,0.0,1.0);
-  c += smoothstep(0.45,0.65, dot(R, normalize(vec3(-0.55,0.65,0.6)))) * vec3(1.0,0.97,0.9)*1.15;
-  c += smoothstep(0.80,0.84, dot(R, normalize(vec3(0.75,-0.35,0.45)))) * vec3(0.85,0.9,1.0)*1.4;
-  c += smoothstep(0.40,0.60, dot(R, normalize(vec3(0.2,-0.7,-0.6)))) * vec3(0.35,0.36,0.4)*0.35;
+  c += smoothstep(0.55-soft,0.55+soft, dot(R, normalize(vec3(-0.55,0.65,0.6)))) * vec3(1.0,0.97,0.9)*1.15;
+  c += smoothstep(0.82-softK,0.82+softK, dot(R, normalize(vec3(0.75,-0.35,0.45)))) * vec3(0.85,0.9,1.0)*1.4;
+  c += smoothstep(0.5-soft,0.5+soft, dot(R, normalize(vec3(0.2,-0.7,-0.6)))) * vec3(0.35,0.36,0.4)*0.35;
   return c;
 }
 void main(){
@@ -294,8 +295,8 @@ void main(){
   float ud = -min(d, 0.0);
   vec3 n = normalize(vec3(G*(H - ud), sqrt(max(ud*(2.0*H-ud), 0.0))));
   vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), n), uTiltX), uRotY);
-  vec3 tint = mix(vec3(1.0), tintOf(hit), 0.6);
-  vec3 col = (env(R) + pow(1.0-n.z, 4.2)*tint*0.5) * tint;
+  vec3 tint = mix(vec3(1.0), tintOf(hit), uAno);
+  vec3 col = (env(R, uRough) + pow(1.0-n.z, mix(4.5,2.0,uRough))*tint*0.5) * tint;
   gl_FragColor = vec4(col*cov, cov);
 }`;
     const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
@@ -313,6 +314,11 @@ void main(){
     const uRes = gl.getUniformLocation(prog, 'uRes');
     const uRot = gl.getUniformLocation(prog, 'uRotY');
     const uTilt = gl.getUniformLocation(prog, 'uTiltX');
+    // look tuned in the Figma Rig console: finish 0.46, rig angle -50°,
+    // anodize 0.10, auto-spin on
+    gl.uniform1f(gl.getUniformLocation(prog, 'uRough'), 0.46);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uAno'), 0.10);
+    const BASE = -50 * Math.PI / 180;
     gl.clearColor(0, 0, 0, 0);
 
     const resize = () => {
@@ -331,12 +337,12 @@ void main(){
     const loop = (now) => {
       const t = (now - t0) / 1000;
       ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
-      // gentle idle sway so the highlights travel even without a pointer
-      draw(0.26 + Math.sin(t * 0.6) * 0.25 + ox * 0.9, -0.17 + oy * 0.5);
+      // auto-spin: the studio turns slowly around the mark
+      draw(BASE + t * 0.4 + ox * 0.6, -0.17 + oy * 0.35);
       raf = visible ? requestAnimationFrame(loop) : 0;
     };
     resize();
-    if (reduceMotion) { draw(0.26, -0.17); }
+    if (reduceMotion) { draw(BASE, -0.17); }
     else {
       const area = rig.closest('.hero-panel') || document;
       area.addEventListener('pointermove', (e) => {
@@ -350,6 +356,6 @@ void main(){
         if (visible && !raf) raf = requestAnimationFrame(loop);
       }).observe(rig);
     }
-    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(0.26, -0.17); });
+    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(BASE, -0.17); });
   })();
 })();
