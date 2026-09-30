@@ -568,12 +568,14 @@ img{ max-width: 100%; height: auto; display: block; }
   max-width: 16ch;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(36px, 5.6vw, 84px);
-  line-height: 1;
+  font-size: clamp(48px, 8vw, 120px);
+  line-height: .95;
   letter-spacing: -0.015em;
   font-variation-settings: 'opsz' 48;
   text-wrap: balance;
 }
+.contact-head{ display: flex; flex-direction: column; gap: 16px; }
+.contact-sub{ margin: 0; max-width: 32ch; font-size: clamp(18px, 1.8vw, 24px); line-height: 1.4; color: rgba(255,255,255,.9); text-wrap: balance; }
 .contact-row{ display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; }
 .contact-mail{
   display: inline-flex; align-items: center; gap: 12px;
