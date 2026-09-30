@@ -256,7 +256,7 @@ void main(){
     if (!gl) { rig.remove(); return; }
     const FRAG = `
 precision highp float;
-uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough; uniform float uAno; uniform float uObj;
+uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough; uniform float uAno; uniform float uObj; uniform float uEnamel; uniform float uCap; uniform float uTime;
 vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
 vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
 float sdSeg(vec2 p, vec2 a, vec2 b){ vec2 pa=p-a, ba=b-a; float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0); return length(pa-ba*h); }
@@ -306,13 +306,12 @@ void main(){
   // un-rotate the in-plane normal so lighting stays fixed to the studio
   n.xy = vec2(c*n.x - s*n.y, s*n.x + c*n.y);
   vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), n), uTiltX), uRotY);
-  vec3 base = m==0 ? vec3(0.93,0.94,0.96) : vec3(0.16,0.17,0.18);
+  vec3 base = m==0 ? vec3(0.93,0.94,0.96) : mix(vec3(0.16,0.17,0.18), vec3(0.93,0.94,0.96), uCap);
   vec3 tint = mix(vec3(1.0), base, m==0 ? uAno : 1.0);
   vec3 spec = env(R, uRough) + pow(1.0-n.z, mix(4.5,2.0,uRough))*tint*0.5;
   vec3 col = spec * tint;
-  // the nib is enamel-white: a steady diffuse body with the chrome
-  // reflection laid over it, so it never turns grey as the studio spins
-  if (m==0) col = tint * (0.60 + 0.28 * n.z) + spec * 0.45;
+  if (m==0) col = mix(col, tint * (0.60 + 0.28 * n.z) + spec * 0.45, uEnamel);
+  col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;
   gl_FragColor = vec4(col*cov, cov);
 }`;
     const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
@@ -330,12 +329,15 @@ void main(){
     const uRes = gl.getUniformLocation(prog, 'uRes');
     const uRot = gl.getUniformLocation(prog, 'uRotY');
     const uTilt = gl.getUniformLocation(prog, 'uTiltX');
-    // look tuned in the Figma Rig console: finish 0.46, rig angle -50°,
-    // anodize 0.10, auto-spin on
-    gl.uniform1f(gl.getUniformLocation(prog, 'uRough'), 0.46);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uAno'), 0.10);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uObj'), 0.6);  // nib tilted, cap upper-left
-    const BASE = -50 * Math.PI / 180;
+    // look tuned in the Pen Rig console: finish 0.84, studio -172°,
+    // chrome nib (enamel 0, tint 0), silver cap 0.84, auto-spin on;
+    // pen turned 135° so its tip points to the upper right
+    gl.uniform1f(gl.getUniformLocation(prog, 'uRough'), 0.84);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uAno'), 0.0);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uEnamel'), 0.0);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uCap'), 0.84);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uObj'), 135 * Math.PI / 180);
+    const BASE = -172 * Math.PI / 180;
     gl.clearColor(0, 0, 0, 0);
 
     const resize = () => {
