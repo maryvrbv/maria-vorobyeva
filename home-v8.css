@@ -308,15 +308,12 @@ img{ max-width: 100%; height: auto; display: block; }
 .case-top{ display: flex; flex-direction: column; gap: 12px; }
 .case-bottom{ display: flex; flex-direction: column; gap: 24px; }
 .case-tag{
-  display: inline-flex; align-items: center; gap: 8px;
+  display: block;
   font-size: 13px; font-weight: 500;
   color: var(--ink-soft);
 }
-.case-tag::before{
-  content: ""; width: 8px; height: 8px; border-radius: 50%;
-  background: var(--case);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--case) 70%, transparent);
-}
+/* company first in full ink, the area after it muted — no marker */
+.case-tag b{ font-weight: 600; color: var(--ink); }
 .case-card h3{
   margin: 4px 0 0;
   font-family: var(--font-display);
@@ -336,17 +333,12 @@ img{ max-width: 100%; height: auto; display: block; }
 .kpis{
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 0;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
+  gap: 12px 32px;
 }
 .kpi{
   flex: 1 1 0;
   min-width: 96px;
-  padding: 0 16px;
-  border-left: 1px solid var(--line);
 }
-.kpi:first-child{ padding-left: 0; border-left: 0; }
 .kpi b{
   display: block;
   font-family: var(--font-display);
