@@ -712,3 +712,11 @@ img{ max-width: 100%; height: auto; display: block; }
 @media (max-width: 900px){
   .profile-card .pen-rig{ width: 28%; right: 4%; top: 4%; }
 }
+
+/* chrome "Aa" type tile, upper-left of the card, opposite the pen */
+.profile-card .type-rig{
+  position: absolute; z-index: 2;
+  left: 6%; top: 7%;
+  width: 26%; aspect-ratio: 1;
+}
+@media (max-width: 900px){ .profile-card .type-rig{ width: 22%; left: 5%; top: 5%; } }
