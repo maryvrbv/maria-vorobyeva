@@ -555,4 +555,125 @@ void main(){
     }
     window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(0, BASE, -0.17); });
   })();
+
+  // ---- chrome heart (same studio and finish as the pen): an exact heart
+  // SDF with a deep bevel, so it reads as a puffy chrome pillow. Turns about
+  // its own axis on scroll; still under reduced motion.
+  const heartRig = document.querySelector('canvas[data-heart-rig]');
+  if (heartRig) (() => {
+    const gl = heartRig.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
+    if (!gl) { heartRig.remove(); return; }
+    const FRAG = `
+precision highp float;
+uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough;
+uniform float uObj; uniform float uEnamel; uniform float uAno; uniform float uTime; uniform float uSpin;
+vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
+vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
+float dot2(vec2 v){ return dot(v,v); }
+// exact heart SDF (after Inigo Quilez), rounded a little
+float sdHeart(vec2 p){
+  p = p / 0.78 + vec2(0.0, 0.56);
+  p.x = abs(p.x);
+  float d;
+  if (p.y + p.x > 1.0) d = sqrt(dot2(p - vec2(0.25,0.75))) - sqrt(2.0)/4.0;
+  else d = sqrt(min(dot2(p - vec2(0.0,1.0)), dot2(p - 0.5*max(p.x+p.y,0.0)))) * sign(p.x - p.y);
+  return d * 0.78 - 0.02;
+}
+vec3 env(vec3 R, float rough){
+  float soft = mix(0.05, 0.55, rough), softK = mix(0.015, 0.25, rough);
+  vec3 c = vec3(0.02,0.021,0.024) + vec3(0.014,0.015,0.019)*clamp(R.y*0.5+0.5,0.0,1.0);
+  c += smoothstep(0.55-soft,0.55+soft, dot(R, normalize(vec3(-0.55,0.65,0.6)))) * vec3(1.0,0.97,0.9)*1.15;
+  c += smoothstep(0.82-softK,0.82+softK, dot(R, normalize(vec3(0.75,-0.35,0.45)))) * vec3(0.85,0.9,1.0)*1.4;
+  c += smoothstep(0.5-soft,0.5+soft, dot(R, normalize(vec3(0.2,-0.7,-0.6)))) * vec3(0.35,0.36,0.4)*0.35;
+  return c;
+}
+
+void main(){
+  vec2 p = (gl_FragCoord.xy*2.0 - uRes) / min(uRes.x, uRes.y);
+  p *= 0.92;
+  float c=cos(uObj), s=sin(uObj); p = vec2(c*p.x + s*p.y, -s*p.x + c*p.y);
+  float cs = cos(uSpin), sn = sin(uSpin), k = max(abs(cs), 0.08);
+  p.x /= k;
+  float d = sdHeart(p);
+  float px = 1.5 / min(uRes.x, uRes.y) / mix(1.0, k, 0.7);
+  float cov = 1.0 - smoothstep(-px, px, d);
+  if (cov <= 0.0) { gl_FragColor = vec4(0.0); return; }
+  float e = 0.0015;
+  vec2 g = vec2(sdHeart(p+vec2(e,0.0)) - d, sdHeart(p+vec2(0.0,e)) - d);
+  g.x /= k;
+  vec2 G = length(g) > 1e-6 ? normalize(g) : vec2(0.0,1.0);
+  // rounded edge narrower than the heart's half-width, so the two sides
+  // meet on a flat face instead of a hard crease along the middle
+  float B = 0.15;
+  float ud = clamp(-d, 0.0, B);
+  vec3 n = normalize(vec3(G*(B - ud), sqrt(max(ud*(2.0*B-ud), 0.0))));
+  n = vec3(n.x*cs + n.z*sn, n.y, -n.x*sn + n.z*cs);
+  if (n.z < 0.0) n = -n;
+  n.xy = vec2(c*n.x - s*n.y, s*n.x + c*n.y);
+  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), n), uTiltX), uRotY);
+  vec3 tint = mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno);
+  vec3 spec = env(R, uRough) + pow(1.0-n.z, mix(4.5,2.0,uRough))*tint*0.5;
+  vec3 col = spec * tint;
+  col = mix(col, tint * (0.60 + 0.28 * n.z) + spec * 0.45, uEnamel);
+  col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;
+  gl_FragColor = vec4(col*cov, cov);
+}`;
+    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { heartRig.remove(); return; }
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'a');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = (n) => gl.getUniformLocation(prog, n);
+    // pen's finish so the three objects read as one set
+    gl.uniform1f(U('uRough'), 0.76);
+    gl.uniform1f(U('uEnamel'), 0.21);
+    gl.uniform1f(U('uAno'), 0.23);
+    gl.uniform1f(U('uObj'), 12 * Math.PI / 180);
+    const BASE = 13 * Math.PI / 180;
+    gl.clearColor(0, 0, 0, 0);
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      heartRig.width = Math.max(1, Math.round(heartRig.clientWidth * dpr));
+      heartRig.height = Math.max(1, Math.round(heartRig.clientHeight * dpr));
+      gl.viewport(0, 0, heartRig.width, heartRig.height);
+    };
+    const draw = (spin, rot, tilt) => {
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(U('uRes'), heartRig.width, heartRig.height);
+      gl.uniform1f(U('uSpin'), spin); gl.uniform1f(U('uRotY'), rot); gl.uniform1f(U('uTiltX'), tilt);
+      gl.uniform1f(U('uTime'), performance.now() * 0.001);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+    let tx = 0, ty = 0, ox = 0, oy = 0, spin = 0, raf = 0, visible = false;
+    const target = () => (window.scrollY || 0) * 0.0045;
+    const loop = () => {
+      ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
+      spin += (target() - spin) * 0.12;
+      draw(spin, BASE + ox * 0.6, -0.17 + oy * 0.35);
+      raf = visible ? requestAnimationFrame(loop) : 0;
+    };
+    resize();
+    if (reduceMotion) { draw(0, BASE, -0.17); }
+    else {
+      const area = heartRig.closest('.hero') || document;
+      area.addEventListener('pointermove', (e) => {
+        const r = area.getBoundingClientRect();
+        tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+        ty = ((e.clientY - r.top) / r.height) * 2 - 1;
+      });
+      area.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
+      new IntersectionObserver(([en]) => {
+        visible = en.isIntersecting;
+        if (visible && !raf) raf = requestAnimationFrame(loop);
+      }).observe(heartRig);
+    }
+    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(0, BASE, -0.17); });
+  })();
 })();

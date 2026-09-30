@@ -716,7 +716,16 @@ img{ max-width: 100%; height: auto; display: block; }
 /* chrome "Aa" type tile, upper-left of the card, opposite the pen */
 .profile-card .type-rig{
   position: absolute; z-index: 2;
-  left: 6%; top: 7%;
+  left: 5%; top: 30%;
+  width: 24%; aspect-ratio: 1;
+}
+/* chrome heart, lower right of the portrait */
+.profile-card .heart-rig{
+  position: absolute; z-index: 2;
+  right: 8%; top: 64%;
   width: 26%; aspect-ratio: 1;
 }
-@media (max-width: 900px){ .profile-card .type-rig{ width: 22%; left: 5%; top: 5%; } }
+@media (max-width: 900px){
+  .profile-card .type-rig{ width: 20%; left: 5%; top: 32%; }
+  .profile-card .heart-rig{ width: 22%; right: 8%; top: 52%; }
+}
