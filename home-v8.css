@@ -278,9 +278,9 @@ img{ max-width: 100%; height: auto; display: block; }
   position: relative;
   display: grid;
   grid-template-columns: minmax(280px, 4fr) minmax(0, 8fr);
-  gap: clamp(20px, 3vw, 48px);
-  align-items: center;
-  padding: clamp(16px, 2vw, 28px) clamp(16px, 2vw, 28px) clamp(16px, 2vw, 28px) clamp(20px, 3vw, 44px);
+  gap: clamp(24px, 3vw, 48px);
+  align-items: stretch;
+  padding: clamp(16px, 2vw, 24px);
   border-radius: var(--radius-lg);
   background:
     radial-gradient(90% 120% at 0% 100%, color-mix(in srgb, var(--case) 22%, transparent), transparent 60%),
@@ -297,25 +297,37 @@ img{ max-width: 100%; height: auto; display: block; }
   content: ""; position: absolute; inset: 0; border-radius: inherit;
   background: #000; opacity: var(--dim); pointer-events: none;
 }
+/* text column: an upper group (who / what / how) and a lower group
+   (results / link) pushed apart, so the card reads top to bottom with
+   whitespace doing the grouping; spacing on an 8px rhythm */
+.case-text{
+  display: flex; flex-direction: column; justify-content: space-between;
+  gap: 32px;
+  padding: clamp(8px, 1.6vw, 24px) 0 clamp(8px, 1.6vw, 24px) clamp(8px, 1.6vw, 24px);
+}
+.case-top{ display: flex; flex-direction: column; gap: 12px; }
+.case-bottom{ display: flex; flex-direction: column; gap: 24px; }
 .case-tag{
-  display: inline-block;
-  font-size: 13px; font-weight: 600;
-  padding: 6px 12px;
-  border-radius: var(--radius-full);
-  background: color-mix(in srgb, var(--case) 16%, transparent);
-  color: color-mix(in srgb, var(--case) 55%, #fff);
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 500;
+  color: var(--ink-soft);
+}
+.case-tag::before{
+  content: ""; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--case);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--case) 70%, transparent);
 }
 .case-card h3{
-  margin: 18px 0 12px;
+  margin: 4px 0 0;
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 600;
+  font-size: clamp(26px, 2.8vw, 36px);
   line-height: 1.08;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 .case-card p + .case-metrics{ margin-top: 14px; }
-.case-card p{ margin: 0; color: var(--body-text); font-size: 15.5px; line-height: 1.55; }
+.case-card p{ margin: 0; max-width: 36ch; color: var(--ink-soft); font-size: 15.5px; line-height: 1.55; }
 .case-metrics{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; color: var(--body-text); font-size: 15.5px; }
 .case-metrics b{ color: var(--ink); font-family: var(--font-display); font-size: 1.15em; margin-right: 4px; }
 /* key numbers: a quiet row under the description, one hairline above,
@@ -325,9 +337,8 @@ img{ max-width: 100%; height: auto; display: block; }
   display: flex;
   flex-wrap: wrap;
   gap: 12px 0;
-  margin-top: 18px;
   padding-top: 16px;
-  border-top: 1px solid color-mix(in srgb, var(--case) 25%, var(--line));
+  border-top: 1px solid var(--line);
 }
 .kpi{
   flex: 1 1 0;
@@ -349,13 +360,14 @@ img{ max-width: 100%; height: auto; display: block; }
 .kpi span{ display: block; margin-top: 4px; font-size: 12.5px; line-height: 1.35; color: var(--ink-soft); }
 .case-link{
   display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 22px;
-  font-weight: 600; font-size: 15px;
+  align-self: flex-start;
+  font-weight: 500; font-size: 15px;
   color: var(--ink);
 }
 .case-link i{ transition: transform .25s var(--ease-out); }
 .case-card:hover .case-link i{ transform: translateX(4px); }
 .case-cover{
+  align-self: center;
   border-radius: var(--radius-md);
   overflow: hidden;
   background: #161616;
@@ -371,11 +383,9 @@ img{ max-width: 100%; height: auto; display: block; }
 
 @media (max-width: 900px){
   .stack-item{ top: calc(72px + var(--i, 0) * 12px); padding-bottom: 20px; }
-  .case-card{ grid-template-columns: 1fr; padding: 14px 14px 22px; }
-  .case-text{ padding: 0 6px; }
-  .case-cover{ max-height: none; }
-  .case-cover{ order: -1; }
-  .case-card h3{ margin-top: 14px; }
+  .case-card{ grid-template-columns: 1fr; padding: 12px 12px 20px; gap: 20px; }
+  .case-text{ padding: 0 8px; gap: 24px; }
+  .case-cover{ max-height: none; order: -1; }
 }
 /* short screens can't hold a sticky card — fall back to a plain list */
 @media (max-height: 620px){
