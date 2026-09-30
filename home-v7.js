@@ -129,7 +129,8 @@
     // offset so the card sits to the right of the pointer, not under it
     const place = (e) => { tx = e.clientX + 230; ty = e.clientY - 40; };
 
-    expList.querySelectorAll('.exp-item').forEach((item) => {
+    // rows without a preview image (e.g. Citi) get no hover card
+    expList.querySelectorAll('.exp-item[data-exp-img]').forEach((item) => {
       const summary = item.querySelector('summary');
       summary.addEventListener('pointerenter', (e) => {
         if (shot.getAttribute('src') !== item.dataset.expImg) shot.src = item.dataset.expImg;
