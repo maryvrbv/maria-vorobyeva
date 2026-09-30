@@ -387,4 +387,172 @@ void main(){
     }
     window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(BASE, -0.17); });
   })();
+
+  // ---- chrome "Aa" type tile (from the Type Rig console): a rounded box
+  // with raised letters; the letters are text baked into a signed distance
+  // field (Felzenszwalb EDT) at load. Same studio as the pen; it turns about
+  // its own axis on scroll, opposite to the pen. Still under reduced motion.
+  const typeRig = document.querySelector('canvas[data-type-rig]');
+  if (typeRig) (() => {
+    const gl = typeRig.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
+    if (!gl) { typeRig.remove(); return; }
+    const FRAG = `
+precision highp float;
+uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough;
+uniform float uObj; uniform float uTileTint; uniform float uGlyphEnamel; uniform float uTime; uniform float uSpin;
+uniform sampler2D uSdf;
+const float TILE = 0.62, TR = 0.20, TB = 0.11, GB = 0.035, RANGE = 0.18;
+vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
+vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
+float sdTile(vec2 p){ vec2 q = abs(p) - vec2(TILE - TR); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - TR; }
+// glyph SDF baked from text into a texture: 0.5 = edge, +-0.5 = +-RANGE
+float sdGlyph(vec2 p){
+  vec2 uv = p / (TILE*2.0*0.80) + 0.5;
+  if (uv.x < 0.0 || uv.y < 0.0 || uv.x > 1.0 || uv.y > 1.0) return RANGE;
+  return (texture2D(uSdf, vec2(uv.x, 1.0 - uv.y)).r - 0.5) * 2.0 * RANGE;
+}
+vec3 env(vec3 R, float rough){
+  float soft = mix(0.05, 0.55, rough), softK = mix(0.015, 0.25, rough);
+  vec3 c = vec3(0.02,0.021,0.024) + vec3(0.014,0.015,0.019)*clamp(R.y*0.5+0.5,0.0,1.0);
+  c += smoothstep(0.55-soft,0.55+soft, dot(R, normalize(vec3(-0.55,0.65,0.6)))) * vec3(1.0,0.97,0.9)*1.15;
+  c += smoothstep(0.82-softK,0.82+softK, dot(R, normalize(vec3(0.75,-0.35,0.45)))) * vec3(0.85,0.9,1.0)*1.4;
+  c += smoothstep(0.5-soft,0.5+soft, dot(R, normalize(vec3(0.2,-0.7,-0.6)))) * vec3(0.35,0.36,0.4)*0.35;
+  return c;
+}
+vec3 bevelN(vec2 G, float d, float B){ float ud = clamp(-d, 0.0, B); return normalize(vec3(G*(B-ud), sqrt(max(ud*(2.0*B-ud),0.0)))); }
+void main(){
+  vec2 p = (gl_FragCoord.xy*2.0 - uRes) / min(uRes.x, uRes.y);
+  p *= 0.92;
+  float c=cos(uObj), s=sin(uObj); p = vec2(c*p.x + s*p.y, -s*p.x + c*p.y);
+  float cs = cos(uSpin), sn = sin(uSpin), k = max(abs(cs), 0.08);
+  p.x /= k;
+  float dt = sdTile(p);
+  float px = 1.5 / min(uRes.x, uRes.y) / mix(1.0, k, 0.7);
+  float cov = 1.0 - smoothstep(-px, px, dt);
+  if (cov <= 0.0) { gl_FragColor = vec4(0.0); return; }
+  float e = 0.004;
+  float dg = sdGlyph(p);
+  bool glyph = dg < 0.0;
+  vec3 n; vec3 base; float enamel;
+  if (glyph){
+    vec2 g = vec2(sdGlyph(p+vec2(e,0.0)) - sdGlyph(p-vec2(e,0.0)), sdGlyph(p+vec2(0.0,e)) - sdGlyph(p-vec2(0.0,e)));
+    g.x /= k;
+    vec2 G = length(g) > 1e-6 ? normalize(g) : vec2(0.0,1.0);
+    n = bevelN(G, dg, GB);
+    base = vec3(0.96,0.96,0.97); enamel = uGlyphEnamel;
+  } else {
+    vec2 g = vec2(sdTile(p+vec2(e,0.0)) - sdTile(p-vec2(e,0.0)), sdTile(p+vec2(0.0,e)) - sdTile(p-vec2(0.0,e)));
+    g.x /= k;
+    vec2 G = length(g) > 1e-6 ? normalize(g) : vec2(0.0,1.0);
+    n = bevelN(G, dt, TB);
+    base = mix(vec3(0.93,0.94,0.96), vec3(1.0,0.78,0.22), uTileTint); enamel = 0.0;
+  }
+  n = vec3(n.x*cs + n.z*sn, n.y, -n.x*sn + n.z*cs);
+  if (n.z < 0.0) n = -n;
+  n.xy = vec2(c*n.x - s*n.y, s*n.x + c*n.y);
+  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), n), uTiltX), uRotY);
+  vec3 spec = env(R, uRough) + pow(1.0-n.z, mix(4.5,2.0,uRough))*base*0.5;
+  vec3 col = spec * base;
+  col = mix(col, base * (0.62 + 0.26*n.z) + spec*0.45, enamel);
+  if (!glyph){
+    // contact shadow of the raised letters on the tile face
+    float sh = sdGlyph(p + vec2(-0.025, 0.035));
+    col *= mix(0.55, 1.0, smoothstep(-0.01, 0.05, sh));
+  }
+  col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;
+  gl_FragColor = vec4(col*cov, cov);
+}`;
+    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { typeRig.remove(); return; }
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'a');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = (n) => gl.getUniformLocation(prog, n);
+    const tex = gl.createTexture();
+  var N = 512;
+  function edt1(f, n){
+    var d = new Float64Array(n), v = new Int32Array(n), z = new Float64Array(n+1), k = 0; v[0]=0; z[0]=-1e20; z[1]=1e20;
+    for (var q=1; q<n; q++){ var s; do { var r=v[k]; s=((f[q]+q*q)-(f[r]+r*r))/(2*q-2*r); } while (s<=z[k] && --k>=0); k++; v[k]=q; z[k]=s; z[k+1]=1e20; }
+    k=0; for (var q2=0; q2<n; q2++){ while (z[k+1]<q2) k++; var dq=q2-v[k]; d[q2]=dq*dq+f[v[k]]; } return d;
+  }
+  function edt(grid){
+    var f=new Float64Array(N), i, x, y;
+    for (x=0;x<N;x++){ for (y=0;y<N;y++) f[y]=grid[y*N+x]; var d=edt1(f,N); for (y=0;y<N;y++) grid[y*N+x]=d[y]; }
+    for (y=0;y<N;y++){ for (x=0;x<N;x++) f[x]=grid[y*N+x]; var d2=edt1(f,N); for (x=0;x<N;x++) grid[y*N+x]=Math.sqrt(d2[x]); }
+    return grid;
+  }
+  function bake(){
+    var c=document.createElement("canvas"); c.width=c.height=N; var x=c.getContext("2d");
+    x.fillStyle="#fff"; x.textAlign="center"; x.textBaseline="alphabetic";
+    x.font='700 '+Math.round(N*0.64)+'px "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif';
+    x.fillText("Aa", N/2, N*0.73);
+    var a=x.getImageData(0,0,N,N).data, inG=new Float64Array(N*N), outG=new Float64Array(N*N), INF=1e20;
+    for (var i=0;i<N*N;i++){ var on=a[i*4+3]>127; inG[i]=on?INF:0; outG[i]=on?0:INF; }
+    edt(inG); edt(outG);
+    var px=new Uint8Array(N*N), rangePx=N*(0.18/(0.62*2*0.80));
+    for (var j=0;j<N*N;j++){ var sd=(outG[j]-inG[j]); var v=0.5+0.5*Math.max(-1,Math.min(1,sd/rangePx)); px[j]=Math.round(v*255); }
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.LUMINANCE,N,N,0,gl.LUMINANCE,gl.UNSIGNED_BYTE,px);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  }
+
+
+    bake();
+    if (document.fonts && document.fonts.load) document.fonts.load('700 128px "Bricolage Grotesque"').then(bake, () => {});
+    // look tuned in the Type Rig console: finish 0.66, studio -17°,
+    // tile tilt -9°, chrome tile (gold 0), letters enamel 0.62
+    gl.uniform1i(U('uSdf'), 0);
+    gl.uniform1f(U('uRough'), 0.66);
+    gl.uniform1f(U('uObj'), -9 * Math.PI / 180);
+    gl.uniform1f(U('uTileTint'), 0.0);
+    gl.uniform1f(U('uGlyphEnamel'), 0.62);
+    const BASE = -17 * Math.PI / 180;
+    gl.clearColor(0, 0, 0, 0);
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      typeRig.width = Math.max(1, Math.round(typeRig.clientWidth * dpr));
+      typeRig.height = Math.max(1, Math.round(typeRig.clientHeight * dpr));
+      gl.viewport(0, 0, typeRig.width, typeRig.height);
+    };
+    const draw = (spin, rot, tilt) => {
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(U('uRes'), typeRig.width, typeRig.height);
+      gl.uniform1f(U('uSpin'), spin); gl.uniform1f(U('uRotY'), rot); gl.uniform1f(U('uTiltX'), tilt);
+      gl.uniform1f(U('uTime'), performance.now() * 0.001);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+    let tx = 0, ty = 0, ox = 0, oy = 0, spin = 0, raf = 0, visible = false;
+    const target = () => -(window.scrollY || 0) * 0.0063;
+    const loop = () => {
+      ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
+      spin += (target() - spin) * 0.12;
+      draw(spin, BASE + ox * 0.6, -0.17 + oy * 0.35);
+      raf = visible ? requestAnimationFrame(loop) : 0;
+    };
+    resize();
+    if (reduceMotion) { draw(0, BASE, -0.17); }
+    else {
+      const area = typeRig.closest('.hero') || document;
+      area.addEventListener('pointermove', (e) => {
+        const r = area.getBoundingClientRect();
+        tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+        ty = ((e.clientY - r.top) / r.height) * 2 - 1;
+      });
+      area.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
+      new IntersectionObserver(([en]) => {
+        visible = en.isIntersecting;
+        if (visible && !raf) raf = requestAnimationFrame(loop);
+      }).observe(typeRig);
+    }
+    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(0, BASE, -0.17); });
+  })();
 })();
