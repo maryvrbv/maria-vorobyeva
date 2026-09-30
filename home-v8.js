@@ -242,4 +242,114 @@ void main(){
     }, { threshold: 0.6 });
     kpiNums.forEach((el) => kIO.observe(el));
   }
+
+  // ---- chrome Figma mark next to the portrait (from the "Figma Rig"
+  // experiment): five rounded boxes from one SDF, domed into a hemisphere,
+  // reflecting a three-light studio and tinted with the brand colors. The
+  // background is transparent; the reflection swings toward the pointer
+  // anywhere over the hero. Still frame under reduced motion.
+  const rig = document.querySelector('canvas[data-figma-rig]');
+  if (rig) (() => {
+    const gl = rig.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
+    if (!gl) { rig.remove(); return; }
+    const FRAG = `
+precision highp float;
+uniform vec2 uRes; uniform float uRotY; uniform float uTiltX;
+const float H = 0.285714; const vec2 CELL = vec2(0.285714);
+vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
+vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
+float box(vec2 p, vec2 b, vec4 r){ r.xy = (p.x>0.0)?r.xy:r.zw; r.x=(p.y>0.0)?r.x:r.y; vec2 q=abs(p)-b+r.x; return min(max(q.x,q.y),0.0)+length(max(q,0.0))-r.x; }
+float sd(int i, vec2 p){
+  if(i==0) return box(p-vec2(-H,2.0*H), CELL, vec4(0.0,0.0,H,H));
+  if(i==1) return box(p-vec2( H,2.0*H), CELL, vec4(H,H,0.0,0.0));
+  if(i==2) return box(p-vec2(-H,0.0),   CELL, vec4(0.0,0.0,H,H));
+  if(i==3) return box(p-vec2( H,0.0),   CELL, vec4(H,H,H,H));
+  return box(p-vec2(-H,-2.0*H), CELL, vec4(0.0,H,H,H));
+}
+vec3 tintOf(int i){
+  if(i==0) return vec3(0.949,0.306,0.118);
+  if(i==1) return vec3(1.0,0.447,0.384);
+  if(i==2) return vec3(0.635,0.349,1.0);
+  if(i==3) return vec3(0.102,0.737,0.996);
+  return vec3(0.039,0.812,0.514);
+}
+vec3 env(vec3 R){
+  vec3 c = vec3(0.02,0.021,0.024) + vec3(0.014,0.015,0.019)*clamp(R.y*0.5+0.5,0.0,1.0);
+  c += smoothstep(0.45,0.65, dot(R, normalize(vec3(-0.55,0.65,0.6)))) * vec3(1.0,0.97,0.9)*1.15;
+  c += smoothstep(0.80,0.84, dot(R, normalize(vec3(0.75,-0.35,0.45)))) * vec3(0.85,0.9,1.0)*1.4;
+  c += smoothstep(0.40,0.60, dot(R, normalize(vec3(0.2,-0.7,-0.6)))) * vec3(0.35,0.36,0.4)*0.35;
+  return c;
+}
+void main(){
+  vec2 p = (gl_FragCoord.xy*2.0 - uRes) / min(uRes.x, uRes.y);
+  p *= 0.62;
+  int hit = -1; float d = 1e9;
+  for (int i = 0; i < 5; i++){ float di = sd(i, p); if (di < d){ d = di; hit = i; } }
+  float px = 1.5 / min(uRes.x, uRes.y);
+  float cov = 1.0 - smoothstep(-px, px, d);
+  if (cov <= 0.0) { gl_FragColor = vec4(0.0); return; }
+  float e = 0.0015;
+  vec2 g = vec2(sd(hit, p+vec2(e,0.0)) - sd(hit,p), sd(hit, p+vec2(0.0,e)) - sd(hit,p));
+  vec2 G = length(g) > 1e-6 ? normalize(g) : vec2(0.0,1.0);
+  float ud = -min(d, 0.0);
+  vec3 n = normalize(vec3(G*(H - ud), sqrt(max(ud*(2.0*H-ud), 0.0))));
+  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), n), uTiltX), uRotY);
+  vec3 tint = mix(vec3(1.0), tintOf(hit), 0.6);
+  vec3 col = (env(R) + pow(1.0-n.z, 4.2)*tint*0.5) * tint;
+  gl_FragColor = vec4(col*cov, cov);
+}`;
+    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { rig.remove(); return; }
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'a');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const uRes = gl.getUniformLocation(prog, 'uRes');
+    const uRot = gl.getUniformLocation(prog, 'uRotY');
+    const uTilt = gl.getUniformLocation(prog, 'uTiltX');
+    gl.clearColor(0, 0, 0, 0);
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      rig.width = Math.max(1, Math.round(rig.clientWidth * dpr));
+      rig.height = Math.max(1, Math.round(rig.clientHeight * dpr));
+      gl.viewport(0, 0, rig.width, rig.height);
+    };
+    let tx = 0, ty = 0, ox = 0, oy = 0, t0 = performance.now(), raf = 0, visible = false;
+    const draw = (rot, tilt) => {
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(uRes, rig.width, rig.height);
+      gl.uniform1f(uRot, rot); gl.uniform1f(uTilt, tilt);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+    const loop = (now) => {
+      const t = (now - t0) / 1000;
+      ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
+      // gentle idle sway so the highlights travel even without a pointer
+      draw(0.26 + Math.sin(t * 0.6) * 0.25 + ox * 0.9, -0.17 + oy * 0.5);
+      raf = visible ? requestAnimationFrame(loop) : 0;
+    };
+    resize();
+    if (reduceMotion) { draw(0.26, -0.17); }
+    else {
+      const area = rig.closest('.hero-panel') || document;
+      area.addEventListener('pointermove', (e) => {
+        const r = area.getBoundingClientRect ? area.getBoundingClientRect() : { left: 0, top: 0, width: innerWidth, height: innerHeight };
+        tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+        ty = ((e.clientY - r.top) / r.height) * 2 - 1;
+      });
+      area.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
+      new IntersectionObserver(([en]) => {
+        visible = en.isIntersecting;
+        if (visible && !raf) raf = requestAnimationFrame(loop);
+      }).observe(rig);
+    }
+    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(0.26, -0.17); });
+  })();
 })();
