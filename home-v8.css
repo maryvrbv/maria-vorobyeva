@@ -308,12 +308,13 @@ img{ max-width: 100%; height: auto; display: block; }
 .case-top{ display: flex; flex-direction: column; gap: 12px; }
 .case-bottom{ display: flex; flex-direction: column; gap: 24px; }
 .case-tag{
-  display: block;
-  font-size: 13px; font-weight: 500;
-  color: var(--ink-soft);
+  align-self: flex-start;
+  font-size: 13px; font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--case) 16%, transparent);
+  color: color-mix(in srgb, var(--case) 55%, #fff);
 }
-/* company first in full ink, the area after it muted — no marker */
-.case-tag b{ font-weight: 600; color: var(--ink); }
 .case-card h3{
   margin: 4px 0 0;
   font-family: var(--font-display);
@@ -334,6 +335,7 @@ img{ max-width: 100%; height: auto; display: block; }
   display: flex;
   flex-wrap: wrap;
   gap: 12px 32px;
+  margin-top: 12px;
 }
 .kpi{
   flex: 1 1 0;
