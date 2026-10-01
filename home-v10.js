@@ -321,18 +321,19 @@ void main(){
   // U) sets the look; o.spin(scrollY) is the scroll-driven turn;
   // o.init(gl, U, redraw) for extra resources (textures)
   const MESH_VS = `
-attribute vec3 aP; attribute vec3 aN; varying vec3 vN;
+attribute vec3 aP; attribute vec3 aN; attribute float aM; varying vec3 vN; varying float vM;
 void main(){
   vec3 v = toView(aP);
   vN = toView(aN);
+  vM = aM;
   gl_Position = vec4(v.xy / 0.92 * min(uRes.x, uRes.y) / uRes, -v.z * 0.5, 1.0);
 }`;
   const MESH_FS = `
-varying vec3 vN;
+varying vec3 vN; varying float vM;
 void main(){
   vec3 nv = normalize(vN);
   vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), nv), uTiltX), uRotY);
-  vec3 col = shade(vec3(0.0), nv, R);
+  vec3 col = shade(vec3(vM), nv, R);
   col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;
   gl_FragColor = vec4(col, 1.0);
 }`;
@@ -352,20 +353,21 @@ void main(){
     gl.linkProgram(prog);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.remove(); return; }
     gl.useProgram(prog);
-    // model: [nVerts, nIdx] uint32, then xyz+normal float32 per vertex, then
-    // uint16 triangle indices
+    // model: [nVerts, nIdx] uint32, then xyz, normal, material id float32
+    // per vertex, then uint16 triangle indices
     let count = o.mesh ? 0 : -1;
     if (o.mesh) {
       gl.enable(gl.DEPTH_TEST);
       fetch(o.mesh).then((r) => r.arrayBuffer()).then((buf) => {
         const [nv, ni] = new Uint32Array(buf, 0, 2);
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(buf, 8, nv * 6), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(buf, 8, nv * 7), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(buf, 8 + nv * 24, ni), gl.STATIC_DRAW);
-        const aP = gl.getAttribLocation(prog, 'aP'), aN = gl.getAttribLocation(prog, 'aN');
-        gl.enableVertexAttribArray(aP); gl.vertexAttribPointer(aP, 3, gl.FLOAT, false, 24, 0);
-        gl.enableVertexAttribArray(aN); gl.vertexAttribPointer(aN, 3, gl.FLOAT, false, 24, 12);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(buf, 8 + nv * 28, ni), gl.STATIC_DRAW);
+        const aP = gl.getAttribLocation(prog, 'aP'), aN = gl.getAttribLocation(prog, 'aN'), aM = gl.getAttribLocation(prog, 'aM');
+        gl.enableVertexAttribArray(aP); gl.vertexAttribPointer(aP, 3, gl.FLOAT, false, 28, 0);
+        gl.enableVertexAttribArray(aN); gl.vertexAttribPointer(aN, 3, gl.FLOAT, false, 28, 12);
+        if (aM >= 0) { gl.enableVertexAttribArray(aM); gl.vertexAttribPointer(aM, 1, gl.FLOAT, false, 28, 24); }
         count = ni;
         if (reduceMotion) draw();
       }, () => canvas.remove());
@@ -563,12 +565,16 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     spin: (y) => -y * 0.011,
   });
 
-  // heart: the puffy heart-emoji model (body only, without its sticker
-  // highlights; normalised and baked to images/home/heart.bin), rendered as
-  // a mesh in the same chrome. Pen's finish so the three objects read as a set
+  // heart: the heart-emoji model exactly as supplied (body plus its sparkle
+  // stickers, original normals; only centred, scaled and baked to
+  // images/home/heart.bin), rendered as a mesh. q.x = material: 0 body, 1
+  // sparkles
   chromeRig(document.querySelector('canvas[data-heart-rig]'), `
 uniform float uEnamel; uniform float uAno;
-vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
+vec3 shade(vec3 q, vec3 nv, vec3 R){
+  if (q.x > 0.5) return metal(vec3(1.0), nv, R, 0.85);
+  return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel);
+}`, {
     set(gl, U) {
       gl.uniform1f(U('uRough'), 0.76);
       gl.uniform1f(U('uEnamel'), 0.21);
