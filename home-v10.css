@@ -730,3 +730,32 @@ img{ max-width: 100%; height: auto; display: block; }
   .profile-card .type-rig{ width: 20%; left: 5%; top: 32%; }
   .profile-card .sparkle-rig{ width: 30%; right: 4%; top: 48.5%; }
 }
+
+/* ---------- gradient tuning panel (?tune) ---------- */
+.visually-hidden{ position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* tuning panel */
+.tune-x:focus-visible{ outline: 2px solid #fff; outline-offset: 2px; }
+.tune-panel{
+  position: fixed; z-index: 100; right: 16px; bottom: 16px;
+  width: min(320px, calc(100vw - 32px)); max-height: calc(100svh - 32px); overflow: auto;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(14, 12, 24, .86);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,.14);
+  color: var(--ink);
+  font-size: 13px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.tune-panel[hidden]{ display: none; }
+.tune-head{ display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 15px; }
+.tune-x{ width: 32px; height: 32px; border-radius: 50%; border: 0; background: rgba(255,255,255,.1); color: #fff; font-size: 20px; line-height: 1; cursor: pointer; }
+.tune-row{ display: grid; gap: 4px; padding: 6px 0; }
+.tune-row span{ display: flex; justify-content: space-between; color: var(--ink-soft); }
+.tune-row output{ color: var(--ink); font-variant-numeric: tabular-nums; }
+.tune-row input{ width: 100%; accent-color: var(--accent-soft); }
+.tune-colors{ display: flex; gap: 8px; padding: 10px 0 6px; }
+.tune-colors input{ width: 44px; height: 32px; padding: 0; border: 1px solid rgba(255,255,255,.2); border-radius: 8px; background: none; cursor: pointer; }
+.tune-out{ width: 100%; margin: 8px 0; padding: 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.35); color: var(--ink-soft); font: 12px/1.4 ui-monospace, monospace; resize: none; }
+.tune-copy{ width: 100%; justify-content: center; }
+
