@@ -382,11 +382,10 @@ void main(){
   }
 
   // pen nib (five-point outline with breather hole and slit) and its pill
-  // cap. Look tuned in the Pen Rig console: finish 0.76, studio 13°, pen
-  // tilt 138° (tip to the upper right), enamel 0.21, nib tint 0.23, cap 0.52
+  // cap, both plain chrome. From the Pen Rig console: finish 0.76, studio
+  // 13°, pen tilt 138° (tip to the upper right)
   chromeRig(document.querySelector('canvas[data-figma-rig]'), `
 #define STEP 0.9
-uniform float uAno; uniform float uEnamel; uniform float uCap;
 float sdNibPoly(vec2 p){
   vec2 v0=vec2(-0.30,0.28), v1=vec2(0.30,0.28), v2=vec2(0.37,0.04), v3=vec2(0.0,-0.72), v4=vec2(-0.37,0.04);
   float d = min(min(min(sdSeg(p,v0,v1), sdSeg(p,v1,v2)), min(sdSeg(p,v2,v3), sdSeg(p,v3,v4))), sdSeg(p,v4,v0));
@@ -401,18 +400,16 @@ float sdNib2(vec2 p){
   return max(d, -(length(max(q,0.0)) + min(max(q.x,q.y),0.0)));
 }
 float sdCap2(vec2 p){ vec2 q = abs(p - vec2(0.0,0.50)) - vec2(0.22, 0.0); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - 0.12; }
-float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.045); }
-float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.12, 0.11); }
+// half-depths are scaled to each canvas so all three objects look about
+// as thick as each other on the card (pen canvas 34%, tile 24%, heart 26%)
+float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.06, 0.045); }
+float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.06, 0.05); }
 float map(vec3 q){ return min(nib(q), cap(q)); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){
-  if (nib(q) < cap(q)) return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel);
-  return metal(mix(vec3(0.16,0.17,0.18), vec3(0.93,0.94,0.96), uCap), nv, R, 0.0);
+  return metal(vec3(0.93,0.94,0.96), nv, R, 0.0);
 }`, {
     set(gl, U) {
       gl.uniform1f(U('uRough'), 0.76);
-      gl.uniform1f(U('uAno'), 0.23);
-      gl.uniform1f(U('uEnamel'), 0.21);
-      gl.uniform1f(U('uCap'), 0.52);
       gl.uniform1f(U('uObj'), 138 * Math.PI / 180);
     },
     base: 13 * Math.PI / 180, spin0: 0.55, yaw: 0.0, pitch: 0.12,
@@ -422,7 +419,7 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
 
   // "Aa" type tile: a rounded chrome tile with raised letters; the letters
   // are text baked into a signed distance field (Felzenszwalb EDT) at load.
-  // The back carries the Figma logo in coloured enamel.
+  // The back carries the Figma logo, chrome like the letters.
   // Look tuned in the Type Rig console: finish 0.66, studio -17°, tile tilt
   // -9°, chrome tile, letters enamel 0.62. Turns opposite to the pen
   chromeRig(document.querySelector('canvas[data-type-rig]'), `
@@ -438,23 +435,17 @@ float sdGlyph2(vec2 p){
 }
 float sdBox2(vec2 p, vec2 c, vec2 h){ vec2 q = abs(p - c) - h; return length(max(q,0.0)) + min(max(q.x,q.y),0.0); }
 // Figma logo on the back, in its 38x57 SVG units (y down), mirrored so it
-// reads from behind; five pieces with a hairline gap, id = which piece
+// reads from behind; five pieces with a hairline gap between them
 const float LS = 0.78 / 57.0, GAP = 0.7;
-float sdFigma2(vec2 p, out float id){
+float sdFigma2(vec2 p){
   vec2 u = vec2(19.0 - p.x / LS, 28.5 - p.y / LS);
-  float d0 = min(length(u - vec2(9.5,9.5)) - 9.5, sdBox2(u, vec2(14.25,9.5), vec2(4.75,9.5)));
-  float d1 = min(length(u - vec2(28.5,9.5)) - 9.5, sdBox2(u, vec2(23.75,9.5), vec2(4.75,9.5)));
-  float d2 = min(length(u - vec2(9.5,28.5)) - 9.5, sdBox2(u, vec2(14.25,28.5), vec2(4.75,9.5)));
-  float d3 = length(u - vec2(28.5,28.5)) - 9.5;
-  float d4 = min(length(u - vec2(9.5,47.5)) - 9.5, sdBox2(u, vec2(14.25,42.75), vec2(4.75,4.75)));
-  float d = d0; id = 0.0;
-  if (d1 < d){ d = d1; id = 1.0; }
-  if (d2 < d){ d = d2; id = 2.0; }
-  if (d3 < d){ d = d3; id = 3.0; }
-  if (d4 < d){ d = d4; id = 4.0; }
+  float d = min(length(u - vec2(9.5,9.5)) - 9.5, sdBox2(u, vec2(14.25,9.5), vec2(4.75,9.5)));
+  d = min(d, min(length(u - vec2(28.5,9.5)) - 9.5, sdBox2(u, vec2(23.75,9.5), vec2(4.75,9.5))));
+  d = min(d, min(length(u - vec2(9.5,28.5)) - 9.5, sdBox2(u, vec2(14.25,28.5), vec2(4.75,9.5))));
+  d = min(d, length(u - vec2(28.5,28.5)) - 9.5);
+  d = min(d, min(length(u - vec2(9.5,47.5)) - 9.5, sdBox2(u, vec2(14.25,42.75), vec2(4.75,4.75))));
   return (d + GAP) * LS;
 }
-float sdFigma2(vec2 p){ float id; return sdFigma2(p, id); }
 float tile(vec3 q){ return sdSlab(sdTile2(q.xy), q.z, TH, 0.07); }
 float glyph(vec3 q){ return sdSlab(sdGlyph2(q.xy), q.z - TH, 0.045, 0.028); }
 float logo(vec3 q){ return sdSlab(sdFigma2(q.xy), q.z + TH, 0.04, 0.024); }
@@ -462,15 +453,7 @@ float map(vec3 q){ return min(tile(q), min(glyph(q), logo(q))); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){
   float dt = tile(q), dg = glyph(q), dl = logo(q);
   if (dg < dt && dg < dl) return metal(vec3(0.96,0.96,0.97), nv, R, uGlyphEnamel);
-  if (dl < dt){
-    float id; sdFigma2(q.xy, id);
-    vec3 c = id < 0.5 ? vec3(0.949,0.306,0.118) : id < 1.5 ? vec3(1.0,0.447,0.384)
-           : id < 2.5 ? vec3(0.635,0.349,1.0) : id < 3.5 ? vec3(0.102,0.737,0.996) : vec3(0.039,0.812,0.514);
-    // glossy coloured enamel: keep the brand colours saturated, with just
-    // a clear-coat reflection on top
-    vec3 spec = env(R, uRough);
-    return c * (0.6 + 0.3 * abs(nv.z)) + spec * 0.07 + pow(1.0 - abs(nv.z), 3.0) * spec * 0.5;
-  }
+  if (dl < dt) return metal(vec3(0.96,0.96,0.97), nv, R, uGlyphEnamel);
   vec3 col = metal(vec3(0.93,0.94,0.96), nv, R, 0.0);
   // contact shadow of the raised letters / logo on the tile faces
   if (q.z > TH - 0.03) col *= mix(0.55, 1.0, smoothstep(-0.01, 0.05, sdGlyph2(q.xy + vec2(-0.025, 0.035))));
@@ -542,7 +525,7 @@ float sdHeart2(vec2 p){
   else d = sqrt(min(dot2(p - vec2(0.0,1.0)), dot2(p - 0.5*max(p.x+p.y,0.0)))) * sign(p.x - p.y);
   return d * 0.78 - 0.02;
 }
-float map(vec3 q){ return sdSlab(sdHeart2(q.xy), q.z, 0.15, 0.13); }
+float map(vec3 q){ return sdSlab(sdHeart2(q.xy), q.z, 0.078, 0.068); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
     set(gl, U) {
       gl.uniform1f(U('uRough'), 0.76);
