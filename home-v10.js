@@ -387,23 +387,25 @@ void main(){
   chromeRig(document.querySelector('canvas[data-figma-rig]'), `
 #define STEP 0.9
 float sdNibPoly(vec2 p){
-  vec2 v0=vec2(-0.30,0.28), v1=vec2(0.30,0.28), v2=vec2(0.37,0.04), v3=vec2(0.0,-0.72), v4=vec2(-0.37,0.04);
+  vec2 v0=vec2(-0.27,0.25), v1=vec2(0.27,0.25), v2=vec2(0.33,0.03), v3=vec2(0.0,-0.62), v4=vec2(-0.33,0.03);
   float d = min(min(min(sdSeg(p,v0,v1), sdSeg(p,v1,v2)), min(sdSeg(p,v2,v3), sdSeg(p,v3,v4))), sdSeg(p,v4,v0));
   #define LEFT(a,b) (((b).x-(a).x)*(p.y-(a).y) - ((b).y-(a).y)*(p.x-(a).x) >= 0.0)
   bool inside = LEFT(v0,v4) && LEFT(v4,v3) && LEFT(v3,v2) && LEFT(v2,v1) && LEFT(v1,v0);
   return inside ? -d : d;
 }
 float sdNib2(vec2 p){
-  float d = sdNibPoly(p) - 0.03;
+  // generous corner radius: a soft, friendly nib rather than a blade
+  float d = sdNibPoly(p) - 0.075;
   d = max(d, -(length(p-vec2(0.0,-0.12)) - 0.075));
-  vec2 q = abs(p - vec2(0.0,-0.44)) - vec2(0.012, 0.30);
+  // slit stops short of the rounded tip
+  vec2 q = abs(p - vec2(0.0,-0.38)) - vec2(0.018, 0.20);
   return max(d, -(length(max(q,0.0)) + min(max(q.x,q.y),0.0)));
 }
-float sdCap2(vec2 p){ vec2 q = abs(p - vec2(0.0,0.50)) - vec2(0.22, 0.0); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - 0.12; }
+float sdCap2(vec2 p){ vec2 q = abs(p - vec2(0.0,0.47)) - vec2(0.21, 0.0); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - 0.12; }
 // half-depths are scaled to each canvas so all three objects look about
-// as thick as each other on the card (pen canvas 34%, tile 24%, heart 26%)
-float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.06, 0.045); }
-float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.06, 0.05); }
+// as thick as each other on the card (pen canvas 31.5%, tile 24%, heart 32.5%)
+float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.045); }
+float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.055); }
 float map(vec3 q){ return min(nib(q), cap(q)); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){
   return metal(vec3(0.93,0.94,0.96), nv, R, 0.0);
@@ -518,14 +520,14 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
 uniform float uEnamel; uniform float uAno;
 float dot2(vec2 v){ return dot(v,v); }
 float sdHeart2(vec2 p){
-  p = p / 0.78 + vec2(0.0, 0.56);
+  p = p / 0.74 + vec2(0.0, 0.56);
   p.x = abs(p.x);
   float d;
   if (p.y + p.x > 1.0) d = sqrt(dot2(p - vec2(0.25,0.75))) - sqrt(2.0)/4.0;
   else d = sqrt(min(dot2(p - vec2(0.0,1.0)), dot2(p - 0.5*max(p.x+p.y,0.0)))) * sign(p.x - p.y);
-  return d * 0.78 - 0.02;
+  return d * 0.74 - 0.06;
 }
-float map(vec3 q){ return sdSlab(sdHeart2(q.xy), q.z, 0.078, 0.068); }
+float map(vec3 q){ return sdSlab(sdHeart2(q.xy), q.z, 0.063, 0.055); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
     set(gl, U) {
       gl.uniform1f(U('uRough'), 0.76);
