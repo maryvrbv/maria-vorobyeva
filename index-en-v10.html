@@ -74,7 +74,12 @@
   <!-- hero: split composition. A tall "profile card" on the left carries
        the moving gradient, the portrait (looking toward the text) and a
        chrome pen nib; the words sit on the page to its right -->
-  <section class="hero hero-split" aria-labelledby="heroTitle">
+  <section class="hero" aria-labelledby="heroTitle">
+    <!-- one big gradient panel holds the whole hero (as in v11); the
+         portrait and chrome objects sit straight on it -->
+    <div class="glow-panel hero-glow">
+    <canvas class="glow-canvas" data-glow="dawn" aria-hidden="true"></canvas>
+    <div class="hero-split">
     <div class="hero-copy">
       <h1 id="heroTitle" class="hero-title">
         <span class="hero-row">Hi, I’m <span class="name-grad">Maria</span></span>
@@ -88,8 +93,7 @@
       </div>
     </div>
 
-    <div class="glow-panel profile-card">
-      <canvas class="glow-canvas" data-glow="dawn" aria-hidden="true"></canvas>
+    <div class="profile-card">
       <figure class="profile-photo">
         <img src="images/home/photo.webp" alt="Maria Vorobyeva" width="1151" height="1053">
       </figure>
@@ -100,6 +104,8 @@
         <p class="glass-pill"><i class="ph-fill ph-star-four" aria-hidden="true"></i> 9+ years in product design</p>
         <p class="glass-pill">e‑commerce · telecom · fintech · HR‑tech</p>
       </div>
+    </div>
+    </div>
     </div>
   </section>
 

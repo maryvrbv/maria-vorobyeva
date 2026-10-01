@@ -830,3 +830,37 @@ img{ max-width: 100%; height: auto; display: block; }
   .hero-copy .hero-title{ font-size: clamp(56px, 6.3vw, 116px); line-height: .95; white-space: nowrap; }
   .hero-copy .hero-lead{ max-width: 32ch; font-size: clamp(22px, 2.1vw, 31px); }
 }
+
+/* ---------- hero on one full gradient panel (as in v11) ----------
+   The gradient moves from the photo card to a panel behind the whole
+   hero; the card loses its own fill so the portrait and the chrome
+   objects sit straight on the gradient, and the text turns white */
+.hero-glow{ min-height: clamp(600px, 86svh, 900px); display: flex; }
+.hero-glow > .hero-split{
+  position: relative; z-index: 1; width: 100%;
+  padding: clamp(24px, 4vw, 56px);
+}
+.hero-glow .profile-card{ background: none; }
+.hero-glow .hero-copy .hero-title{ color: #fff; text-shadow: 0 2px 40px rgba(40, 20, 90, .25); }
+.hero-glow .name-grad{ background: none; color: #fff; }
+.hero-glow .hero-copy .hero-lead{ color: rgba(255,255,255,.72); }
+.hero-glow .hero-lead em{ color: #fff; }
+.hero-glow .btn-primary{ background: #0c0a14; border-color: #0c0a14; color: #fff; }
+.hero-glow .btn-primary:hover{ background: #1c1830; border-color: #1c1830; }
+.hero-glow .hero-actions .btn:not(.btn-primary){
+  background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.35); color: #fff;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+.hero-glow .hero-actions .btn:not(.btn-primary):hover{ background: rgba(255,255,255,.28); }
+@media (min-width: 901px){
+  .hero-glow .hero-split .profile-card{ max-height: none; }
+  .hero-glow .hero-split .hero-copy{ padding-top: 0; padding-bottom: clamp(12px, 1.4vw, 20px); }
+}
+@media (max-width: 900px){
+  .hero-glow .profile-card{ aspect-ratio: 1; }
+}
+/* contrast and fit on the light gradient */
+.hero-glow .hero-copy .hero-lead{ color: rgba(255,255,255,.86); text-shadow: 0 1px 24px rgba(40, 20, 90, .25); }
+.hero-glow .hero-lead em{ font-weight: 500; }
+@media (min-width: 901px){ .hero-glow .hero-copy .hero-title{ font-size: clamp(52px, 5.6vw, 104px); } }
+@media (max-width: 900px){ .hero-glow .hero-copy .hero-title{ font-size: clamp(36px, 10.5vw, 60px); white-space: nowrap; } }
