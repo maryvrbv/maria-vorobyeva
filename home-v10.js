@@ -565,14 +565,13 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     spin: (y) => -y * 0.011,
   });
 
-  // heart: the heart-emoji model exactly as supplied (body plus its sparkle
-  // stickers, original normals; only centred, scaled and baked to
-  // images/home/heart.bin), rendered as a mesh. q.x = material: 0 body, 1
-  // sparkles
+  // heart: the body of the supplied heart-emoji model (original geometry and
+  // normals, sparkle stickers left out), centred, scaled and flattened front
+  // to back to the pen's and tile's thickness; baked to images/home/heart.bin
+  // and rendered as a mesh
   chromeRig(document.querySelector('canvas[data-heart-rig]'), `
 uniform float uEnamel; uniform float uAno;
 vec3 shade(vec3 q, vec3 nv, vec3 R){
-  if (q.x > 0.5) return metal(vec3(1.0), nv, R, 0.85);
   return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel);
 }`, {
     set(gl, U) {
