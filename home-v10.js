@@ -244,230 +244,91 @@ void main(){
     kpiNums.forEach((el) => kIO.observe(el));
   }
 
-  // ---- chrome pen nib next to the portrait (a "rig" in the style of the
-  // Figma Rig experiment): the Figma pen-tool nib and its dark cap as 2D
-  // SDFs — a five-point nib with breather hole and slit, a pill cap — each
-  // extruded into a bevelled slab that reflects the same three-light
-  // studio. Transparent background; the reflection swings toward the
-  // pointer anywhere over the hero. Still frame under reduced motion.
-  const rig = document.querySelector('canvas[data-figma-rig]');
-  if (rig) (() => {
-    const gl = rig.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
-    if (!gl) { rig.remove(); return; }
-    const FRAG = `
-precision highp float;
-uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough; uniform float uAno; uniform float uObj; uniform float uEnamel; uniform float uCap; uniform float uTime; uniform float uSpin;
-vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
-vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
-float sdSeg(vec2 p, vec2 a, vec2 b){ vec2 pa=p-a, ba=b-a; float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0); return length(pa-ba*h); }
-// signed distance to a convex 5-point nib outline (tip down)
-float sdNibPoly(vec2 p){
-  vec2 v0=vec2(-0.30,0.28), v1=vec2(0.30,0.28), v2=vec2(0.37,0.04), v3=vec2(0.0,-0.72), v4=vec2(-0.37,0.04);
-  float d = min(min(min(sdSeg(p,v0,v1), sdSeg(p,v1,v2)), min(sdSeg(p,v2,v3), sdSeg(p,v3,v4))), sdSeg(p,v4,v0));
-  // inside test: p is left of every edge walked counter-clockwise
-  #define LEFT(a,b) (((b).x-(a).x)*(p.y-(a).y) - ((b).y-(a).y)*(p.x-(a).x) >= 0.0)
-  bool inside = LEFT(v0,v4) && LEFT(v4,v3) && LEFT(v3,v2) && LEFT(v2,v1) && LEFT(v1,v0);
-  return inside ? -d : d;
-}
-float sdNib(vec2 p){
-  float d = sdNibPoly(p) - 0.03;
-  d = max(d, -(length(p-vec2(0.0,-0.12)) - 0.075));            // breather hole
-  vec2 q = abs(p - vec2(0.0,-0.44)) - vec2(0.012, 0.30);          // slit to the tip
-  d = max(d, -(length(max(q,0.0)) + min(max(q.x,q.y),0.0)));
-  return d;
-}
-float sdCap(vec2 p){ vec2 q = abs(p - vec2(0.0,0.50)) - vec2(0.34-0.12, 0.0); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - 0.12; }
-vec3 env(vec3 R, float rough){
-  float soft = mix(0.05, 0.55, rough), softK = mix(0.015, 0.25, rough);
-  vec3 c = vec3(0.02,0.021,0.024) + vec3(0.014,0.015,0.019)*clamp(R.y*0.5+0.5,0.0,1.0);
-  c += smoothstep(0.55-soft,0.55+soft, dot(R, normalize(vec3(-0.55,0.65,0.6)))) * vec3(1.0,0.97,0.9)*1.15;
-  c += smoothstep(0.82-softK,0.82+softK, dot(R, normalize(vec3(0.75,-0.35,0.45)))) * vec3(0.85,0.9,1.0)*1.4;
-  c += smoothstep(0.5-soft,0.5+soft, dot(R, normalize(vec3(0.2,-0.7,-0.6)))) * vec3(0.35,0.36,0.4)*0.35;
-  return c;
-}
-float sdAny(int m, vec2 p){ return m==0 ? sdNib(p) : sdCap(p); }
-void main(){
-  vec2 p = (gl_FragCoord.xy*2.0 - uRes) / min(uRes.x, uRes.y);
-  p *= 0.92;
-  float c=cos(uObj), s=sin(uObj); p = vec2(c*p.x + s*p.y, -s*p.x + c*p.y);
-  p.y += 0.06;
-  // axial spin: turning the pen about its long axis foreshortens its width
-  float cs = cos(uSpin), sn = sin(uSpin), k = max(abs(cs), 0.08);
-  p.x /= k;
-  float dn = sdNib(p), dc = sdCap(p);
-  int m = dn < dc ? 0 : 1; float d = min(dn, dc);
-  float px = 1.5 / min(uRes.x, uRes.y) / mix(1.0, k, 0.7);
-  float cov = 1.0 - smoothstep(-px, px, d);
-  if (cov <= 0.0) { gl_FragColor = vec4(0.0); return; }
-  float e = 0.0015;
-  vec2 g = vec2(sdAny(m, p+vec2(e,0.0)) - sdAny(m,p), sdAny(m, p+vec2(0.0,e)) - sdAny(m,p));
-  g.x /= k;
-  vec2 G = length(g) > 1e-6 ? normalize(g) : vec2(0.0,1.0);
-  // bevelled slab: rounded edge of radius B, flat face inside
-  float B = m==0 ? 0.09 : 0.12;
-  float ud = clamp(-d, 0.0, B);
-  vec3 n = normalize(vec3(G*(B - ud), sqrt(max(ud*(2.0*B-ud), 0.0))));
-  // tip the normal with the axial spin; past 90° we see the other face
-  n = vec3(n.x*cs + n.z*sn, n.y, -n.x*sn + n.z*cs);
-  if (n.z < 0.0) n = -n;
-  // un-rotate the in-plane normal so lighting stays fixed to the studio
-  n.xy = vec2(c*n.x - s*n.y, s*n.x + c*n.y);
-  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), n), uTiltX), uRotY);
-  vec3 base = m==0 ? vec3(0.93,0.94,0.96) : mix(vec3(0.16,0.17,0.18), vec3(0.93,0.94,0.96), uCap);
-  vec3 tint = mix(vec3(1.0), base, m==0 ? uAno : 1.0);
-  vec3 spec = env(R, uRough) + pow(1.0-n.z, mix(4.5,2.0,uRough))*tint*0.5;
-  vec3 col = spec * tint;
-  if (m==0) col = mix(col, tint * (0.60 + 0.28 * n.z) + spec * 0.45, uEnamel);
-  col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;
-  gl_FragColor = vec4(col*cov, cov);
-}`;
-    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
-    const prog = gl.createProgram();
-    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
-    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { rig.remove(); return; }
-    gl.useProgram(prog);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, 'a');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const uRes = gl.getUniformLocation(prog, 'uRes');
-    const uRot = gl.getUniformLocation(prog, 'uRotY');
-    const uTilt = gl.getUniformLocation(prog, 'uTiltX');
-    // look tuned in the Pen Rig console: finish 0.76, studio 13°,
-    // pen tilt 138° (tip to the upper right), enamel 0.21, nib tint 0.23,
-    // cap 0.52, auto-spin off; the pen turns about its own axis on scroll
-    gl.uniform1f(gl.getUniformLocation(prog, 'uRough'), 0.76);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uAno'), 0.23);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uEnamel'), 0.21);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uCap'), 0.52);
-    gl.uniform1f(gl.getUniformLocation(prog, 'uObj'), 138 * Math.PI / 180);
-    const uSpin = gl.getUniformLocation(prog, 'uSpin');
-    const BASE = 13 * Math.PI / 180;
-    gl.clearColor(0, 0, 0, 0);
-
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      rig.width = Math.max(1, Math.round(rig.clientWidth * dpr));
-      rig.height = Math.max(1, Math.round(rig.clientHeight * dpr));
-      gl.viewport(0, 0, rig.width, rig.height);
-    };
-    let tx = 0, ty = 0, ox = 0, oy = 0, raf = 0, visible = false, spin = 0;
-    // one full turn per ~1000px of scroll, eased so it glides to a stop
-    const scrollSpin = () => (window.scrollY || 0) * 0.0063;
-    const draw = (rot, tilt) => {
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform2f(uRes, rig.width, rig.height);
-      gl.uniform1f(uRot, rot); gl.uniform1f(uTilt, tilt);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    };
-    const loop = () => {
-      ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
-      spin += (scrollSpin() - spin) * 0.12;
-      gl.uniform1f(uSpin, spin);
-      draw(BASE + ox * 0.6, -0.17 + oy * 0.35);
-      raf = visible ? requestAnimationFrame(loop) : 0;
-    };
-    resize();
-    if (reduceMotion) { draw(BASE, -0.17); }
-    else {
-      const area = rig.closest('.hero') || document;
-      area.addEventListener('pointermove', (e) => {
-        const r = area.getBoundingClientRect ? area.getBoundingClientRect() : { left: 0, top: 0, width: innerWidth, height: innerHeight };
-        tx = ((e.clientX - r.left) / r.width) * 2 - 1;
-        ty = ((e.clientY - r.top) / r.height) * 2 - 1;
-      });
-      area.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
-      new IntersectionObserver(([en]) => {
-        visible = en.isIntersecting;
-        if (visible && !raf) raf = requestAnimationFrame(loop);
-      }).observe(rig);
-    }
-    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(BASE, -0.17); });
-  })();
-
-  // ---- chrome "Aa" type tile (from the Type Rig console): a rounded box
-  // with raised letters; the letters are text baked into a signed distance
-  // field (Felzenszwalb EDT) at load. Same studio as the pen; it turns about
-  // its own axis on scroll, opposite to the pen. Still under reduced motion.
-  const typeRig = document.querySelector('canvas[data-type-rig]');
-  if (typeRig) (() => {
-    const gl = typeRig.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
-    if (!gl) { typeRig.remove(); return; }
-    const FRAG = `
+  // ---- chrome objects next to the portrait (in the style of the Figma Rig
+  // experiment): a pen nib with its cap, an "Aa" type tile and a heart. Each
+  // is a 2D outline extruded into a solid with rounded edges and raymarched,
+  // so it has real thickness: the side walls show as it turns about its own
+  // axis on scroll. All three reflect the same three-light studio, which
+  // swings toward the pointer anywhere over the hero; the objects lean a
+  // little toward it too. Transparent background; still frame under reduced
+  // motion.
+  const RIG_HEAD = `
 precision highp float;
 uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough;
-uniform float uObj; uniform float uTileTint; uniform float uGlyphEnamel; uniform float uTime; uniform float uSpin;
-uniform sampler2D uSdf;
-const float TILE = 0.62, TR = 0.20, TB = 0.11, GB = 0.035, RANGE = 0.18;
-vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
+uniform float uObj; uniform float uSpin; uniform float uYaw; uniform float uPitch; uniform float uTime;
 vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
-float sdTile(vec2 p){ vec2 q = abs(p) - vec2(TILE - TR); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - TR; }
-// glyph SDF baked from text into a texture: 0.5 = edge, +-0.5 = +-RANGE
-float sdGlyph(vec2 p){
-  vec2 uv = p / (TILE*2.0*0.80) + 0.5;
-  if (uv.x < 0.0 || uv.y < 0.0 || uv.x > 1.0 || uv.y > 1.0) return RANGE;
-  return (texture2D(uSdf, vec2(uv.x, 1.0 - uv.y)).r - 0.5) * 2.0 * RANGE;
+vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
+vec3 rotZ(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c-v.y*s, v.x*s+v.y*c, v.z); }
+// view <-> object: in-plane angle, spin about the object's own y axis,
+// then the lean toward the viewer
+vec3 toObj(vec3 v){ return rotY(rotZ(rotX(rotY(v, -uYaw), -uPitch), -uObj), -uSpin); }
+vec3 toView(vec3 v){ return rotY(rotX(rotZ(rotY(v, uSpin), uObj), uPitch), uYaw); }
+// 2D distance d2 extruded to half-depth h, every edge rounded by r
+float sdSlab(float d2, float z, float h, float r){
+  vec2 w = vec2(d2 + r, abs(z) - h + r);
+  return min(max(w.x, w.y), 0.0) + length(max(w, 0.0)) - r;
 }
+float sdSeg(vec2 p, vec2 a, vec2 b){ vec2 pa=p-a, ba=b-a; float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0); return length(pa-ba*h); }
 vec3 env(vec3 R, float rough){
   float soft = mix(0.05, 0.55, rough), softK = mix(0.015, 0.25, rough);
   vec3 c = vec3(0.02,0.021,0.024) + vec3(0.014,0.015,0.019)*clamp(R.y*0.5+0.5,0.0,1.0);
   c += smoothstep(0.55-soft,0.55+soft, dot(R, normalize(vec3(-0.55,0.65,0.6)))) * vec3(1.0,0.97,0.9)*1.15;
   c += smoothstep(0.82-softK,0.82+softK, dot(R, normalize(vec3(0.75,-0.35,0.45)))) * vec3(0.85,0.9,1.0)*1.4;
   c += smoothstep(0.5-soft,0.5+soft, dot(R, normalize(vec3(0.2,-0.7,-0.6)))) * vec3(0.35,0.36,0.4)*0.35;
+  // broad softbox behind the camera: faces turned toward the viewer stay
+  // bright, so the darker side walls read as thickness
+  c += smoothstep(0.15, 1.0, dot(R, normalize(vec3(0.15,0.25,1.0)))) * vec3(0.95,0.95,0.97)*0.55 + 0.07;
   return c;
 }
-vec3 bevelN(vec2 G, float d, float B){ float ud = clamp(-d, 0.0, B); return normalize(vec3(G*(B-ud), sqrt(max(ud*(2.0*B-ud),0.0)))); }
+// chrome with an optional enamel (diffuse) coat, lit by the studio
+vec3 metal(vec3 base, vec3 nv, vec3 R, float enamel){
+  vec3 spec = env(R, uRough) + pow(1.0 - abs(nv.z), mix(4.5,2.0,uRough)) * base * 0.5;
+  return mix(spec * base, base * (0.60 + 0.28 * abs(nv.z)) + spec * 0.45, enamel);
+}
+`;
+  // each object supplies map(q) and shade(q, nv, R) before this
+  const RIG_MAIN = `
 void main(){
-  vec2 p = (gl_FragCoord.xy*2.0 - uRes) / min(uRes.x, uRes.y);
-  p *= 0.92;
-  float c=cos(uObj), s=sin(uObj); p = vec2(c*p.x + s*p.y, -s*p.x + c*p.y);
-  float cs = cos(uSpin), sn = sin(uSpin), k = max(abs(cs), 0.08);
-  p.x /= k;
-  float dt = sdTile(p);
-  float px = 1.5 / min(uRes.x, uRes.y) / mix(1.0, k, 0.7);
-  float cov = 1.0 - smoothstep(-px, px, dt);
+  vec2 p = (gl_FragCoord.xy*2.0 - uRes) / min(uRes.x, uRes.y) * 0.92;
+  vec3 ro = toObj(vec3(p, 2.0)), rd = toObj(vec3(0.0, 0.0, -1.0));
+  float b = dot(ro, rd), disc = b*b - dot(ro, ro) + 1.0;
+  if (disc < 0.0) { gl_FragColor = vec4(0.0); return; }
+  float t = max(-b - sqrt(disc), 0.0), tEnd = -b + sqrt(disc);
+  float dmin = 1e9, tmin = t; bool hit = false;
+  for (int i = 0; i < 96; i++){
+    float d = map(ro + rd*t);
+    if (d < dmin){ dmin = d; tmin = t; }
+    if (d < 0.0006){ hit = true; break; }
+    t += d * STEP;
+    if (t > tEnd) break;
+  }
+  // soft silhouette from the ray's closest approach
+  float px = 1.7 / min(uRes.x, uRes.y);
+  float cov = hit ? 1.0 : 1.0 - smoothstep(0.0, px, dmin);
   if (cov <= 0.0) { gl_FragColor = vec4(0.0); return; }
-  float e = 0.004;
-  float dg = sdGlyph(p);
-  bool glyph = dg < 0.0;
-  vec3 n; vec3 base; float enamel;
-  if (glyph){
-    vec2 g = vec2(sdGlyph(p+vec2(e,0.0)) - sdGlyph(p-vec2(e,0.0)), sdGlyph(p+vec2(0.0,e)) - sdGlyph(p-vec2(0.0,e)));
-    g.x /= k;
-    vec2 G = length(g) > 1e-6 ? normalize(g) : vec2(0.0,1.0);
-    n = bevelN(G, dg, GB);
-    base = vec3(0.96,0.96,0.97); enamel = uGlyphEnamel;
-  } else {
-    vec2 g = vec2(sdTile(p+vec2(e,0.0)) - sdTile(p-vec2(e,0.0)), sdTile(p+vec2(0.0,e)) - sdTile(p-vec2(0.0,e)));
-    g.x /= k;
-    vec2 G = length(g) > 1e-6 ? normalize(g) : vec2(0.0,1.0);
-    n = bevelN(G, dt, TB);
-    base = mix(vec3(0.93,0.94,0.96), vec3(1.0,0.78,0.22), uTileTint); enamel = 0.0;
-  }
-  n = vec3(n.x*cs + n.z*sn, n.y, -n.x*sn + n.z*cs);
-  if (n.z < 0.0) n = -n;
-  n.xy = vec2(c*n.x - s*n.y, s*n.x + c*n.y);
-  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), n), uTiltX), uRotY);
-  vec3 spec = env(R, uRough) + pow(1.0-n.z, mix(4.5,2.0,uRough))*base*0.5;
-  vec3 col = spec * base;
-  col = mix(col, base * (0.62 + 0.26*n.z) + spec*0.45, enamel);
-  if (!glyph){
-    // contact shadow of the raised letters on the tile face
-    float sh = sdGlyph(p + vec2(-0.025, 0.035));
-    col *= mix(0.55, 1.0, smoothstep(-0.01, 0.05, sh));
-  }
+  vec3 q = ro + rd*tmin;
+  vec2 e = vec2(0.0015, -0.0015);
+  vec3 n = normalize(e.xyy*map(q+e.xyy) + e.yyx*map(q+e.yyx) + e.yxy*map(q+e.yxy) + e.xxx*map(q+e.xxx));
+  vec3 nv = toView(n);
+  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), nv), uTiltX), uRotY);
+  vec3 col = shade(q, nv, R);
   col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;
   gl_FragColor = vec4(col*cov, cov);
 }`;
-    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+
+  // canvas: the rig's <canvas>; body: GLSL with map/shade; o.set(gl, U) sets
+  // the look; o.spin(scrollY) is the scroll-driven turn; o.init(gl, U, redraw)
+  // for extra resources (textures)
+  function chromeRig(canvas, body, o) {
+    if (!canvas) return;
+    const gl = canvas.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
+    if (!gl) { canvas.remove(); return; }
+    const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return s; };
     const prog = gl.createProgram();
     gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
-    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, RIG_HEAD + body + RIG_MAIN));
     gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { typeRig.remove(); return; }
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.remove(); return; }
     gl.useProgram(prog);
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
@@ -475,73 +336,37 @@ void main(){
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const U = (n) => gl.getUniformLocation(prog, n);
-    const tex = gl.createTexture();
-  var N = 512;
-  function edt1(f, n){
-    var d = new Float64Array(n), v = new Int32Array(n), z = new Float64Array(n+1), k = 0; v[0]=0; z[0]=-1e20; z[1]=1e20;
-    for (var q=1; q<n; q++){ var s; do { var r=v[k]; s=((f[q]+q*q)-(f[r]+r*r))/(2*q-2*r); } while (s<=z[k] && --k>=0); k++; v[k]=q; z[k]=s; z[k+1]=1e20; }
-    k=0; for (var q2=0; q2<n; q2++){ while (z[k+1]<q2) k++; var dq=q2-v[k]; d[q2]=dq*dq+f[v[k]]; } return d;
-  }
-  function edt(grid){
-    var f=new Float64Array(N), i, x, y;
-    for (x=0;x<N;x++){ for (y=0;y<N;y++) f[y]=grid[y*N+x]; var d=edt1(f,N); for (y=0;y<N;y++) grid[y*N+x]=d[y]; }
-    for (y=0;y<N;y++){ for (x=0;x<N;x++) f[x]=grid[y*N+x]; var d2=edt1(f,N); for (x=0;x<N;x++) grid[y*N+x]=Math.sqrt(d2[x]); }
-    return grid;
-  }
-  function bake(){
-    var c=document.createElement("canvas"); c.width=c.height=N; var x=c.getContext("2d");
-    x.fillStyle="#fff"; x.textAlign="center"; x.textBaseline="alphabetic";
-    x.font='700 '+Math.round(N*0.64)+'px "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif';
-    x.fillText("Aa", N/2, N*0.73);
-    var a=x.getImageData(0,0,N,N).data, inG=new Float64Array(N*N), outG=new Float64Array(N*N), INF=1e20;
-    for (var i=0;i<N*N;i++){ var on=a[i*4+3]>127; inG[i]=on?INF:0; outG[i]=on?0:INF; }
-    edt(inG); edt(outG);
-    var px=new Uint8Array(N*N), rangePx=N*(0.18/(0.62*2*0.80));
-    for (var j=0;j<N*N;j++){ var sd=(outG[j]-inG[j]); var v=0.5+0.5*Math.max(-1,Math.min(1,sd/rangePx)); px[j]=Math.round(v*255); }
-    gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);
-    gl.texImage2D(gl.TEXTURE_2D,0,gl.LUMINANCE,N,N,0,gl.LUMINANCE,gl.UNSIGNED_BYTE,px);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-  }
-
-
-    bake();
-    if (document.fonts && document.fonts.load) document.fonts.load('700 128px "Bricolage Grotesque"').then(bake, () => {});
-    // look tuned in the Type Rig console: finish 0.66, studio -17°,
-    // tile tilt -9°, chrome tile (gold 0), letters enamel 0.62
-    gl.uniform1i(U('uSdf'), 0);
-    gl.uniform1f(U('uRough'), 0.66);
-    gl.uniform1f(U('uObj'), -9 * Math.PI / 180);
-    gl.uniform1f(U('uTileTint'), 0.0);
-    gl.uniform1f(U('uGlyphEnamel'), 0.62);
-    const BASE = -17 * Math.PI / 180;
+    o.set(gl, U);
     gl.clearColor(0, 0, 0, 0);
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      typeRig.width = Math.max(1, Math.round(typeRig.clientWidth * dpr));
-      typeRig.height = Math.max(1, Math.round(typeRig.clientHeight * dpr));
-      gl.viewport(0, 0, typeRig.width, typeRig.height);
+      canvas.width = Math.max(1, Math.round(canvas.clientWidth * dpr));
+      canvas.height = Math.max(1, Math.round(canvas.clientHeight * dpr));
+      gl.viewport(0, 0, canvas.width, canvas.height);
     };
-    const draw = (spin, rot, tilt) => {
+    let tx = 0, ty = 0, ox = 0, oy = 0, spin = 0, raf = 0, visible = false;
+    const draw = () => {
       gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform2f(U('uRes'), typeRig.width, typeRig.height);
-      gl.uniform1f(U('uSpin'), spin); gl.uniform1f(U('uRotY'), rot); gl.uniform1f(U('uTiltX'), tilt);
+      gl.uniform2f(U('uRes'), canvas.width, canvas.height);
+      gl.uniform1f(U('uSpin'), o.spin0 + spin);
+      gl.uniform1f(U('uYaw'), o.yaw + ox * 0.3);
+      gl.uniform1f(U('uPitch'), o.pitch + oy * 0.22);
+      gl.uniform1f(U('uRotY'), o.base + ox * 0.6);
+      gl.uniform1f(U('uTiltX'), -0.17 + oy * 0.35);
       gl.uniform1f(U('uTime'), performance.now() * 0.001);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
-    let tx = 0, ty = 0, ox = 0, oy = 0, spin = 0, raf = 0, visible = false;
-    const target = () => -(window.scrollY || 0) * 0.0063;
     const loop = () => {
       ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
-      spin += (target() - spin) * 0.12;
-      draw(spin, BASE + ox * 0.6, -0.17 + oy * 0.35);
+      spin += (o.spin(window.scrollY || 0) - spin) * 0.12;
+      draw();
       raf = visible ? requestAnimationFrame(loop) : 0;
     };
+    if (o.init) o.init(gl, U, () => { if (reduceMotion) draw(); });
     resize();
-    if (reduceMotion) { draw(0, BASE, -0.17); }
+    if (reduceMotion) draw();
     else {
-      const area = typeRig.closest('.hero') || document;
+      const area = canvas.closest('.hero') || document.documentElement;
       area.addEventListener('pointermove', (e) => {
         const r = area.getBoundingClientRect();
         tx = ((e.clientX - r.left) / r.width) * 2 - 1;
@@ -551,27 +376,132 @@ void main(){
       new IntersectionObserver(([en]) => {
         visible = en.isIntersecting;
         if (visible && !raf) raf = requestAnimationFrame(loop);
-      }).observe(typeRig);
+      }).observe(canvas);
     }
-    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(0, BASE, -0.17); });
-  })();
+    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(); });
+  }
 
-  // ---- chrome heart (same studio and finish as the pen): an exact heart
-  // SDF with a deep bevel, so it reads as a puffy chrome pillow. Turns about
-  // its own axis on scroll; still under reduced motion.
-  const heartRig = document.querySelector('canvas[data-heart-rig]');
-  if (heartRig) (() => {
-    const gl = heartRig.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
-    if (!gl) { heartRig.remove(); return; }
-    const FRAG = `
-precision highp float;
-uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough;
-uniform float uObj; uniform float uEnamel; uniform float uAno; uniform float uTime; uniform float uSpin;
-vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
-vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
+  // pen nib (five-point outline with breather hole and slit) and its pill
+  // cap. Look tuned in the Pen Rig console: finish 0.76, studio 13°, pen
+  // tilt 138° (tip to the upper right), enamel 0.21, nib tint 0.23, cap 0.52
+  chromeRig(document.querySelector('canvas[data-figma-rig]'), `
+#define STEP 0.9
+uniform float uAno; uniform float uEnamel; uniform float uCap;
+float sdNibPoly(vec2 p){
+  vec2 v0=vec2(-0.30,0.28), v1=vec2(0.30,0.28), v2=vec2(0.37,0.04), v3=vec2(0.0,-0.72), v4=vec2(-0.37,0.04);
+  float d = min(min(min(sdSeg(p,v0,v1), sdSeg(p,v1,v2)), min(sdSeg(p,v2,v3), sdSeg(p,v3,v4))), sdSeg(p,v4,v0));
+  #define LEFT(a,b) (((b).x-(a).x)*(p.y-(a).y) - ((b).y-(a).y)*(p.x-(a).x) >= 0.0)
+  bool inside = LEFT(v0,v4) && LEFT(v4,v3) && LEFT(v3,v2) && LEFT(v2,v1) && LEFT(v1,v0);
+  return inside ? -d : d;
+}
+float sdNib2(vec2 p){
+  float d = sdNibPoly(p) - 0.03;
+  d = max(d, -(length(p-vec2(0.0,-0.12)) - 0.075));
+  vec2 q = abs(p - vec2(0.0,-0.44)) - vec2(0.012, 0.30);
+  return max(d, -(length(max(q,0.0)) + min(max(q.x,q.y),0.0)));
+}
+float sdCap2(vec2 p){ vec2 q = abs(p - vec2(0.0,0.50)) - vec2(0.22, 0.0); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - 0.12; }
+float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.045); }
+float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.12, 0.11); }
+float map(vec3 q){ return min(nib(q), cap(q)); }
+vec3 shade(vec3 q, vec3 nv, vec3 R){
+  if (nib(q) < cap(q)) return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel);
+  return metal(mix(vec3(0.16,0.17,0.18), vec3(0.93,0.94,0.96), uCap), nv, R, 0.0);
+}`, {
+    set(gl, U) {
+      gl.uniform1f(U('uRough'), 0.76);
+      gl.uniform1f(U('uAno'), 0.23);
+      gl.uniform1f(U('uEnamel'), 0.21);
+      gl.uniform1f(U('uCap'), 0.52);
+      gl.uniform1f(U('uObj'), 138 * Math.PI / 180);
+    },
+    base: 13 * Math.PI / 180, spin0: 0.55, yaw: 0.0, pitch: 0.12,
+    // one full turn per ~1000px of scroll, eased so it glides to a stop
+    spin: (y) => y * 0.0063,
+  });
+
+  // "Aa" type tile: a rounded chrome tile with raised letters; the letters
+  // are text baked into a signed distance field (Felzenszwalb EDT) at load.
+  // Look tuned in the Type Rig console: finish 0.66, studio -17°, tile tilt
+  // -9°, chrome tile, letters enamel 0.62. Turns opposite to the pen
+  chromeRig(document.querySelector('canvas[data-type-rig]'), `
+#define STEP 0.8
+uniform float uGlyphEnamel; uniform sampler2D uSdf;
+const float TILE = 0.62, TR = 0.20, TH = 0.085, RANGE = 0.18;
+float sdTile2(vec2 p){ vec2 q = abs(p) - vec2(TILE - TR); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - TR; }
+// glyph SDF baked from text into a texture: 0.5 = edge, +-0.5 = +-RANGE
+float sdGlyph2(vec2 p){
+  vec2 uv = p / (TILE*2.0*0.80) + 0.5;
+  if (uv.x < 0.0 || uv.y < 0.0 || uv.x > 1.0 || uv.y > 1.0) return RANGE;
+  return (texture2D(uSdf, vec2(uv.x, 1.0 - uv.y)).r - 0.5) * 2.0 * RANGE;
+}
+float tile(vec3 q){ return sdSlab(sdTile2(q.xy), q.z, TH, 0.07); }
+float glyph(vec3 q){ return sdSlab(sdGlyph2(q.xy), q.z - TH, 0.045, 0.028); }
+float map(vec3 q){ return min(tile(q), glyph(q)); }
+vec3 shade(vec3 q, vec3 nv, vec3 R){
+  if (glyph(q) < tile(q)) return metal(vec3(0.96,0.96,0.97), nv, R, uGlyphEnamel);
+  vec3 col = metal(vec3(0.93,0.94,0.96), nv, R, 0.0);
+  // contact shadow of the raised letters on the tile face
+  if (q.z > TH - 0.03) col *= mix(0.55, 1.0, smoothstep(-0.01, 0.05, sdGlyph2(q.xy + vec2(-0.025, 0.035))));
+  return col;
+}`, {
+    set(gl, U) {
+      gl.uniform1i(U('uSdf'), 0);
+      gl.uniform1f(U('uRough'), 0.66);
+      gl.uniform1f(U('uObj'), -9 * Math.PI / 180);
+      gl.uniform1f(U('uGlyphEnamel'), 0.62);
+    },
+    init(gl, U, redraw) {
+      const tex = gl.createTexture(), N = 512;
+      const edt1 = (f, n) => {
+        const d = new Float64Array(n), v = new Int32Array(n), z = new Float64Array(n + 1);
+        let k = 0; v[0] = 0; z[0] = -1e20; z[1] = 1e20;
+        for (let q = 1; q < n; q++) {
+          let s;
+          do { const r = v[k]; s = ((f[q] + q * q) - (f[r] + r * r)) / (2 * q - 2 * r); } while (s <= z[k] && --k >= 0);
+          k++; v[k] = q; z[k] = s; z[k + 1] = 1e20;
+        }
+        k = 0;
+        for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; const dq = q - v[k]; d[q] = dq * dq + f[v[k]]; }
+        return d;
+      };
+      const edt = (g) => {
+        const f = new Float64Array(N);
+        for (let x = 0; x < N; x++) { for (let y = 0; y < N; y++) f[y] = g[y * N + x]; const d = edt1(f, N); for (let y = 0; y < N; y++) g[y * N + x] = d[y]; }
+        for (let y = 0; y < N; y++) { for (let x = 0; x < N; x++) f[x] = g[y * N + x]; const d = edt1(f, N); for (let x = 0; x < N; x++) g[y * N + x] = Math.sqrt(d[x]); }
+      };
+      const bake = () => {
+        const c = document.createElement('canvas'); c.width = c.height = N;
+        const x = c.getContext('2d');
+        x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+        x.font = '700 ' + Math.round(N * 0.64) + 'px "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif';
+        x.fillText('Aa', N / 2, N * 0.73);
+        const a = x.getImageData(0, 0, N, N).data, inG = new Float64Array(N * N), outG = new Float64Array(N * N);
+        for (let i = 0; i < N * N; i++) { const on = a[i * 4 + 3] > 127; inG[i] = on ? 1e20 : 0; outG[i] = on ? 0 : 1e20; }
+        edt(inG); edt(outG);
+        const px = new Uint8Array(N * N), rangePx = N * (0.18 / (0.62 * 2 * 0.80));
+        for (let j = 0; j < N * N; j++) px[j] = Math.round((0.5 + 0.5 * Math.max(-1, Math.min(1, (outG[j] - inG[j]) / rangePx))) * 255);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, N, N, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, px);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      };
+      bake();
+      if (document.fonts && document.fonts.load) document.fonts.load('700 128px "Bricolage Grotesque"').then(() => { bake(); redraw(); }, () => {});
+    },
+    base: -17 * Math.PI / 180, spin0: -0.4, yaw: 0.0, pitch: 0.18,
+    spin: (y) => -y * 0.0063,
+  });
+
+  // heart: an exact heart outline (after Inigo Quilez) extruded deep with
+  // fully rounded sides, so it reads as a puffy chrome pillow. Pen's finish
+  // so the three objects read as one set
+  chromeRig(document.querySelector('canvas[data-heart-rig]'), `
+#define STEP 0.9
+uniform float uEnamel; uniform float uAno;
 float dot2(vec2 v){ return dot(v,v); }
-// exact heart SDF (after Inigo Quilez), rounded a little
-float sdHeart(vec2 p){
+float sdHeart2(vec2 p){
   p = p / 0.78 + vec2(0.0, 0.56);
   p.x = abs(p.x);
   float d;
@@ -579,101 +509,15 @@ float sdHeart(vec2 p){
   else d = sqrt(min(dot2(p - vec2(0.0,1.0)), dot2(p - 0.5*max(p.x+p.y,0.0)))) * sign(p.x - p.y);
   return d * 0.78 - 0.02;
 }
-vec3 env(vec3 R, float rough){
-  float soft = mix(0.05, 0.55, rough), softK = mix(0.015, 0.25, rough);
-  vec3 c = vec3(0.02,0.021,0.024) + vec3(0.014,0.015,0.019)*clamp(R.y*0.5+0.5,0.0,1.0);
-  c += smoothstep(0.55-soft,0.55+soft, dot(R, normalize(vec3(-0.55,0.65,0.6)))) * vec3(1.0,0.97,0.9)*1.15;
-  c += smoothstep(0.82-softK,0.82+softK, dot(R, normalize(vec3(0.75,-0.35,0.45)))) * vec3(0.85,0.9,1.0)*1.4;
-  c += smoothstep(0.5-soft,0.5+soft, dot(R, normalize(vec3(0.2,-0.7,-0.6)))) * vec3(0.35,0.36,0.4)*0.35;
-  return c;
-}
-
-void main(){
-  vec2 p = (gl_FragCoord.xy*2.0 - uRes) / min(uRes.x, uRes.y);
-  p *= 0.92;
-  float c=cos(uObj), s=sin(uObj); p = vec2(c*p.x + s*p.y, -s*p.x + c*p.y);
-  float cs = cos(uSpin), sn = sin(uSpin), k = max(abs(cs), 0.08);
-  p.x /= k;
-  float d = sdHeart(p);
-  float px = 1.5 / min(uRes.x, uRes.y) / mix(1.0, k, 0.7);
-  float cov = 1.0 - smoothstep(-px, px, d);
-  if (cov <= 0.0) { gl_FragColor = vec4(0.0); return; }
-  float e = 0.0015;
-  vec2 g = vec2(sdHeart(p+vec2(e,0.0)) - d, sdHeart(p+vec2(0.0,e)) - d);
-  g.x /= k;
-  vec2 G = length(g) > 1e-6 ? normalize(g) : vec2(0.0,1.0);
-  // rounded edge narrower than the heart's half-width, so the two sides
-  // meet on a flat face instead of a hard crease along the middle
-  float B = 0.15;
-  float ud = clamp(-d, 0.0, B);
-  vec3 n = normalize(vec3(G*(B - ud), sqrt(max(ud*(2.0*B-ud), 0.0))));
-  n = vec3(n.x*cs + n.z*sn, n.y, -n.x*sn + n.z*cs);
-  if (n.z < 0.0) n = -n;
-  n.xy = vec2(c*n.x - s*n.y, s*n.x + c*n.y);
-  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), n), uTiltX), uRotY);
-  vec3 tint = mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno);
-  vec3 spec = env(R, uRough) + pow(1.0-n.z, mix(4.5,2.0,uRough))*tint*0.5;
-  vec3 col = spec * tint;
-  col = mix(col, tint * (0.60 + 0.28 * n.z) + spec * 0.45, uEnamel);
-  col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;
-  gl_FragColor = vec4(col*cov, cov);
-}`;
-    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
-    const prog = gl.createProgram();
-    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
-    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { heartRig.remove(); return; }
-    gl.useProgram(prog);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, 'a');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const U = (n) => gl.getUniformLocation(prog, n);
-    // pen's finish so the three objects read as one set
-    gl.uniform1f(U('uRough'), 0.76);
-    gl.uniform1f(U('uEnamel'), 0.21);
-    gl.uniform1f(U('uAno'), 0.23);
-    gl.uniform1f(U('uObj'), 12 * Math.PI / 180);
-    const BASE = 13 * Math.PI / 180;
-    gl.clearColor(0, 0, 0, 0);
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      heartRig.width = Math.max(1, Math.round(heartRig.clientWidth * dpr));
-      heartRig.height = Math.max(1, Math.round(heartRig.clientHeight * dpr));
-      gl.viewport(0, 0, heartRig.width, heartRig.height);
-    };
-    const draw = (spin, rot, tilt) => {
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform2f(U('uRes'), heartRig.width, heartRig.height);
-      gl.uniform1f(U('uSpin'), spin); gl.uniform1f(U('uRotY'), rot); gl.uniform1f(U('uTiltX'), tilt);
-      gl.uniform1f(U('uTime'), performance.now() * 0.001);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    };
-    let tx = 0, ty = 0, ox = 0, oy = 0, spin = 0, raf = 0, visible = false;
-    const target = () => (window.scrollY || 0) * 0.0045;
-    const loop = () => {
-      ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
-      spin += (target() - spin) * 0.12;
-      draw(spin, BASE + ox * 0.6, -0.17 + oy * 0.35);
-      raf = visible ? requestAnimationFrame(loop) : 0;
-    };
-    resize();
-    if (reduceMotion) { draw(0, BASE, -0.17); }
-    else {
-      const area = heartRig.closest('.hero') || document;
-      area.addEventListener('pointermove', (e) => {
-        const r = area.getBoundingClientRect();
-        tx = ((e.clientX - r.left) / r.width) * 2 - 1;
-        ty = ((e.clientY - r.top) / r.height) * 2 - 1;
-      });
-      area.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
-      new IntersectionObserver(([en]) => {
-        visible = en.isIntersecting;
-        if (visible && !raf) raf = requestAnimationFrame(loop);
-      }).observe(heartRig);
-    }
-    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(0, BASE, -0.17); });
-  })();
+float map(vec3 q){ return sdSlab(sdHeart2(q.xy), q.z, 0.15, 0.13); }
+vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
+    set(gl, U) {
+      gl.uniform1f(U('uRough'), 0.76);
+      gl.uniform1f(U('uEnamel'), 0.21);
+      gl.uniform1f(U('uAno'), 0.23);
+      gl.uniform1f(U('uObj'), 12 * Math.PI / 180);
+    },
+    base: 13 * Math.PI / 180, spin0: 0.32, yaw: 0.0, pitch: -0.15,
+    spin: (y) => y * 0.0045,
+  });
 })();
