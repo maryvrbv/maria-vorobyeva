@@ -245,7 +245,7 @@ void main(){
   }
 
   // ---- chrome objects next to the portrait (in the style of the Figma Rig
-  // experiment): a pen nib with its cap, an "Aa" type tile and a heart. Each
+  // experiment): a pen nib with its cap, an "Aa" type tile and sparkles. Each
   // is a 2D outline extruded into a solid with rounded edges and raymarched,
   // so it has real thickness: the side walls show as it turns about its own
   // axis on scroll. All three reflect the same three-light studio, which
@@ -316,68 +316,25 @@ void main(){
   gl_FragColor = vec4(col*cov, cov);
 }`;
 
-  // canvas: the rig's <canvas>; body: GLSL with map/shade (or just shade
-  // when o.mesh names a model to rasterise instead of raymarching); o.set(gl,
-  // U) sets the look; o.spin(scrollY) is the scroll-driven turn;
-  // o.init(gl, U, redraw) for extra resources (textures)
-  const MESH_VS = `
-attribute vec3 aP; attribute vec3 aN; attribute float aM; varying vec3 vN; varying float vM;
-void main(){
-  vec3 v = toView(aP);
-  vN = toView(aN);
-  vM = aM;
-  gl_Position = vec4(v.xy / 0.92 * min(uRes.x, uRes.y) / uRes, -v.z * 0.5, 1.0);
-}`;
-  const MESH_FS = `
-varying vec3 vN; varying float vM;
-void main(){
-  vec3 nv = normalize(vN);
-  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), nv), uTiltX), uRotY);
-  vec3 col = shade(vec3(vM), nv, R);
-  col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;
-  gl_FragColor = vec4(col, 1.0);
-}`;
+  // canvas: the rig's <canvas>; body: GLSL with map/shade; o.set(gl, U) sets
+  // the look; o.spin(scrollY) is the scroll-driven turn; o.init(gl, U, redraw)
+  // for extra resources (textures)
   function chromeRig(canvas, body, o) {
     if (!canvas) return;
     const gl = canvas.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
     if (!gl) { canvas.remove(); return; }
     const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return s; };
     const prog = gl.createProgram();
-    if (o.mesh) {
-      gl.attachShader(prog, sh(gl.VERTEX_SHADER, RIG_HEAD + MESH_VS));
-      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, RIG_HEAD + body + MESH_FS));
-    } else {
-      gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
-      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, RIG_HEAD + body + RIG_MAIN));
-    }
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, RIG_HEAD + body + RIG_MAIN));
     gl.linkProgram(prog);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.remove(); return; }
     gl.useProgram(prog);
-    // model: [nVerts, nIdx] uint32, then xyz, normal, material id float32
-    // per vertex, then uint16 triangle indices
-    let count = o.mesh ? 0 : -1;
-    if (o.mesh) {
-      gl.enable(gl.DEPTH_TEST);
-      fetch(o.mesh).then((r) => r.arrayBuffer()).then((buf) => {
-        const [nv, ni] = new Uint32Array(buf, 0, 2);
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(buf, 8, nv * 7), gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(buf, 8 + nv * 28, ni), gl.STATIC_DRAW);
-        const aP = gl.getAttribLocation(prog, 'aP'), aN = gl.getAttribLocation(prog, 'aN'), aM = gl.getAttribLocation(prog, 'aM');
-        gl.enableVertexAttribArray(aP); gl.vertexAttribPointer(aP, 3, gl.FLOAT, false, 28, 0);
-        gl.enableVertexAttribArray(aN); gl.vertexAttribPointer(aN, 3, gl.FLOAT, false, 28, 12);
-        if (aM >= 0) { gl.enableVertexAttribArray(aM); gl.vertexAttribPointer(aM, 1, gl.FLOAT, false, 28, 24); }
-        count = ni;
-        if (reduceMotion) draw();
-      }, () => canvas.remove());
-    } else {
-      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-      const loc = gl.getAttribLocation(prog, 'a');
-      gl.enableVertexAttribArray(loc);
-      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    }
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'a');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const U = (n) => gl.getUniformLocation(prog, n);
     o.set(gl, U);
     gl.clearColor(0, 0, 0, 0);
@@ -389,8 +346,7 @@ void main(){
     };
     let tx = 0, ty = 0, ox = 0, oy = 0, spin = 0, raf = 0, visible = false;
     const draw = () => {
-      if (count === 0) return;
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.clear(gl.COLOR_BUFFER_BIT);
       gl.uniform2f(U('uRes'), canvas.width, canvas.height);
       gl.uniform1f(U('uSpin'), o.spin0 + spin);
       gl.uniform1f(U('uYaw'), o.yaw + ox * 0.3);
@@ -398,8 +354,7 @@ void main(){
       gl.uniform1f(U('uRotY'), o.base + ox * 0.6);
       gl.uniform1f(U('uTiltX'), -0.17 + oy * 0.35);
       gl.uniform1f(U('uTime'), performance.now() * 0.001);
-      if (count > 0) gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);
-      else gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
     const loop = () => {
       ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
@@ -448,7 +403,7 @@ float sdNib2(vec2 p){
 }
 float sdCap2(vec2 p){ vec2 q = abs(p - vec2(0.0,0.47)) - vec2(0.21, 0.0); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - 0.12; }
 // half-depths are scaled to each canvas so all three objects look about
-// as thick as each other on the card (pen canvas 31.5%, tile 24%, heart 32.5%)
+// as thick as each other on the card (pen canvas 31.5%, tile 24%, sparkles 36%)
 float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.045); }
 float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.055); }
 float map(vec3 q){ return min(nib(q), cap(q)); }
@@ -565,22 +520,34 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     spin: (y) => -y * 0.011,
   });
 
-  // heart: a flat "coin" in the silhouette of the supplied heart-emoji model
-  // — flat faces, a rounded rim and the same half-depth as the pen and tile
-  // slabs; built offline and baked to images/home/heart.bin, rendered as a
-  // mesh
-  chromeRig(document.querySelector('canvas[data-heart-rig]'), `
+  // sparkles: two four-point stars, each a square with a circle cut from
+  // every corner (concave sides, long rays), tips rounded off; fitted to the
+  // ✨ reference. Flat chrome slabs like the pen and tile, rounded rims
+  chromeRig(document.querySelector('canvas[data-sparkle-rig]'), `
+#define STEP 0.9
 uniform float uEnamel; uniform float uAno;
-vec3 shade(vec3 q, vec3 nv, vec3 R){
-  return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel);
-}`, {
+// star with arm length L (circle centre c·L, radius ρ·L fitted to the
+// reference: c 0.972, ρ 0.972), shrunk then offset by RT to round the tips
+float sdStar(vec2 p, float L){
+  const float RT = 0.012;
+  L -= RT * 1.6;
+  vec2 q = abs(p);
+  vec2 b = q - vec2(L);
+  float box = length(max(b, 0.0)) + min(max(b.x, b.y), 0.0);
+  float cut = length(q - vec2(0.972 * L)) - 0.972 * L;
+  return max(box, -cut) - RT;
+}
+float map(vec3 q){
+  float d = min(sdStar(q.xy - vec2(-0.142, 0.132), 0.419), sdStar(q.xy - vec2(0.300, -0.290), 0.259));
+  return sdSlab(d, q.z, 0.057, 0.02);
+}
+vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
     set(gl, U) {
       gl.uniform1f(U('uRough'), 0.76);
       gl.uniform1f(U('uEnamel'), 0.21);
       gl.uniform1f(U('uAno'), 0.23);
-      gl.uniform1f(U('uObj'), 12 * Math.PI / 180);
+      gl.uniform1f(U('uObj'), -6 * Math.PI / 180);
     },
-    mesh: 'images/home/heart.bin',
     base: 13 * Math.PI / 180, spin0: 0.32, yaw: 0.0, pitch: -0.15,
     spin: (y) => y * 0.0045,
   });
