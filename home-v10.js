@@ -547,12 +547,11 @@ float star(vec3 q, vec2 c, float L, float a){
   q = rotY(q, -a);
   return sdSlab(sdStar(q.xy, L), q.z, 0.057, 0.02);
 }
-// each star turns on its own axis: a slow idle spin plus the scroll turn,
-// the small one faster and the other way round
+// each star turns on its own axis, both in step: a slow idle spin plus
+// the scroll turn
 float map(vec3 q){
-  float t = uTime;
-  return min(star(q, vec2(-0.142, 0.132), 0.419, 0.35 + uTurn + t * 0.55),
-             star(q, vec2(0.300, -0.290), 0.259, -0.5 - uTurn * 1.4 - t * 0.85));
+  float a = 0.35 + uTurn + uTime * 0.55;
+  return min(star(q, vec2(-0.142, 0.132), 0.419, a), star(q, vec2(0.300, -0.290), 0.259, a));
 }
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
     set(gl, U) {
