@@ -547,10 +547,10 @@ float star(vec3 q, vec2 c, float L, float a){
   q = rotY(q, -a);
   return sdSlab(sdStar(q.xy, L), q.z, 0.057, 0.02);
 }
-// each star turns on its own axis, both in step: a slow idle spin plus
-// the scroll turn
+// each star turns on its own axis, both in step, on scroll only — like
+// the pen and the tile
 float map(vec3 q){
-  float a = 0.35 + uTurn + uTime * 0.55;
+  float a = 0.35 + uTurn;
   return min(star(q, vec2(-0.142, 0.132), 0.419, a), star(q, vec2(0.300, -0.290), 0.259, a));
 }
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
@@ -561,6 +561,7 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,
       gl.uniform1f(U('uObj'), -6 * Math.PI / 180);
     },
     base: 13 * Math.PI / 180, spin0: 0.0, yaw: 0.0, pitch: -0.15, selfSpin: true,
-    spin: (y) => y * 0.0045,
+    // same rate as the pen: one full turn per ~1000px of scroll
+    spin: (y) => y * 0.0063,
   });
 })();
