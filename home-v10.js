@@ -422,6 +422,7 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
 
   // "Aa" type tile: a rounded chrome tile with raised letters; the letters
   // are text baked into a signed distance field (Felzenszwalb EDT) at load.
+  // The back carries the Figma logo in coloured enamel.
   // Look tuned in the Type Rig console: finish 0.66, studio -17°, tile tilt
   // -9°, chrome tile, letters enamel 0.62. Turns opposite to the pen
   chromeRig(document.querySelector('canvas[data-type-rig]'), `
@@ -435,14 +436,45 @@ float sdGlyph2(vec2 p){
   if (uv.x < 0.0 || uv.y < 0.0 || uv.x > 1.0 || uv.y > 1.0) return RANGE;
   return (texture2D(uSdf, vec2(uv.x, 1.0 - uv.y)).r - 0.5) * 2.0 * RANGE;
 }
+float sdBox2(vec2 p, vec2 c, vec2 h){ vec2 q = abs(p - c) - h; return length(max(q,0.0)) + min(max(q.x,q.y),0.0); }
+// Figma logo on the back, in its 38x57 SVG units (y down), mirrored so it
+// reads from behind; five pieces with a hairline gap, id = which piece
+const float LS = 0.78 / 57.0, GAP = 0.7;
+float sdFigma2(vec2 p, out float id){
+  vec2 u = vec2(19.0 - p.x / LS, 28.5 - p.y / LS);
+  float d0 = min(length(u - vec2(9.5,9.5)) - 9.5, sdBox2(u, vec2(14.25,9.5), vec2(4.75,9.5)));
+  float d1 = min(length(u - vec2(28.5,9.5)) - 9.5, sdBox2(u, vec2(23.75,9.5), vec2(4.75,9.5)));
+  float d2 = min(length(u - vec2(9.5,28.5)) - 9.5, sdBox2(u, vec2(14.25,28.5), vec2(4.75,9.5)));
+  float d3 = length(u - vec2(28.5,28.5)) - 9.5;
+  float d4 = min(length(u - vec2(9.5,47.5)) - 9.5, sdBox2(u, vec2(14.25,42.75), vec2(4.75,4.75)));
+  float d = d0; id = 0.0;
+  if (d1 < d){ d = d1; id = 1.0; }
+  if (d2 < d){ d = d2; id = 2.0; }
+  if (d3 < d){ d = d3; id = 3.0; }
+  if (d4 < d){ d = d4; id = 4.0; }
+  return (d + GAP) * LS;
+}
+float sdFigma2(vec2 p){ float id; return sdFigma2(p, id); }
 float tile(vec3 q){ return sdSlab(sdTile2(q.xy), q.z, TH, 0.07); }
 float glyph(vec3 q){ return sdSlab(sdGlyph2(q.xy), q.z - TH, 0.045, 0.028); }
-float map(vec3 q){ return min(tile(q), glyph(q)); }
+float logo(vec3 q){ return sdSlab(sdFigma2(q.xy), q.z + TH, 0.04, 0.024); }
+float map(vec3 q){ return min(tile(q), min(glyph(q), logo(q))); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){
-  if (glyph(q) < tile(q)) return metal(vec3(0.96,0.96,0.97), nv, R, uGlyphEnamel);
+  float dt = tile(q), dg = glyph(q), dl = logo(q);
+  if (dg < dt && dg < dl) return metal(vec3(0.96,0.96,0.97), nv, R, uGlyphEnamel);
+  if (dl < dt){
+    float id; sdFigma2(q.xy, id);
+    vec3 c = id < 0.5 ? vec3(0.949,0.306,0.118) : id < 1.5 ? vec3(1.0,0.447,0.384)
+           : id < 2.5 ? vec3(0.635,0.349,1.0) : id < 3.5 ? vec3(0.102,0.737,0.996) : vec3(0.039,0.812,0.514);
+    // glossy coloured enamel: keep the brand colours saturated, with just
+    // a clear-coat reflection on top
+    vec3 spec = env(R, uRough);
+    return c * (0.6 + 0.3 * abs(nv.z)) + spec * 0.07 + pow(1.0 - abs(nv.z), 3.0) * spec * 0.5;
+  }
   vec3 col = metal(vec3(0.93,0.94,0.96), nv, R, 0.0);
-  // contact shadow of the raised letters on the tile face
+  // contact shadow of the raised letters / logo on the tile faces
   if (q.z > TH - 0.03) col *= mix(0.55, 1.0, smoothstep(-0.01, 0.05, sdGlyph2(q.xy + vec2(-0.025, 0.035))));
+  if (q.z < -TH + 0.03) col *= mix(0.55, 1.0, smoothstep(-0.01, 0.05, sdFigma2(q.xy + vec2(0.025, 0.035))));
   return col;
 }`, {
     set(gl, U) {
@@ -491,7 +523,8 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
       if (document.fonts && document.fonts.load) document.fonts.load('700 128px "Bricolage Grotesque"').then(() => { bake(); redraw(); }, () => {});
     },
     base: -17 * Math.PI / 180, spin0: -0.4, yaw: 0.0, pitch: 0.18,
-    spin: (y) => -y * 0.0063,
+    // flips to the Figma logo within the first ~250px, while still in view
+    spin: (y) => -y * 0.011,
   });
 
   // heart: an exact heart outline (after Inigo Quilez) extruded deep with
