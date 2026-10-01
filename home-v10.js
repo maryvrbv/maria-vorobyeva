@@ -148,40 +148,53 @@
     window.addEventListener('scroll', hide, { passive: true });
   }
 
-  // ---- glow panels: grainy "fluted glass" gradient in WebGL ----
-  // Domain-warped value noise drives a violet / periwinkle / peach / ink
-  // palette; a sine on x adds vertical ribbing like fluted glass, and a
-  // per-pixel hash adds film grain. Renders only while on screen; under
-  // reduced motion it draws one still frame. The CSS gradient on
-  // .glow-panel stays underneath as the fallback.
-  const PALETTES = {
-    dawn: [[0.73, 0.64, 1.00], [0.43, 0.49, 0.94], [0.96, 0.71, 0.55], [0.15, 0.10, 0.36]],
-    dusk: [[0.56, 0.45, 0.98], [0.96, 0.62, 0.52], [0.36, 0.55, 0.95], [0.10, 0.07, 0.24]],
+  // ---- glow panels: soft moving gradient in WebGL ----
+  // Domain-warped value noise drives a four-colour palette; optional
+  // vertical ribbing (fluted glass) and film grain, and a soft light that
+  // follows the pointer. Every knob lives in GLOW so the tuning panel
+  // (open with ?tune in the URL) can change it live.
+  // Renders only while on screen; under reduced motion it draws one still
+  // frame. The CSS gradient on the element underneath is the fallback.
+  const hex = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16) / 255);
+  const GLOW = {
+    // values picked in the tuning panel
+    speed: 0.07,     // how fast the colours drift
+    scale: 1.85,     // size of the blobs (lower = bigger, calmer)
+    warp: 0.55,      // how much the blobs swirl into each other
+    ribs: 0.1,       // fluted-glass ribbing (the "ripple"); 0 = off
+    ribFreq: 144,    // rib density
+    grain: 0.08,     // film grain
+    glow: 0.35,      // pointer light
+    colors: ['#baa3ff', '#6e7df0', '#ffbab3', '#26195c'],
   };
   const FRAG = `
 precision mediump float;
 uniform vec2 uRes; uniform float uTime; uniform vec3 uA; uniform vec3 uB; uniform vec3 uC; uniform vec3 uD; uniform float uSeed;
+uniform float uScale; uniform float uWarp; uniform float uRibs; uniform float uRibFreq; uniform float uGrain; uniform float uGlow;
+uniform vec2 uMouse;
 float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float n(vec2 p){ vec2 i = floor(p), f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);
   return mix(mix(h(i), h(i + vec2(1, 0)), u.x), mix(h(i + vec2(0, 1)), h(i + vec2(1, 1)), u.x), u.y); }
 float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 4; i++){ v += a * n(p); p *= 2.02; a *= 0.5; } return v; }
 void main(){
-  vec2 uv = gl_FragCoord.xy / uRes; vec2 p = uv * vec2(uRes.x / uRes.y, 1.0) * 1.6;
-  float t = uTime * 0.05 + uSeed;
-  // fluted glass: offset the lookup with a fine vertical sine
-  p.x += sin(uv.x * 90.0) * 0.006;
+  vec2 uv = gl_FragCoord.xy / uRes; float asp = uRes.x / uRes.y;
+  vec2 p = uv * vec2(asp, 1.0) * uScale;
+  float t = uTime + uSeed;
+  p.x += sin(uv.x * uRibFreq) * 0.006 * uRibs;
   vec2 q = vec2(fbm(p + t), fbm(p + vec2(5.2, 1.3) - t));
-  vec2 r = vec2(fbm(p + 2.0 * q + vec2(1.7, 9.2) + t * 0.7), fbm(p + 2.0 * q + vec2(8.3, 2.8) - t * 0.6));
-  float f = fbm(p + 2.5 * r);
+  vec2 r = vec2(fbm(p + uWarp * q + vec2(1.7, 9.2) + t * 0.7), fbm(p + uWarp * q + vec2(8.3, 2.8) - t * 0.6));
+  float f = fbm(p + uWarp * 1.25 * r);
   vec3 col = mix(uA, uB, smoothstep(0.2, 0.75, f));
   col = mix(col, uC, smoothstep(0.35, 0.9, r.x) * 0.9);
   col = mix(col, uD, smoothstep(0.55, 1.0, q.y) * 0.75);
-  // soft highlights along the ribs
-  col += 0.025 * sin(uv.x * 90.0 + f * 6.0);
-  col += (h(gl_FragCoord.xy + fract(uTime)) - 0.5) * 0.09;
+  col += 0.025 * uRibs * sin(uv.x * uRibFreq + f * 6.0);
+  vec2 m = (uv - uMouse) * vec2(asp, 1.0);
+  col += uGlow * exp(-dot(m, m) * 5.0) * vec3(1.0, 0.93, 0.96) * 0.3;
+  col += (h(gl_FragCoord.xy + fract(uTime * 17.0)) - 0.5) * uGrain;
   gl_FragColor = vec4(col, 1.0);
 }`;
   const VERT = 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }';
+  const glowRedraws = [];
 
   document.querySelectorAll('canvas[data-glow]').forEach((canvas, idx) => {
     const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false });
@@ -199,30 +212,91 @@ void main(){
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const u = (name) => gl.getUniformLocation(prog, name);
-    const pal = PALETTES[canvas.dataset.glow] || PALETTES.dawn;
-    ['uA', 'uB', 'uC', 'uD'].forEach((k, i) => gl.uniform3fv(u(k), pal[i]));
     gl.uniform1f(u('uSeed'), idx * 7.3);
 
     const resize = () => {
-      // render at reduced resolution: the picture is soft, and it keeps the GPU cool
-      const scale = Math.min(window.devicePixelRatio || 1, 1.5) * 0.6;
+      // reduced resolution keeps the GPU cool; grain is drawn per pixel of
+      // this buffer, so don't go too low or it turns blocky
+      const scale = Math.min(window.devicePixelRatio || 1, 1.5) * 0.75;
       canvas.width = Math.max(1, Math.round(canvas.clientWidth * scale));
       canvas.height = Math.max(1, Math.round(canvas.clientHeight * scale));
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform2f(u('uRes'), canvas.width, canvas.height);
     };
-    const draw = (ms) => { gl.uniform1f(u('uTime'), ms / 1000); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
+    // pointer light: eased toward the cursor, fades out when it leaves
+    let mx = 0.7, my = 0.6, tx = 0.7, ty = 0.6, on = 0, tOn = 0, clock = 0, last = 0;
+    const host = canvas.parentElement;
+    host.addEventListener('pointermove', (e) => {
+      const r = canvas.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width; ty = 1 - (e.clientY - r.top) / r.height; tOn = 1;
+    });
+    host.addEventListener('pointerleave', () => { tOn = 0; });
+    const draw = (ms) => {
+      // integrate time so changing the speed doesn't jump the picture
+      clock += Math.min(0.1, (ms - last) / 1000 || 0) * GLOW.speed; last = ms;
+      mx += (tx - mx) * 0.06; my += (ty - my) * 0.06; on += (tOn - on) * 0.05;
+      gl.uniform1f(u('uTime'), clock);
+      ['uA', 'uB', 'uC', 'uD'].forEach((k, i) => gl.uniform3fv(u(k), hex(GLOW.colors[i])));
+      gl.uniform1f(u('uScale'), GLOW.scale); gl.uniform1f(u('uWarp'), GLOW.warp);
+      gl.uniform1f(u('uRibs'), GLOW.ribs); gl.uniform1f(u('uRibFreq'), GLOW.ribFreq);
+      gl.uniform1f(u('uGrain'), GLOW.grain); gl.uniform1f(u('uGlow'), GLOW.glow * on);
+      gl.uniform2f(u('uMouse'), mx, my);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
     resize();
     let raf = 0, visible = false;
     const loop = (ms) => { draw(ms); raf = visible ? requestAnimationFrame(loop) : 0; };
-    if (reduceMotion) { draw(12000); } else {
+    if (reduceMotion) { clock = 0.6; draw(0); glowRedraws.push(() => draw(0)); } else {
       new IntersectionObserver(([e]) => {
         visible = e.isIntersecting;
-        if (visible && !raf) raf = requestAnimationFrame(loop);
+        if (visible && !raf) { last = performance.now(); raf = requestAnimationFrame(loop); }
       }).observe(canvas);
     }
-    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(12000); });
+    window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(0); });
   });
+
+  // ---- gradient tuning panel: sliders and colour pickers bound to GLOW;
+  // "Copy settings" puts a line of values on the clipboard to send back ----
+  const tunePanel = document.querySelector('[data-tune-panel]');
+  if (tunePanel && /[?&]tune\b/.test(location.search)) {
+    const KNOBS = [
+      ['speed', 'Speed', 0, 0.2, 0.005],
+      ['scale', 'Blob size (lower = bigger)', 0.5, 3, 0.05],
+      ['warp', 'Swirl', 0, 4, 0.05],
+      ['ribs', 'Ripple (fluted glass)', 0, 1.5, 0.05],
+      ['ribFreq', 'Ripple density', 20, 200, 1],
+      ['grain', 'Grain', 0, 0.12, 0.005],
+      ['glow', 'Pointer light', 0, 1.5, 0.05],
+    ];
+    const body = tunePanel.querySelector('[data-tune-body]');
+    const out = tunePanel.querySelector('[data-tune-out]');
+    const fmt = () => 'gradient: ' + KNOBS.map(([k]) => `${k} ${+GLOW[k].toFixed(3)}`).join(', ') + ', colors ' + GLOW.colors.join(' ');
+    const refresh = () => { out.value = fmt(); glowRedraws.forEach((f) => f()); };
+    KNOBS.forEach(([k, label, min, max, step]) => {
+      const row = document.createElement('label'); row.className = 'tune-row';
+      row.innerHTML = `<span>${label} <output>${GLOW[k]}</output></span><input type="range" min="${min}" max="${max}" step="${step}" value="${GLOW[k]}">`;
+      const input = row.querySelector('input'), val = row.querySelector('output');
+      input.addEventListener('input', () => { GLOW[k] = +input.value; val.textContent = input.value; refresh(); });
+      body.appendChild(row);
+    });
+    const swatches = document.createElement('div'); swatches.className = 'tune-colors';
+    GLOW.colors.forEach((c, i) => {
+      const lab = document.createElement('label');
+      lab.innerHTML = `<span class="visually-hidden">Colour ${i + 1}</span><input type="color" value="${c}">`;
+      lab.querySelector('input').addEventListener('input', (e) => { GLOW.colors[i] = e.target.value; refresh(); });
+      swatches.appendChild(lab);
+    });
+    body.appendChild(swatches);
+    refresh();
+    tunePanel.hidden = false;
+    tunePanel.querySelector('[data-tune-close]').addEventListener('click', () => { tunePanel.hidden = true; });
+    tunePanel.querySelector('[data-tune-copy]').addEventListener('click', (e) => {
+      out.select();
+      const done = () => { e.target.textContent = 'Copied'; setTimeout(() => { e.target.textContent = 'Copy settings'; }, 1500); };
+      if (navigator.clipboard) navigator.clipboard.writeText(out.value).then(done, () => document.execCommand('copy') && done());
+      else if (document.execCommand('copy')) done();
+    });
+  }
 
   // ---- case KPIs count up the first time a card scrolls into view ----
   const kpiNums = document.querySelectorAll('.kpi b[data-count]');

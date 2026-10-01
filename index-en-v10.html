@@ -105,6 +105,15 @@
     </div>
   </section>
 
+  <!-- live controls for the gradients (home-v10.js); shown with ?tune in
+       the URL -->
+  <div class="tune-panel" id="tunePanel" data-tune-panel hidden role="dialog" aria-label="Gradient settings">
+    <div class="tune-head"><b>Gradient</b><button type="button" class="tune-x" data-tune-close aria-label="Close">×</button></div>
+    <div class="tune-body" data-tune-body></div>
+    <textarea class="tune-out" data-tune-out readonly rows="3" aria-label="Current settings"></textarea>
+    <button type="button" class="btn btn-primary tune-copy" data-tune-copy>Copy settings</button>
+  </div>
+
   <!-- case studies: cards pin and stack as you scroll
        (adapted from 21st.dev "Stacking Cards") -->
   <section id="work" class="section" aria-labelledby="workTitle">
