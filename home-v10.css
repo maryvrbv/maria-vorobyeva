@@ -706,11 +706,11 @@ img{ max-width: 100%; height: auto; display: block; }
 }
 .profile-card .pen-rig{
   aspect-ratio: 1;
-  width: 34%;
-  right: 4%; top: 6%;
+  width: 31.5%;
+  right: 5.25%; top: 7%;
 }
 @media (max-width: 900px){
-  .profile-card .pen-rig{ width: 28%; right: 4%; top: 4%; }
+  .profile-card .pen-rig{ width: 26%; right: 5%; top: 5%; }
 }
 
 /* chrome "Aa" type tile, upper-left of the card, opposite the pen */
@@ -719,13 +719,14 @@ img{ max-width: 100%; height: auto; display: block; }
   left: 5%; top: 30%;
   width: 24%; aspect-ratio: 1;
 }
-/* chrome heart, lower right of the portrait */
+/* chrome heart, lower right of the portrait; canvas sizes are set so the
+   pen, tile and heart read about the same size on the card */
 .profile-card .heart-rig{
   position: absolute; z-index: 2;
-  right: 8%; top: 64%;
-  width: 26%; aspect-ratio: 1;
+  right: 4.75%; top: 61.4%;
+  width: 32.5%; aspect-ratio: 1;
 }
 @media (max-width: 900px){
   .profile-card .type-rig{ width: 20%; left: 5%; top: 32%; }
-  .profile-card .heart-rig{ width: 22%; right: 8%; top: 52%; }
+  .profile-card .heart-rig{ width: 27.5%; right: 5.25%; top: 50%; }
 }
