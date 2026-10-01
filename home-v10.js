@@ -316,25 +316,66 @@ void main(){
   gl_FragColor = vec4(col*cov, cov);
 }`;
 
-  // canvas: the rig's <canvas>; body: GLSL with map/shade; o.set(gl, U) sets
-  // the look; o.spin(scrollY) is the scroll-driven turn; o.init(gl, U, redraw)
-  // for extra resources (textures)
+  // canvas: the rig's <canvas>; body: GLSL with map/shade (or just shade
+  // when o.mesh names a model to rasterise instead of raymarching); o.set(gl,
+  // U) sets the look; o.spin(scrollY) is the scroll-driven turn;
+  // o.init(gl, U, redraw) for extra resources (textures)
+  const MESH_VS = `
+attribute vec3 aP; attribute vec3 aN; varying vec3 vN;
+void main(){
+  vec3 v = toView(aP);
+  vN = toView(aN);
+  gl_Position = vec4(v.xy / 0.92 * min(uRes.x, uRes.y) / uRes, -v.z * 0.5, 1.0);
+}`;
+  const MESH_FS = `
+varying vec3 vN;
+void main(){
+  vec3 nv = normalize(vN);
+  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), nv), uTiltX), uRotY);
+  vec3 col = shade(vec3(0.0), nv, R);
+  col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;
+  gl_FragColor = vec4(col, 1.0);
+}`;
   function chromeRig(canvas, body, o) {
     if (!canvas) return;
     const gl = canvas.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
     if (!gl) { canvas.remove(); return; }
     const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return s; };
     const prog = gl.createProgram();
-    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
-    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, RIG_HEAD + body + RIG_MAIN));
+    if (o.mesh) {
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, RIG_HEAD + MESH_VS));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, RIG_HEAD + body + MESH_FS));
+    } else {
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, RIG_HEAD + body + RIG_MAIN));
+    }
     gl.linkProgram(prog);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.remove(); return; }
     gl.useProgram(prog);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, 'a');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    // model: [nVerts, nIdx] uint32, then xyz+normal float32 per vertex, then
+    // uint16 triangle indices
+    let count = o.mesh ? 0 : -1;
+    if (o.mesh) {
+      gl.enable(gl.DEPTH_TEST);
+      fetch(o.mesh).then((r) => r.arrayBuffer()).then((buf) => {
+        const [nv, ni] = new Uint32Array(buf, 0, 2);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(buf, 8, nv * 6), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(buf, 8 + nv * 24, ni), gl.STATIC_DRAW);
+        const aP = gl.getAttribLocation(prog, 'aP'), aN = gl.getAttribLocation(prog, 'aN');
+        gl.enableVertexAttribArray(aP); gl.vertexAttribPointer(aP, 3, gl.FLOAT, false, 24, 0);
+        gl.enableVertexAttribArray(aN); gl.vertexAttribPointer(aN, 3, gl.FLOAT, false, 24, 12);
+        count = ni;
+        if (reduceMotion) draw();
+      }, () => canvas.remove());
+    } else {
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, 'a');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    }
     const U = (n) => gl.getUniformLocation(prog, n);
     o.set(gl, U);
     gl.clearColor(0, 0, 0, 0);
@@ -346,7 +387,8 @@ void main(){
     };
     let tx = 0, ty = 0, ox = 0, oy = 0, spin = 0, raf = 0, visible = false;
     const draw = () => {
-      gl.clear(gl.COLOR_BUFFER_BIT);
+      if (count === 0) return;
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       gl.uniform2f(U('uRes'), canvas.width, canvas.height);
       gl.uniform1f(U('uSpin'), o.spin0 + spin);
       gl.uniform1f(U('uYaw'), o.yaw + ox * 0.3);
@@ -354,7 +396,8 @@ void main(){
       gl.uniform1f(U('uRotY'), o.base + ox * 0.6);
       gl.uniform1f(U('uTiltX'), -0.17 + oy * 0.35);
       gl.uniform1f(U('uTime'), performance.now() * 0.001);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (count > 0) gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);
+      else gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
     const loop = () => {
       ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
@@ -520,21 +563,11 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     spin: (y) => -y * 0.011,
   });
 
-  // heart: a puffy 3D heart made by warping a sphere — each column is
-  // lifted by g(x) = 1.05|x| − 1.15x², which dents the top into a soft cleft
-  // between two round lobes and draws the bottom down to a point; |x| is
-  // smoothed so neither the cleft nor the point is a crease. Flattened front
-  // to back. Pen's finish so the three objects read as one set
+  // heart: the puffy heart-emoji model (body only, without its sticker
+  // highlights; normalised and baked to images/home/heart.bin), rendered as
+  // a mesh in the same chrome. Pen's finish so the three objects read as a set
   chromeRig(document.querySelector('canvas[data-heart-rig]'), `
-#define STEP 1.0
 uniform float uEnamel; uniform float uAno;
-float map(vec3 q){
-  const float S = 1.11, Z = 0.55;
-  vec3 p = vec3(q.x / (S * 1.05), q.y / S + 0.078, q.z / (S * Z));
-  p.y -= 1.05 * sqrt(p.x*p.x + 0.0009) - 1.15 * p.x*p.x;
-  // the warp and the stretches inflate distances; scale back to stay safe
-  return (length(p) - 0.48) * S * Z * 0.62;
-}
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
     set(gl, U) {
       gl.uniform1f(U('uRough'), 0.76);
@@ -542,6 +575,7 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,
       gl.uniform1f(U('uAno'), 0.23);
       gl.uniform1f(U('uObj'), 12 * Math.PI / 180);
     },
+    mesh: 'images/home/heart.bin',
     base: 13 * Math.PI / 180, spin0: 0.32, yaw: 0.0, pitch: -0.15,
     spin: (y) => y * 0.0045,
   });
