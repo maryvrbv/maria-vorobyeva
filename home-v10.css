@@ -919,3 +919,19 @@ img{ max-width: 100%; height: auto; display: block; }
   .hero-stage > .hero-title .hero-row:first-child{ font-size: .2em; margin-bottom: .04em; }
   .hero-stage > .profile-card{ width: min(100%, 500px); margin-top: clamp(-300px, -17vw, -140px); margin-right: clamp(-16px, -1vw, 0px); }
 }
+
+/* portrait on the LEFT: her face turns right, so it looks into the name
+   and the text instead of off the page. The name is set flush right and
+   the portrait overlaps its first letter; lead and buttons sit bottom
+   right */
+@media (min-width: 901px){
+  .hero-stage{ grid-template-areas: "title title" "card copy"; }
+  .hero-stage > .hero-title{ text-align: right; }
+  .hero-stage > .profile-card{ justify-self: start; margin-right: 0; margin-left: clamp(-16px, -1vw, 0px); }
+  .hero-stage > .hero-copy{ justify-self: end; align-items: flex-start; }
+}
+@media (min-width: 901px){
+  /* the title block hugs its text and sits right, so "Hi, I'm" lines up
+     with the start of the name */
+  .hero-stage > .hero-title{ justify-self: end; text-align: left; }
+}
