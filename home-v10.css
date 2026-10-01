@@ -781,29 +781,13 @@ img{ max-width: 100%; height: auto; display: block; }
 @media (max-width: 560px){ .contact-head{ flex-direction: column; align-items: flex-start; } }
 
 /* ---------- hero: a heavier text column ----------
-   status chip instead of the small role label, a larger lead, and the
+   no small role label, a larger lead, and the
    recent companies with logos and one line of context each */
 @media (min-width: 901px){
   .hero-split{ align-items: stretch; }
   .hero-split .hero-copy{ justify-content: center; gap: 32px; }
 }
 .hero-copy .hero-title{ font-size: clamp(48px, 6.4vw, 112px); }
-.hero-status{
-  margin: 0; align-self: flex-start;
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 8px 14px 8px 12px;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--line-strong);
-  background: var(--paper-raised);
-  font-size: 14px; font-weight: 500; color: var(--ink);
-}
-.status-dot{
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--success);
-  box-shadow: 0 0 0 0 rgba(111, 190, 156, .6);
-  animation: status-pulse 2.4s ease-out infinite;
-}
-@keyframes status-pulse{ to{ box-shadow: 0 0 0 8px rgba(111, 190, 156, 0); } }
 .hero-copy .hero-lead{ max-width: 28ch; font-size: clamp(21px, 2vw, 30px); line-height: 1.35; color: var(--ink); }
 .hero-companies{
   list-style: none; margin: 0; padding: 0;
@@ -819,4 +803,3 @@ img{ max-width: 100%; height: auto; display: block; }
 .hero-companies img{ width: 40px; height: 40px; border-radius: 10px; flex: none; }
 .hero-companies span{ display: flex; flex-direction: column; gap: 2px; font-size: 15px; line-height: 1.35; color: var(--ink-soft); }
 .hero-companies b{ font-size: 16px; font-weight: 600; color: var(--ink); }
-@media (prefers-reduced-motion: reduce){ .status-dot{ animation: none; } }
