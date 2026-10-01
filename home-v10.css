@@ -759,3 +759,23 @@ img{ max-width: 100%; height: auto; display: block; }
 .tune-out{ width: 100%; margin: 8px 0; padding: 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.35); color: var(--ink-soft); font: 12px/1.4 ui-monospace, monospace; resize: none; }
 .tune-copy{ width: 100%; justify-content: center; }
 
+
+/* ---------- copy pass: a personal hero lead, a quieter contact block ---------- */
+.hero-lead{
+  margin: 0; max-width: 30ch;
+  font-size: clamp(20px, 1.9vw, 27px); line-height: 1.4;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+.contact-panel{ min-height: 0; }
+.contact-in{ gap: 32px; }
+.contact-head{ flex-direction: row; align-items: center; gap: clamp(16px, 2vw, 24px); }
+.contact-face{
+  flex: none;
+  width: clamp(64px, 6vw, 88px); height: clamp(64px, 6vw, 88px);
+  border-radius: 50%; object-fit: cover; object-position: 50% 30%;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.6);
+}
+.contact-title{ max-width: none; font-size: clamp(26px, 2.8vw, 40px); line-height: 1.1; }
+.contact-head .contact-sub{ margin-top: 8px; max-width: 46ch; font-size: clamp(16px, 1.4vw, 19px); }
+@media (max-width: 560px){ .contact-head{ flex-direction: column; align-items: flex-start; } }
