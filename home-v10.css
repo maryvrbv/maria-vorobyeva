@@ -817,3 +817,16 @@ img{ max-width: 100%; height: auto; display: block; }
 .hero-actions-in{ animation-delay: .32s; }
 @keyframes rise-in{ from{ opacity: 0; transform: translateY(14px); filter: blur(6px); } to{ opacity: 1; transform: none; filter: none; } }
 @media (prefers-reduced-motion: reduce){ .hero-copy .hero-lead, .hero-actions-in{ animation: none; } }
+
+/* ---------- hero balance ----------
+   the text column used to float in the middle of its cell, leaving dead
+   space top, bottom and right so the layout tipped toward the card. Now
+   the column is pinned to the card's edges: the title starts level with
+   the card's top, the buttons sit level with its bottom pills, and the
+   title and lead are sized to fill the column's width */
+@media (min-width: 901px){
+  .hero-split{ grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); align-items: stretch; }
+  .hero-split .hero-copy{ justify-content: space-between; padding: clamp(8px, 1.5vw, 24px) 0 clamp(20px, 2.2vw, 30px); }
+  .hero-copy .hero-title{ font-size: clamp(56px, 6.3vw, 116px); line-height: .95; white-space: nowrap; }
+  .hero-copy .hero-lead{ max-width: 32ch; font-size: clamp(22px, 2.1vw, 31px); }
+}
