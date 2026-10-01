@@ -864,3 +864,58 @@ img{ max-width: 100%; height: auto; display: block; }
 .hero-glow .hero-lead em{ font-weight: 500; }
 @media (min-width: 901px){ .hero-glow .hero-copy .hero-title{ font-size: clamp(52px, 5.6vw, 104px); } }
 @media (max-width: 900px){ .hero-glow .hero-copy .hero-title{ font-size: clamp(36px, 10.5vw, 60px); white-space: nowrap; } }
+
+/* ---------- hero stage: oversized name, portrait overlapping it ----------
+   Exaggerated-minimal / editorial layout (ui-ux-pro-max) with the
+   21st.dev "Portfolio Hero" move of a portrait laid over a huge name:
+   "Hi, I'm / Maria" runs across the panel, the portrait with its chrome
+   objects floats over the lower right of the name, and the lead and
+   buttons anchor the bottom left. Panel as tall as the v11 hero */
+.hero-glow{ min-height: clamp(640px, 88svh, 940px); }
+.hero-stage{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "title title" "copy card";
+  column-gap: clamp(24px, 4vw, 64px);
+  align-items: end;
+}
+.hero-stage > .hero-title{
+  grid-area: title;
+  position: relative; z-index: 0;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(64px, 12.5vw, 228px);
+  line-height: .86;
+  letter-spacing: -0.045em;
+  text-shadow: 0 4px 60px rgba(40, 20, 90, .22);
+}
+.hero-stage > .hero-title .hero-row{ white-space: nowrap; }
+.hero-stage > .hero-title .hero-row:first-child{ font-size: .42em; letter-spacing: -0.02em; margin-bottom: .12em; font-weight: 500; }
+.hero-stage > .hero-copy{ grid-area: copy; position: relative; z-index: 2; justify-content: flex-end; gap: 28px; padding: 0; }
+.hero-stage > .profile-card{
+  grid-area: card;
+  position: relative; z-index: 1;
+  justify-self: end;
+  width: min(100%, 520px); aspect-ratio: 1; max-height: none;
+  /* rises over the lower half of the name */
+  margin-top: clamp(-260px, -15vw, -90px);
+}
+.hero-stage .profile-photo{ width: 66%; }
+.hero-stage .hero-copy .hero-lead{ max-width: 30ch; font-size: clamp(19px, 1.7vw, 25px); }
+@media (min-width: 901px){
+  .hero-glow .hero-split.hero-stage{ grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; }
+  .hero-glow .hero-split.hero-stage .hero-copy{ padding: 0 0 clamp(12px, 2vw, 28px); justify-content: flex-end; }
+}
+@media (max-width: 900px){
+  .hero-stage{ grid-template-columns: 1fr; grid-template-areas: "title" "card" "copy"; row-gap: 8px; }
+  .hero-stage > .hero-title{ font-size: clamp(64px, 25vw, 140px); }
+  .hero-stage > .profile-card{ justify-self: center; width: min(100%, 420px); margin-top: -18vw; }
+  .hero-stage > .hero-copy{ gap: 22px; }
+}
+@media (min-width: 901px){
+  /* the name spans most of the panel so the portrait can overlap it */
+  .hero-stage > .hero-title{ font-size: clamp(120px, 21vw, 380px); }
+  .hero-stage > .hero-title .hero-row:first-child{ font-size: .2em; margin-bottom: .04em; }
+  .hero-stage > .profile-card{ width: min(100%, 500px); margin-top: clamp(-300px, -17vw, -140px); margin-right: clamp(-16px, -1vw, 0px); }
+}
