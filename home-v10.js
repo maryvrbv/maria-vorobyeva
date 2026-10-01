@@ -419,6 +419,44 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     spin: (y) => y * 0.0063,
   });
 
+  // bakes a white shape painted on an N×N canvas into a signed distance
+  // texture (Felzenszwalb EDT) on unit 0: the canvas spans `span` units,
+  // 0.5 = edge, ±0.5 = ±range units
+  function bakeSdf(gl, N, span, range, paint) {
+    const edt1 = (f, n) => {
+      const d = new Float64Array(n), v = new Int32Array(n), z = new Float64Array(n + 1);
+      let k = 0; v[0] = 0; z[0] = -1e20; z[1] = 1e20;
+      for (let q = 1; q < n; q++) {
+        let s;
+        do { const r = v[k]; s = ((f[q] + q * q) - (f[r] + r * r)) / (2 * q - 2 * r); } while (s <= z[k] && --k >= 0);
+        k++; v[k] = q; z[k] = s; z[k + 1] = 1e20;
+      }
+      k = 0;
+      for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; const dq = q - v[k]; d[q] = dq * dq + f[v[k]]; }
+      return d;
+    };
+    const edt = (g) => {
+      const f = new Float64Array(N);
+      for (let x = 0; x < N; x++) { for (let y = 0; y < N; y++) f[y] = g[y * N + x]; const d = edt1(f, N); for (let y = 0; y < N; y++) g[y * N + x] = d[y]; }
+      for (let y = 0; y < N; y++) { for (let x = 0; x < N; x++) f[x] = g[y * N + x]; const d = edt1(f, N); for (let x = 0; x < N; x++) g[y * N + x] = Math.sqrt(d[x]); }
+    };
+    const c = document.createElement('canvas'); c.width = c.height = N;
+    const x = c.getContext('2d');
+    x.fillStyle = '#fff';
+    paint(x, N);
+    const a = x.getImageData(0, 0, N, N).data, inG = new Float64Array(N * N), outG = new Float64Array(N * N);
+    for (let i = 0; i < N * N; i++) { const on = a[i * 4 + 3] > 127; inG[i] = on ? 1e20 : 0; outG[i] = on ? 0 : 1e20; }
+    edt(inG); edt(outG);
+    const px = new Uint8Array(N * N), rangePx = N * range / span;
+    for (let j = 0; j < N * N; j++) px[j] = Math.round((0.5 + 0.5 * Math.max(-1, Math.min(1, (outG[j] - inG[j]) / rangePx))) * 255);
+    if (!gl.__sdfTex) gl.__sdfTex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, gl.__sdfTex);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, N, N, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, px);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  }
+
   // "Aa" type tile: a rounded chrome tile with raised letters; the letters
   // are text baked into a signed distance field (Felzenszwalb EDT) at load.
   // The back carries the Figma logo, chrome like the letters.
@@ -469,41 +507,11 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
       gl.uniform1f(U('uGlyphEnamel'), 0.62);
     },
     init(gl, U, redraw) {
-      const tex = gl.createTexture(), N = 512;
-      const edt1 = (f, n) => {
-        const d = new Float64Array(n), v = new Int32Array(n), z = new Float64Array(n + 1);
-        let k = 0; v[0] = 0; z[0] = -1e20; z[1] = 1e20;
-        for (let q = 1; q < n; q++) {
-          let s;
-          do { const r = v[k]; s = ((f[q] + q * q) - (f[r] + r * r)) / (2 * q - 2 * r); } while (s <= z[k] && --k >= 0);
-          k++; v[k] = q; z[k] = s; z[k + 1] = 1e20;
-        }
-        k = 0;
-        for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; const dq = q - v[k]; d[q] = dq * dq + f[v[k]]; }
-        return d;
-      };
-      const edt = (g) => {
-        const f = new Float64Array(N);
-        for (let x = 0; x < N; x++) { for (let y = 0; y < N; y++) f[y] = g[y * N + x]; const d = edt1(f, N); for (let y = 0; y < N; y++) g[y * N + x] = d[y]; }
-        for (let y = 0; y < N; y++) { for (let x = 0; x < N; x++) f[x] = g[y * N + x]; const d = edt1(f, N); for (let x = 0; x < N; x++) g[y * N + x] = Math.sqrt(d[x]); }
-      };
-      const bake = () => {
-        const c = document.createElement('canvas'); c.width = c.height = N;
-        const x = c.getContext('2d');
-        x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+      const bake = () => bakeSdf(gl, 512, 0.62 * 2 * 0.80, 0.18, (x, N) => {
+        x.textAlign = 'center'; x.textBaseline = 'alphabetic';
         x.font = '700 ' + Math.round(N * 0.64) + 'px "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif';
         x.fillText('Aa', N / 2, N * 0.73);
-        const a = x.getImageData(0, 0, N, N).data, inG = new Float64Array(N * N), outG = new Float64Array(N * N);
-        for (let i = 0; i < N * N; i++) { const on = a[i * 4 + 3] > 127; inG[i] = on ? 1e20 : 0; outG[i] = on ? 0 : 1e20; }
-        edt(inG); edt(outG);
-        const px = new Uint8Array(N * N), rangePx = N * (0.18 / (0.62 * 2 * 0.80));
-        for (let j = 0; j < N * N; j++) px[j] = Math.round((0.5 + 0.5 * Math.max(-1, Math.min(1, (outG[j] - inG[j]) / rangePx))) * 255);
-        gl.bindTexture(gl.TEXTURE_2D, tex);
-        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, N, N, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, px);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      };
+      });
       bake();
       if (document.fonts && document.fonts.load) document.fonts.load('700 128px "Bricolage Grotesque"').then(() => { bake(); redraw(); }, () => {});
     },
@@ -512,27 +520,31 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     spin: (y) => -y * 0.011,
   });
 
-  // heart: a classic heart outline extruded with
-  // fully rounded sides, so it reads as a puffy chrome pillow. Pen's finish
-  // so the three objects read as one set
+  // heart with convex sides (like a puffy 3D heart): two round lobes plus a
+  // bottom made of two large arcs, each tangent to the opposite lobe and
+  // meeting at the point; the lobes blend into a soft cleft and the outline
+  // is offset so the point is rounded. Extruded with fully rounded sides.
+  // Pen's finish so the three objects read as one set
   chromeRig(document.querySelector('canvas[data-heart-rig]'), `
 #define STEP 0.9
 uniform float uEnamel; uniform float uAno;
-// classic heart: a square turned 45° with two round lobes on its upper
-// edges (the lobes meet its sides tangentially); the lobes blend into a soft
-// cleft and the whole outline is offset so the bottom point is rounded
 float sdHeart2(vec2 p){
-  const float H = 0.305, R = 0.055;
-  p.y += 0.045;
-  vec2 u = vec2(p.x + p.y, p.y - p.x) * 0.70710678;
-  vec2 q = abs(u) - vec2(H);
-  float sq = length(max(q,0.0)) + min(max(q.x,q.y),0.0);
-  float c1 = length(u - vec2(H, 0.0)) - H, c2 = length(u - vec2(0.0, H)) - H;
-  float k = 0.018, h = clamp(0.5 + 0.5*(c2 - c1)/k, 0.0, 1.0);
-  float lobes = mix(c2, c1, h) - k*h*(1.0 - h);
-  return min(sq, lobes) - R;
+  const float SC = 0.95, A = 0.28, B = 0.17, R = 0.30, C = 0.248, RB = 0.828;
+  p = vec2(abs(p.x), p.y - 0.075) / SC;
+  float lobeR = length(p - vec2(A, B)) - R, lobeL = length(p + vec2(A, -B)) - R;
+  float k = 0.09, h = clamp(0.5 + 0.5*(lobeL - lobeR)/k, 0.0, 1.0);
+  float lobes = mix(lobeL, lobeR, h) - k*h*(1.0 - h);
+  float bottom = max(max(length(p - vec2(-C, B)), length(p - vec2(C, B))) - RB, p.y - B);
+  return min(lobes, bottom) * SC - 0.03;
 }
-float map(vec3 q){ return sdSlab(sdHeart2(q.xy), q.z, 0.063, 0.055); }
+// edge as thick as the pen and tile; the faces swell gently toward the
+// middle like an inflated heart
+float map(vec3 q){
+  float d2 = sdHeart2(q.xy);
+  vec2 e = (q.xy - vec2(0.0, 0.04)) / vec2(0.66, 0.62);
+  float h = 0.063 + 0.075 * max(1.0 - dot(e, e), 0.0) * smoothstep(0.0, 0.05, -d2);
+  return sdSlab(d2, q.z, h, 0.055) * 0.8;
+}
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
     set(gl, U) {
       gl.uniform1f(U('uRough'), 0.76);
