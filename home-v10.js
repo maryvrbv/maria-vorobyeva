@@ -565,10 +565,10 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     spin: (y) => -y * 0.011,
   });
 
-  // heart: the body of the supplied heart-emoji model (original geometry and
-  // normals, sparkle stickers left out), centred, scaled and flattened front
-  // to back to the pen's and tile's thickness; baked to images/home/heart.bin
-  // and rendered as a mesh
+  // heart: a flat "coin" in the silhouette of the supplied heart-emoji model
+  // — flat faces, a rounded rim and the same half-depth as the pen and tile
+  // slabs; built offline and baked to images/home/heart.bin, rendered as a
+  // mesh
   chromeRig(document.querySelector('canvas[data-heart-rig]'), `
 uniform float uEnamel; uniform float uAno;
 vec3 shade(vec3 q, vec3 nv, vec3 R){
