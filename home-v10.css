@@ -873,3 +873,17 @@ img{ max-width: 100%; height: auto; display: block; }
   .hero-glow .hero-split .hero-copy{ justify-content: center; gap: clamp(28px, 3vw, 40px); padding: 0; }
   .hero-glow .profile-card{ align-self: center; }
 }
+
+/* exactly the v11 panel height on every screen: on wide screens the photo
+   card used to grow with its column and push the panel taller, so its
+   height is now tied to the panel and its width follows the 4:5 ratio */
+.hero-glow{ --hero-h: clamp(600px, 88svh, 900px); --hero-pad: clamp(24px, 4vw, 56px); min-height: var(--hero-h); }
+@media (min-width: 901px){
+  .hero-glow{ height: var(--hero-h); }
+  .hero-glow > .hero-split{ padding: var(--hero-pad); }
+  .hero-glow .hero-split .profile-card{
+    height: calc(var(--hero-h) - 2 * var(--hero-pad));
+    width: auto; max-width: 100%; max-height: none;
+    justify-self: center;
+  }
+}
