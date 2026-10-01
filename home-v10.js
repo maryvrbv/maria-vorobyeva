@@ -520,30 +520,20 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     spin: (y) => -y * 0.011,
   });
 
-  // heart with convex sides (like a puffy 3D heart): two round lobes plus a
-  // bottom made of two large arcs, each tangent to the opposite lobe and
-  // meeting at the point; the lobes blend into a soft cleft and the outline
-  // is offset so the point is rounded. Extruded with fully rounded sides.
-  // Pen's finish so the three objects read as one set
+  // heart: a puffy 3D heart made by warping a sphere — each column is
+  // lifted by g(x) = 1.05|x| − 1.15x², which dents the top into a soft cleft
+  // between two round lobes and draws the bottom down to a point; |x| is
+  // smoothed so neither the cleft nor the point is a crease. Flattened front
+  // to back. Pen's finish so the three objects read as one set
   chromeRig(document.querySelector('canvas[data-heart-rig]'), `
-#define STEP 0.9
+#define STEP 1.0
 uniform float uEnamel; uniform float uAno;
-float sdHeart2(vec2 p){
-  const float SC = 0.95, A = 0.28, B = 0.17, R = 0.30, C = 0.248, RB = 0.828;
-  p = vec2(abs(p.x), p.y - 0.075) / SC;
-  float lobeR = length(p - vec2(A, B)) - R, lobeL = length(p + vec2(A, -B)) - R;
-  float k = 0.09, h = clamp(0.5 + 0.5*(lobeL - lobeR)/k, 0.0, 1.0);
-  float lobes = mix(lobeL, lobeR, h) - k*h*(1.0 - h);
-  float bottom = max(max(length(p - vec2(-C, B)), length(p - vec2(C, B))) - RB, p.y - B);
-  return min(lobes, bottom) * SC - 0.03;
-}
-// edge as thick as the pen and tile; the faces swell gently toward the
-// middle like an inflated heart
 float map(vec3 q){
-  float d2 = sdHeart2(q.xy);
-  vec2 e = (q.xy - vec2(0.0, 0.04)) / vec2(0.66, 0.62);
-  float h = 0.063 + 0.075 * max(1.0 - dot(e, e), 0.0) * smoothstep(0.0, 0.05, -d2);
-  return sdSlab(d2, q.z, h, 0.055) * 0.8;
+  const float S = 1.11, Z = 0.55;
+  vec3 p = vec3(q.x / (S * 1.05), q.y / S + 0.078, q.z / (S * Z));
+  p.y -= 1.05 * sqrt(p.x*p.x + 0.0009) - 1.15 * p.x*p.x;
+  // the warp and the stretches inflate distances; scale back to stay safe
+  return (length(p) - 0.48) * S * Z * 0.62;
 }
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
     set(gl, U) {
