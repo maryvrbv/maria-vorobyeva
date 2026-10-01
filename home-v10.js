@@ -512,20 +512,25 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     spin: (y) => -y * 0.011,
   });
 
-  // heart: an exact heart outline (after Inigo Quilez) extruded deep with
+  // heart: a classic heart outline extruded with
   // fully rounded sides, so it reads as a puffy chrome pillow. Pen's finish
   // so the three objects read as one set
   chromeRig(document.querySelector('canvas[data-heart-rig]'), `
 #define STEP 0.9
 uniform float uEnamel; uniform float uAno;
-float dot2(vec2 v){ return dot(v,v); }
+// classic heart: a square turned 45° with two round lobes on its upper
+// edges (the lobes meet its sides tangentially); the lobes blend into a soft
+// cleft and the whole outline is offset so the bottom point is rounded
 float sdHeart2(vec2 p){
-  p = p / 0.74 + vec2(0.0, 0.56);
-  p.x = abs(p.x);
-  float d;
-  if (p.y + p.x > 1.0) d = sqrt(dot2(p - vec2(0.25,0.75))) - sqrt(2.0)/4.0;
-  else d = sqrt(min(dot2(p - vec2(0.0,1.0)), dot2(p - 0.5*max(p.x+p.y,0.0)))) * sign(p.x - p.y);
-  return d * 0.74 - 0.06;
+  const float H = 0.305, R = 0.055;
+  p.y += 0.045;
+  vec2 u = vec2(p.x + p.y, p.y - p.x) * 0.70710678;
+  vec2 q = abs(u) - vec2(H);
+  float sq = length(max(q,0.0)) + min(max(q.x,q.y),0.0);
+  float c1 = length(u - vec2(H, 0.0)) - H, c2 = length(u - vec2(0.0, H)) - H;
+  float k = 0.018, h = clamp(0.5 + 0.5*(c2 - c1)/k, 0.0, 1.0);
+  float lobes = mix(c2, c1, h) - k*h*(1.0 - h);
+  return min(sq, lobes) - R;
 }
 float map(vec3 q){ return sdSlab(sdHeart2(q.xy), q.z, 0.063, 0.055); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
