@@ -256,6 +256,7 @@ void main(){
 precision highp float;
 uniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough;
 uniform float uObj; uniform float uSpin; uniform float uYaw; uniform float uPitch; uniform float uTime;
+uniform float uTurn;   // eased scroll turn, for rigs whose parts spin on their own
 vec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }
 vec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }
 vec3 rotZ(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c-v.y*s, v.x*s+v.y*c, v.z); }
@@ -348,7 +349,9 @@ void main(){
     const draw = () => {
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.uniform2f(U('uRes'), canvas.width, canvas.height);
-      gl.uniform1f(U('uSpin'), o.spin0 + spin);
+      // selfSpin: the parts turn on their own axes (via uTurn), not the whole
+      gl.uniform1f(U('uSpin'), o.spin0 + (o.selfSpin ? 0 : spin));
+      gl.uniform1f(U('uTurn'), spin);
       gl.uniform1f(U('uYaw'), o.yaw + ox * 0.3);
       gl.uniform1f(U('uPitch'), o.pitch + oy * 0.22);
       gl.uniform1f(U('uRotY'), o.base + ox * 0.6);
@@ -522,7 +525,8 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
 
   // sparkles: two four-point stars, each a square with a circle cut from
   // every corner (concave sides, long rays), tips rounded off; fitted to the
-  // ✨ reference. Flat chrome slabs like the pen and tile, rounded rims
+  // ✨ reference. Flat chrome slabs like the pen and tile, rounded rims; each
+  // star spins about its own axis
   chromeRig(document.querySelector('canvas[data-sparkle-rig]'), `
 #define STEP 0.9
 uniform float uEnamel; uniform float uAno;
@@ -537,9 +541,18 @@ float sdStar(vec2 p, float L){
   float cut = length(q - vec2(0.972 * L)) - 0.972 * L;
   return max(box, -cut) - RT;
 }
+// one star spinning about its own vertical axis through its centre c
+float star(vec3 q, vec2 c, float L, float a){
+  q.xy -= c;
+  q = rotY(q, -a);
+  return sdSlab(sdStar(q.xy, L), q.z, 0.057, 0.02);
+}
+// each star turns on its own axis: a slow idle spin plus the scroll turn,
+// the small one faster and the other way round
 float map(vec3 q){
-  float d = min(sdStar(q.xy - vec2(-0.142, 0.132), 0.419), sdStar(q.xy - vec2(0.300, -0.290), 0.259));
-  return sdSlab(d, q.z, 0.057, 0.02);
+  float t = uTime;
+  return min(star(q, vec2(-0.142, 0.132), 0.419, 0.35 + uTurn + t * 0.55),
+             star(q, vec2(0.300, -0.290), 0.259, -0.5 - uTurn * 1.4 - t * 0.85));
 }
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
     set(gl, U) {
@@ -548,7 +561,7 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,
       gl.uniform1f(U('uAno'), 0.23);
       gl.uniform1f(U('uObj'), -6 * Math.PI / 180);
     },
-    base: 13 * Math.PI / 180, spin0: 0.32, yaw: 0.0, pitch: -0.15,
+    base: 13 * Math.PI / 180, spin0: 0.0, yaw: 0.0, pitch: -0.15, selfSpin: true,
     spin: (y) => y * 0.0045,
   });
 })();
