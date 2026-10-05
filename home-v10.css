@@ -981,3 +981,28 @@ img{ max-width: 100%; height: auto; display: block; }
   .profile-card .photo-orbit .type-rig{ width: 24%; left: 5%; top: 25%; }
   .profile-card .photo-orbit .sparkle-rig{ width: 36%; right: 3%; top: 61.9%; }
 }
+
+/* ---------- phones: tighter gutters, clearer hero hierarchy ----------
+   Smaller side gutters so more fits; the greeting is set noticeably
+   larger than the lead (≈2×) instead of nearly the same size; the photo
+   sits closer to the text; buttons fill the width (the main one on its
+   own row, the other two sharing the next) */
+@media (max-width: 700px){
+  :root{ --gutter: 12px; }
+  .hero-glow{ border-radius: 28px; height: auto; min-height: 0; }
+  .hero-glow > .hero-split{ align-content: start; }
+  .hero-glow .profile-card{ margin-bottom: -6%; }
+  .hero-glow > .hero-split{ padding: 20px 20px 24px; row-gap: 0; }
+  .hero-glow .profile-card{ aspect-ratio: 1 / .9; }
+  .hero-glow .photo-orbit{ width: min(100cqw, 100cqh); }
+  .hero-glow .hero-copy{ gap: 18px; }
+  .hero-glow .hero-copy .hero-title{
+    white-space: nowrap;
+    font-size: min(calc((100vw - 64px) / 9.3), 44px);
+    line-height: 1.05;
+  }
+  .hero-glow .hero-copy .hero-lead{ font-size: 17px; line-height: 1.45; max-width: none; }
+  .hero-glow .hero-copy .hero-actions{ display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+  .hero-glow .hero-copy .hero-actions .btn{ justify-content: center; min-height: 48px; padding-inline: 12px; }
+  .hero-glow .hero-copy .hero-actions .btn:first-child{ grid-column: 1 / -1; }
+}
