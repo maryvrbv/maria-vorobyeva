@@ -545,6 +545,8 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .metric{ display: inline-flex; flex-direction: column; gap: 4px; background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 16px 18px; min-width: 160px; }
 .metric .num-big{ font-weight: 700; font-size: 24px; letter-spacing: -0.01em; color: var(--ink); }
 .metric .lbl{ font-size: 12px; color: var(--ink-soft); }
+/* secondary detail under a metric (e.g. the raw before → after values) */
+.metric .sub{ margin-top: 4px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
 .quote-block{
   border-left: 2px solid var(--accent);
