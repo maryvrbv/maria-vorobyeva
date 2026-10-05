@@ -1006,3 +1006,21 @@ img{ max-width: 100%; height: auto; display: block; }
   .hero-glow .hero-copy .hero-actions .btn{ justify-content: center; min-height: 48px; padding-inline: 12px; }
   .hero-glow .hero-copy .hero-actions .btn:first-child{ grid-column: 1 / -1; }
 }
+
+/* ---------- case cards on phones: link under the metrics ----------
+   The two text groups dissolve into one column so the "view case" link
+   can move to the end, after the numbers; it becomes a full-width pill
+   that is easy to hit with a thumb */
+@media (max-width: 900px){
+  .case-text{ gap: 12px; }
+  .case-top, .case-bottom{ display: contents; }
+  .case-text .kpis{ order: 1; margin-top: 12px; }
+  .case-text .case-link{
+    order: 2;
+    align-self: stretch; justify-content: center;
+    min-height: 48px; margin-top: 12px; padding: 0 20px;
+    border-radius: var(--radius-full);
+    border: 1px solid color-mix(in srgb, var(--case) 45%, transparent);
+    background: color-mix(in srgb, var(--case) 14%, transparent);
+  }
+}
