@@ -1036,3 +1036,14 @@ img{ max-width: 100%; height: auto; display: block; }
 }
 .case-card:hover .case-logo{ transform: rotate(-6deg) scale(1.06); }
 @media (prefers-reduced-motion: reduce){ .case-card:hover .case-logo{ transform: none; } }
+
+/* the toast never runs off a narrow screen */
+.copy-toast{ max-width: calc(100vw - 24px); white-space: normal; }
+
+/* ---------- phones: no sticky header ----------
+   the header that slides in on scroll takes room the case cards need, so
+   on phones it stays hidden and the stacked cards pin close to the top */
+@media (max-width: 900px){
+  .nav-reveal{ display: none; }
+  .stack-item{ top: calc(12px + var(--i, 0) * 10px); }
+}
