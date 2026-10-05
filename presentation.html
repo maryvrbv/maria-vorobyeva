@@ -12,40 +12,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Маша Воробьева — презентация</title>
-<meta name="description" content="Презентация о себе: Senior Product Designer, кейсы Альфа-Банка, МегаФона и Пятёрочки, опыт и подход к работе.">
+<meta name="description" content="Презентация о себе: опыт, кейсы Альфа-Банка и МегаФона, подход к работе.">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Маша Воробьева — презентация">
-<meta property="og:description" content="Senior Product Designer: кейсы, подход и опыт">
+<meta property="og:description" content="Senior Product Designer: опыт, кейсы и подход">
 <meta property="og:image" content="https://marydis.com/images/home/og-image.png">
 <meta property="og:url" content="https://marydis.com/presentation.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
 <style>
   /* ==========================================================================
-     Presentation (RU). Every slide is drawn on a fixed 1920×1080 canvas and
-     scaled to fit the window (--s, set by the script below). Arrows, space,
-     swipe or the buttons move between slides; #n in the URL opens slide n.
+     Presentation (RU), told as a story: experience, then two cases arc by
+     arc (setup → difficulty → what I did → climax → outcome), one idea per
+     slide. Every slide is drawn on a fixed 1920×1080 canvas and scaled to
+     the window (--s). Arrows, space, swipe or the buttons move between
+     slides; #n in the URL opens slide n. The "?" button (or N) shows the
+     talk track for the current slide: each slide's <aside class="notes">.
      Printing (Cmd/Ctrl+P) gives one slide per page, ready to save as PDF.
      ========================================================================== */
   :root{
-    --bg: #0c0a14;
-    --bg-2: #15121f;
-    --card: #1b1728;
-    --ink: #f4f2fa;
-    --ink-soft: #b4afc4;
+    --bg: #0e0b16;
+    --bg-2: #16121f;
+    --ink: #f4f1fa;
+    --ink-soft: #b9b3c9;
     --ink-faint: #8a849c;
-    --line: rgba(255,255,255,.1);
     --lilac: #baa3ff;
     --peach: #ffbab3;
     --blue: #6e7df0;
     --deep: #26195c;
+    --alfa: #ff6a5f;
+    --mega: #2fd57c;
+    --x5: #b5e04a;
     --font-display: 'Manrope', 'Inter', system-ui, sans-serif;
     --font-body: 'Inter', system-ui, -apple-system, sans-serif;
     --s: 1;
@@ -58,7 +61,7 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, p{ margin: 0; }
+  h1, h2, h3, p, figure{ margin: 0; }
   a{ color: inherit; }
   img, video{ display: block; }
 
@@ -71,41 +74,36 @@
   .slide{
     position: absolute; inset: 0; overflow: hidden;
     background: var(--bg);
-    padding: 120px 128px;
-    display: flex; flex-direction: column;
+    padding: 128px;
+    display: flex; flex-direction: column; justify-content: center; gap: 48px;
     opacity: 0; visibility: hidden;
     transition: opacity .5s ease, visibility 0s linear .5s;
   }
   .slide.is-active{ opacity: 1; visibility: visible; transition: opacity .5s ease, visibility 0s; }
   .slide > *{ position: relative; }
   .slide.alt{ background: var(--bg-2); }
+  .slide .notes{ display: none; }
 
   /* gentle rise for slide content on enter */
   .slide [data-in]{ opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s cubic-bezier(.22,1,.36,1); }
   .slide.is-active [data-in]{ opacity: 1; transform: none; }
-  .slide.is-active [data-in="2"]{ transition-delay: .12s; }
-  .slide.is-active [data-in="3"]{ transition-delay: .24s; }
-  .slide.is-active [data-in="4"]{ transition-delay: .36s; }
+  .slide.is-active [data-in="2"]{ transition-delay: .15s; }
+  .slide.is-active [data-in="3"]{ transition-delay: .3s; }
 
   /* ---------- type ---------- */
-  .eyebrow{
-    display: inline-flex; align-items: center; gap: 12px;
-    font: 600 26px/1 var(--font-body); color: var(--lilac);
-    letter-spacing: .02em; margin-bottom: 28px;
-  }
-  .eyebrow i{ font-size: 24px; }
-  .title{
-    font: 800 88px/1.04 var(--font-display); letter-spacing: -.03em;
-    max-width: 1500px; text-wrap: balance;
-  }
-  .lead{ font: 400 34px/1.45 var(--font-body); color: var(--ink-soft); max-width: 1180px; text-wrap: pretty; }
-  .lead em{ font-style: normal; color: var(--ink); }
-  .grad{
-    background: linear-gradient(100deg, var(--lilac) 0%, var(--peach) 55%, #9aa6ff 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
+  .label{ font: 600 28px/1 var(--font-body); color: var(--lilac); letter-spacing: .01em; }
+  .alfa .label{ color: var(--alfa); }
+  .mega .label{ color: var(--mega); }
+  .h-xl{ font: 800 96px/1.05 var(--font-display); letter-spacing: -.03em; max-width: 1500px; text-wrap: balance; }
+  .h-lg{ font: 800 88px/1.06 var(--font-display); letter-spacing: -.025em; max-width: 1500px; text-wrap: balance; }
+  .h-md{ font: 800 72px/1.08 var(--font-display); letter-spacing: -.025em; max-width: 1500px; text-wrap: balance; }
+  .sub{ font: 400 40px/1.35 var(--font-body); color: var(--ink-soft); }
+  .head{ display: flex; flex-direction: column; gap: 20px; }
+  .num-big{ font: 800 120px/1 var(--font-display); letter-spacing: -.035em; white-space: nowrap; }
+  .num-cap{ font: 400 32px/1.4 var(--font-body); color: var(--ink-soft); margin-top: 16px; }
+  .alfa .num-big{ color: var(--alfa); }
 
-  /* ---------- moving gradient (cover, statement, contact) ---------- */
+  /* ---------- moving gradient (cover, thanks) ---------- */
   .glow{ position: absolute !important; inset: 0; overflow: hidden; background: var(--deep); }
   .glow::before, .glow::after{
     content: ""; position: absolute; inset: -30%;
@@ -117,16 +115,12 @@
     filter: blur(40px);
     animation: drift 22s ease-in-out infinite alternate;
   }
-  .glow::after{
-    opacity: .55; mix-blend-mode: screen;
-    animation-duration: 30s; animation-direction: alternate-reverse;
-  }
+  .glow::after{ opacity: .55; mix-blend-mode: screen; animation-duration: 30s; animation-direction: alternate-reverse; }
   @keyframes drift{
     0%{ transform: translate(0,0) rotate(0deg) scale(1); }
     50%{ transform: translate(4%,-3%) rotate(8deg) scale(1.06); }
     100%{ transform: translate(-3%,4%) rotate(-6deg) scale(1.02); }
   }
-  /* vertical "fluted glass" ribs and film grain over the gradient */
   .glow .ribs{
     position: absolute; inset: 0; z-index: 1;
     background: repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, transparent 2px 44px, rgba(0,0,0,.06) 44px 46px, transparent 46px 88px);
@@ -135,196 +129,100 @@
     position: absolute; inset: 0; z-index: 2; opacity: .22; mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
+  .on-glow{ color: #fff; }
 
-  /* ---------- 1. cover ---------- */
-  .cover{ flex-direction: row; align-items: center; gap: 96px; padding: 96px 128px; }
-  .cover .photo{
-    width: 720px; height: 820px; flex: none;
-    border-radius: 48px; overflow: hidden;
-    box-shadow: 0 40px 120px rgba(20,10,60,.45);
-  }
+  /* "difficulty" statement slides in the case colour */
+  .tension-alfa{ background: linear-gradient(135deg, #3a0e14 0%, #8a1e1a 55%, #ef3124 100%); }
+  .tension-mega{ background: linear-gradient(135deg, #062a18 0%, #0b6a3c 55%, #00b956 100%); }
+  .tension-alfa .label{ color: #ffd4cf; }
+  .tension-mega .label{ color: #c8f5da; }
+  .tension-alfa .sub{ color: #ffe3df; }
+  .tension-mega .sub{ color: #ddf8e8; }
+  .tension-alfa .h-xl, .tension-mega .h-xl{ color: #fff; }
+
+  /* ---------- cover ---------- */
+  .cover{ flex-direction: row; align-items: center; gap: 112px; }
+  .cover .photo{ width: 680px; height: 824px; flex: none; border-radius: 48px; overflow: hidden; box-shadow: 0 40px 120px rgba(20,10,60,.45); }
   .cover .photo img{ width: 100%; height: 100%; object-fit: cover; object-position: 40% 30%; }
   .cover .copy{ display: flex; flex-direction: column; gap: 40px; }
-  .cover h1{ font: 800 150px/.98 var(--font-display); letter-spacing: -.045em; color: #fff; }
-  .cover .role{ font: 700 44px/1.1 var(--font-display); color: #fff; letter-spacing: -.01em; }
-  .cover .lead{ color: rgba(255,255,255,.8); max-width: 860px; }
-  .cover .lead em{ color: #fff; }
-  .cover .site{ font: 500 28px/1 var(--font-body); color: rgba(255,255,255,.75); text-decoration: none; }
+  .cover h1{ font: 800 140px/1 var(--font-display); letter-spacing: -.035em; }
+  .cover .role{ font: 700 48px/1.15 var(--font-display); }
+  .cover .lead{ font: 400 34px/1.45 var(--font-body); color: rgba(255,255,255,.85); max-width: 760px; }
 
-  /* ---------- 2. about: big numbers ---------- */
-  .stats{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: auto; }
-  .stat{
-    background: var(--card); border-radius: 36px; padding: 48px 44px 44px;
-    display: flex; flex-direction: column; gap: 18px; min-height: 300px;
-  }
-  .stat b{ font: 800 92px/1 var(--font-display); letter-spacing: -.04em; white-space: nowrap; }
-  .stat span{ font: 400 28px/1.35 var(--font-body); color: var(--ink-soft); }
-  .spheres{ display: flex; gap: 14px; flex-wrap: wrap; margin-top: 48px; }
-  .spheres span{
-    font: 500 28px/1 var(--font-body); color: var(--ink);
-    padding: 18px 28px; border-radius: 999px; background: rgba(186,163,255,.14);
-  }
+  /* ---------- career ---------- */
+  .career{ gap: 72px; }
+  .jobs{ display: grid; grid-template-columns: 1fr 1fr; gap: 36px 64px; }
+  .job{ display: flex; align-items: center; gap: 28px; }
+  .job img{ width: 88px; height: 88px; border-radius: 22px; flex: none; }
+  .job b{ display: block; font: 800 40px/1.1 var(--font-display); letter-spacing: -.01em; }
+  .job span{ display: block; font: 400 26px/1.35 var(--font-body); color: var(--ink-soft); margin-top: 6px; }
 
-  /* ---------- 3. how I work ---------- */
-  .powers{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: auto; }
-  .power{
-    position: relative; overflow: hidden; border-radius: 36px; min-height: 560px;
-    padding: 44px 40px; display: flex; flex-direction: column; justify-content: flex-end; gap: 18px;
-    background: var(--card);
-  }
-  .power img{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .power::after{ content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(12,10,20,0) 20%, rgba(12,10,20,.82) 100%); }
-  .power h3, .power p{ position: relative; z-index: 1; }
-  .power h3{ font: 800 40px/1.1 var(--font-display); letter-spacing: -.02em; }
-  .power p{ font: 400 26px/1.4 var(--font-body); color: rgba(255,255,255,.82); }
-  .power .n{ position: absolute; z-index: 1; top: 36px; left: 40px; font: 700 28px/1 var(--font-display); color: rgba(255,255,255,.85); }
+  /* ---------- three numbers ---------- */
+  .trio{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+  .trio .num-big{ font-size: 140px; letter-spacing: -.04em; }
+  .trio div:nth-child(1) .num-big{ color: var(--lilac); }
+  .trio div:nth-child(2) .num-big{ color: var(--peach); }
+  .trio div:nth-child(3) .num-big{ color: #9aa6ff; }
+  .alfa .trio .num-big{ font-size: 120px; color: var(--alfa); }
 
-  /* ---------- case slides ---------- */
-  .case{ flex-direction: row; gap: 80px; align-items: stretch; }
-  .case .text{ width: 760px; flex: none; display: flex; flex-direction: column; }
-  .case-head{ display: inline-flex; align-items: center; gap: 16px; margin-bottom: 40px; }
-  .case-head img{ width: 56px; height: 56px; border-radius: 14px; }
-  .case-head span{
-    font: 600 26px/1 var(--font-body); padding: 15px 22px; border-radius: 999px;
-    background: color-mix(in srgb, var(--case) 22%, transparent); color: #fff;
-  }
-  .case h2{ font: 800 70px/1.06 var(--font-display); letter-spacing: -.03em; text-wrap: balance; }
-  .case .sub{ font: 400 32px/1.45 var(--font-body); color: var(--ink-soft); margin-top: 32px; text-wrap: pretty; }
-  .kpis{ display: flex; gap: 48px; margin-top: auto; padding-top: 48px; }
-  .kpi{ display: flex; flex-direction: column; gap: 12px; max-width: 260px; }
-  .kpi b{ font: 800 76px/1 var(--font-display); letter-spacing: -.03em; color: #fff; white-space: nowrap; }
-  .kpi span{ font: 400 26px/1.35 var(--font-body); color: var(--ink-soft); }
-  .kpi:first-child b{ color: var(--case-text, var(--case)); }
-  .case .media{
-    flex: 1; min-width: 0; border-radius: 40px; overflow: hidden;
-    background: color-mix(in srgb, var(--case) 16%, #0c0a14);
-    display: grid; place-items: center;
-  }
-  .case .media video, .case .media img{ width: 100%; height: 100%; object-fit: cover; }
-  .case-link{
-    align-self: flex-start; margin-top: 40px;
-    display: inline-flex; align-items: center; gap: 12px;
-    font: 600 26px/1 var(--font-body); text-decoration: none; color: #fff;
-    padding: 20px 30px; border-radius: 999px; background: rgba(255,255,255,.1);
-  }
-  .case-link:hover{ background: rgba(255,255,255,.18); }
+  /* ---------- full case cover ---------- */
+  .case-cover{ justify-content: flex-start; align-items: center; gap: 40px; padding: 96px 128px; }
+  .case-title{ align-self: flex-start; display: flex; align-items: center; gap: 20px; font: 800 40px/1 var(--font-display); }
+  .case-title img{ width: 56px; height: 56px; border-radius: 14px; }
+  .case-cover video{ height: 740px; width: auto; max-width: 1664px; border-radius: 32px; }
 
-  /* ---------- case details: one big screenshot ---------- */
-  .shot{ gap: 44px; }
-  .shot .row{ display: flex; justify-content: space-between; align-items: flex-end; gap: 64px; }
-  .shot h2{ font: 800 60px/1.08 var(--font-display); letter-spacing: -.025em; max-width: 1000px; text-wrap: balance; }
-  .shot .note{ font: 400 28px/1.45 var(--font-body); color: var(--ink-soft); max-width: 600px; }
-  .shot .frame{
-    flex: 1; min-height: 0; border-radius: 36px; overflow: hidden;
-    background: #f3f1f7; display: grid; place-items: center;
-  }
-  .shot .frame img{ width: 100%; height: 100%; object-fit: contain; }
-  .shot .frame.dark{ background: #191527; }
+  /* ---------- picture beside a headline ---------- */
+  .split{ flex-direction: row; align-items: center; gap: 88px; }
+  .split .head{ flex: none; }
+  .shot{ border-radius: 32px; overflow: hidden; display: grid; place-items: center; }
+  .shot img{ width: 100%; height: 100%; object-fit: contain; }
+  .shot.light{ background: #f3f1f7; }
+  .shot.dark{ background: #161616; }
 
-  /* ---------- experience ---------- */
-  .timeline{ list-style: none; margin: auto 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; }
-  .timeline li{
-    display: flex; align-items: center; gap: 28px;
-    background: var(--card); border-radius: 32px; padding: 30px 36px;
-  }
-  .timeline img{ width: 80px; height: 80px; border-radius: 20px; flex: none; }
-  .timeline .co{ font: 800 38px/1.1 var(--font-display); letter-spacing: -.015em; }
-  .timeline .meta{ font: 400 26px/1.35 var(--font-body); color: var(--ink-soft); margin-top: 6px; }
-  .timeline .fact{ margin-left: auto; text-align: right; font: 700 30px/1.2 var(--font-display); color: var(--lilac); white-space: nowrap; }
-  .timeline .fact small{ display: block; font: 400 22px/1.3 var(--font-body); color: var(--ink-faint); margin-top: 4px; }
+  /* ---------- one huge number ---------- */
+  .hero-num{ gap: 24px; }
+  .hero-num .giant{ font: 800 300px/1 var(--font-display); letter-spacing: -.045em; }
+  .alfa .giant{ color: var(--alfa); }
+  .mega .giant{ color: var(--mega); font-size: 260px; }
+  .hero-num .what{ font: 800 64px/1.1 var(--font-display); letter-spacing: -.015em; }
+  .hero-num .more{ display: flex; gap: 96px; margin-top: 40px; }
+  .hero-num .more b{ display: block; font: 800 72px/1 var(--font-display); letter-spacing: -.02em; }
+  .hero-num .more span{ display: block; font: 400 28px/1.35 var(--font-body); color: var(--ink-soft); margin-top: 10px; }
 
-  /* ---------- education ---------- */
-  .edu{ display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: auto; }
-  .edu li{ list-style: none; background: var(--card); border-radius: 36px; padding: 48px; display: flex; flex-direction: column; gap: 36px; min-height: 420px; }
-  .edu img{ width: 120px; height: 120px; border-radius: 28px; }
-  .edu .school{ font: 800 48px/1.1 var(--font-display); letter-spacing: -.02em; margin-top: auto; }
-  .edu .degree{ font: 400 30px/1.4 var(--font-body); color: var(--ink-soft); margin-top: 14px; }
-  .edu ul{ padding: 0; margin: 0; }
+  /* ---------- two options side by side ---------- */
+  .pair{ display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .pair figure{ display: flex; flex-direction: column; gap: 20px; }
+  .pair .shot{ height: 440px; }
+  .pair figcaption{ font: 400 28px/1.3 var(--font-body); color: var(--ink-soft); }
+  .pair figcaption.mine{ font-weight: 600; color: var(--mega); }
 
-  /* ---------- statement ---------- */
-  .statement{ justify-content: center; }
-  .statement h2{ font: 800 112px/1.02 var(--font-display); letter-spacing: -.04em; color: #fff; max-width: 1500px; text-wrap: balance; }
-  .statement p{ font: 400 36px/1.45 var(--font-body); color: rgba(255,255,255,.82); max-width: 1100px; margin-top: 48px; }
+  /* ---------- Pyaterochka in one slide ---------- */
+  .x5{ flex-direction: row; align-items: center; gap: 80px; padding: 96px 128px; }
+  .x5 .head{ width: 520px; flex: none; gap: 40px; }
+  .x5 .kp{ display: flex; gap: 48px; }
+  .x5 .kp b{ display: block; font: 800 64px/1 var(--font-display); color: var(--x5); }
+  .x5 .kp span{ display: block; font: 400 26px/1.35 var(--font-body); color: var(--ink-soft); margin-top: 8px; }
+  .x5 video{ width: 1064px; height: auto; border-radius: 32px; }
 
-  /* ---------- contact ---------- */
-  .contact{ justify-content: space-between; }
-  .contact .head{ display: flex; align-items: center; gap: 56px; }
-  .contact .face{ width: 260px; height: 260px; border-radius: 50%; object-fit: cover; object-position: 40% 30%; flex: none; }
-  .contact h2{ font: 800 100px/1.02 var(--font-display); letter-spacing: -.04em; color: #fff; max-width: 1240px; text-wrap: balance; }
-  .contact .sub{ font: 400 36px/1.4 var(--font-body); color: rgba(255,255,255,.82); margin-top: 28px; }
-  .contact .links{ display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; }
-  .contact .mail{
-    font: 700 56px/1.1 var(--font-display); color: #fff; text-decoration: none;
-    border-bottom: 3px solid rgba(255,255,255,.5); padding-bottom: 8px; letter-spacing: -.01em;
-  }
-  .contact .mail:hover{ border-color: #fff; }
-  .btns{ display: flex; gap: 16px; }
-  .btn{
-    display: inline-flex; align-items: center; gap: 12px;
-    font: 600 28px/1 var(--font-body); color: #fff; text-decoration: none;
-    padding: 22px 32px; border-radius: 999px;
-    background: rgba(255,255,255,.16); border: 2px solid rgba(255,255,255,.35);
-  }
-  .btn:hover{ background: rgba(255,255,255,.26); }
-  .btn.primary{ background: #0c0a14; border-color: #0c0a14; }
-  .btn i{ font-size: 30px; }
+  /* ---------- approach ---------- */
+  .ways{ display: grid; grid-template-columns: 1fr 1fr; gap: 56px 96px; }
+  .ways p{ font: 800 64px/1.1 var(--font-display); letter-spacing: -.015em; }
+  .ways p:last-child{ color: var(--lilac); }
 
-
-  /* ---------- case deep dive (Alfa, MegaFon) ---------- */
-  .dd{ gap: 44px; }
-  .dd .eyebrow{ color: var(--case-text, var(--case)); margin-bottom: 0; }
-  .dd .eyebrow img{ width: 36px; height: 36px; border-radius: 10px; }
-  .dd h2{ font: 800 64px/1.06 var(--font-display); letter-spacing: -.025em; max-width: 1500px; text-wrap: balance; margin-top: -16px; }
-  .dd .cols{ flex: 1; min-height: 0; display: grid; gap: 32px; }
-  .dd .stackc{ display: flex; flex-direction: column; gap: 24px; min-height: 0; }
-  .dd .card{ background: var(--card); border-radius: 32px; padding: 40px 44px; display: flex; flex-direction: column; gap: 14px; }
-  .dd .card h3{ font: 800 34px/1.15 var(--font-display); letter-spacing: -.01em; }
-  .dd .card p, .dd .card li{ font: 400 26px/1.42 var(--font-body); color: var(--ink-soft); }
-  .dd .card p b, .dd .card li b{ color: var(--ink); font-weight: 600; }
-  .dd .card ul{ margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
-  .dd .card li{ display: flex; gap: 14px; }
-  .dd .card li i{ font-size: 30px; flex: none; margin-top: 2px; }
-  .dd .plus i{ color: #6fd39b; }
-  .dd .minus i{ color: #ff8a80; }
-  .dd .text-lg{ font: 400 32px/1.45 var(--font-body); color: var(--ink-soft); text-wrap: pretty; }
-  .dd .text-lg b{ color: var(--ink); font-weight: 600; }
-  .dd .meta{ display: grid; grid-template-columns: 1fr; gap: 0; background: var(--card); border-radius: 32px; padding: 12px 44px; }
-  .dd .meta div{ padding: 26px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
-  .dd .meta div:first-child{ border-top: 0; }
-  .dd .meta dt{ font: 600 24px/1.4 var(--font-body); color: var(--ink-faint); }
-  .dd .meta dd{ margin: 0; font: 400 26px/1.4 var(--font-body); color: var(--ink); }
-  .dd .quote{
-    background: color-mix(in srgb, var(--case) 14%, var(--card)); border-radius: 32px; padding: 36px 44px;
-    font: 500 30px/1.45 var(--font-body); color: var(--ink);
-  }
-  .dd .quote b{ font-weight: 700; color: var(--case-text, var(--case)); }
-  .dd .big{ display: flex; flex-direction: column; gap: 8px; }
-  .dd .big b{ font: 800 84px/1 var(--font-display); letter-spacing: -.035em; color: #fff; white-space: nowrap; }
-  .dd .big span{ font: 400 26px/1.35 var(--font-body); color: var(--ink-soft); }
-  .dd .img{ border-radius: 32px; overflow: hidden; background: #f3f1f7; display: grid; place-items: center; min-height: 0; }
-  .dd .img.dark{ background: #161616; }
-  .dd .img img{ width: 100%; height: 100%; object-fit: contain; }
-  .dd table{ width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border-radius: 32px; overflow: hidden; }
-  .dd th, .dd td{ text-align: left; padding: 22px 36px; font: 400 26px/1.35 var(--font-body); border-top: 1px solid var(--line); }
-  .dd th{ font: 700 26px/1.3 var(--font-body); color: var(--ink-faint); border-top: 0; }
-  .dd td:first-child{ color: var(--ink); font-weight: 600; width: 34%; }
-  .dd td:nth-child(2){ color: var(--ink-faint); }
-  .dd td:nth-child(3){ color: var(--ink); }
-  .dd th:nth-child(3){ color: #6fd39b; }
-  .dd .metrics{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .dd .metrics .card{ gap: 10px; padding: 36px 40px; }
-  .dd .metrics b{ font: 800 64px/1 var(--font-display); letter-spacing: -.03em; color: #fff; white-space: nowrap; }
-  .dd .metrics b.hl{ color: var(--case-text, var(--case)); }
-  .dd .metrics span{ font: 400 24px/1.35 var(--font-body); color: var(--ink-soft); }
-  .dd .feat{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; flex: 1; min-height: 0; }
-  .dd .feat .card{ padding: 0; overflow: hidden; gap: 0; }
-  .dd .feat .img{ border-radius: 0; flex: 1; min-height: 0; }
-  .dd .feat .cap{ padding: 32px 36px 36px; display: flex; flex-direction: column; gap: 10px; }
-  .dd .case-link{ margin-top: 0; }
+  /* ---------- thanks ---------- */
+  .thanks{ justify-content: space-between; }
+  .thanks .top{ display: flex; align-items: center; gap: 56px; }
+  .thanks .face{ width: 240px; height: 240px; border-radius: 50%; object-fit: cover; object-position: 40% 30%; }
+  .thanks h2{ font: 800 120px/1 var(--font-display); letter-spacing: -.035em; }
+  .thanks .mail{ font: 700 56px/1.1 var(--font-display); text-decoration: none; border-bottom: 3px solid rgba(255,255,255,.5); padding-bottom: 6px; }
+  .thanks .mail:hover{ border-color: #fff; }
+  .thanks .links{ font: 400 36px/1.4 var(--font-body); color: rgba(255,255,255,.88); margin-top: 24px; }
+  .thanks .links a{ text-decoration: none; }
+  .thanks .links a:hover{ text-decoration: underline; }
 
   /* slide number, bottom right of each slide */
   .num{ position: absolute !important; right: 128px; bottom: 52px; font: 500 22px/1 var(--font-body); color: var(--ink-faint); }
-  .on-glow .num{ color: rgba(255,255,255,.65); }
+  .on-glow .num, .tension-alfa .num, .tension-mega .num{ color: rgba(255,255,255,.65); }
 
   /* ---------- controls (outside the canvas, not scaled) ---------- */
   .controls{
@@ -336,7 +234,6 @@
     transition: opacity .3s ease;
   }
   .controls.idle{ opacity: 0; }
-  /* while presenting, the cursor hides together with the controls */
   body.idle, body.idle *{ cursor: none !important; }
   .controls button, .controls a{
     all: unset; cursor: pointer; box-sizing: border-box;
@@ -346,8 +243,23 @@
   .controls button:hover, .controls a:hover{ background: rgba(255,255,255,.12); }
   .controls button:focus-visible, .controls a:focus-visible{ outline: 2px solid var(--lilac); outline-offset: 2px; }
   .controls button:disabled{ opacity: .3; cursor: default; background: none; }
+  .controls .help{ font: 700 18px/1 var(--font-body); }
+  .controls .help[aria-pressed="true"]{ background: var(--lilac); color: #1a1430; }
   .controls .count{ font: 500 14px/1 var(--font-body); color: var(--ink-soft); min-width: 56px; text-align: center; font-variant-numeric: tabular-nums; }
   .progress{ position: fixed; z-index: 10; left: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--lilac), var(--peach)); transition: width .4s ease; }
+
+  /* talk track for the current slide, opened with "?" */
+  .talk{
+    position: fixed; z-index: 11; right: 18px; bottom: 76px;
+    width: min(460px, calc(100vw - 36px)); max-height: calc(100vh - 120px); overflow: auto;
+    padding: 20px 22px; border-radius: 18px;
+    background: rgba(20,17,32,.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 16px 40px rgba(0,0,0,.5);
+    font: 400 16px/1.55 var(--font-body); color: var(--ink);
+  }
+  .talk[hidden]{ display: none; }
+  .talk b{ display: block; font: 600 12px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--lilac); margin-bottom: 10px; }
+  .talk p + p{ margin-top: 10px; }
 
   @media (prefers-reduced-motion: reduce){
     .glow::before, .glow::after{ animation: none; }
@@ -358,12 +270,12 @@
   @media print{
     @page{ size: 1920px 1080px; margin: 0; }
     html, body{ height: auto; overflow: visible; background: var(--bg); }
-    .deck{ position: static; display: block; }
+    .deck{ position: static; }
     .stage{ position: static; transform: none; width: 1920px; height: auto; }
     .slide{ position: relative; width: 1920px; height: 1080px; opacity: 1; visibility: visible; break-after: page; page-break-after: always; }
     .slide [data-in]{ opacity: 1; transform: none; }
     .glow::before, .glow::after{ animation: none; }
-    .controls, .progress{ display: none; }
+    .controls, .progress, .talk{ display: none; }
     *{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
@@ -373,370 +285,174 @@
 <main class="deck" aria-roledescription="презентация" aria-label="Маша Воробьева — презентация">
 <div class="stage" id="stage">
 
-  <!-- 1. cover -->
+  <!-- ===================== Знакомство ===================== -->
   <section class="slide cover on-glow" aria-roledescription="слайд" aria-label="Привет! Я Маша">
     <div class="glow" aria-hidden="true"><div class="ribs"></div><div class="grain"></div></div>
-    <figure class="photo" data-in style="margin:0"><img src="images/home/photo.webp" alt="Маша Воробьева" width="1151" height="1053"></figure>
+    <figure class="photo" data-in><img src="images/home/photo.webp" alt="Маша Воробьева" width="1151" height="1053"></figure>
     <div class="copy">
       <h1 data-in="2">Привет!<br>Я Маша</h1>
       <p class="role" data-in="2">Senior Product Designer</p>
-      <p class="lead" data-in="3">Больше 9 лет проектирую B2C и B2B продукты <em>для миллионов пользователей</em> в&nbsp;сферах e‑commerce, telecom, fintech и HR‑tech</p>
-      <a class="site" href="index.html" data-in="4">marydis.com</a>
+      <p class="lead" data-in="3">9+ лет проектирую продукты для&nbsp;миллионов пользователей</p>
     </div>
+    <aside class="notes"><p>Привет! Меня зовут Маша, я продуктовый дизайнер, больше 9 лет в профессии. Работала в e‑commerce, телекоме, финтехе и HR‑tech, сейчас в Альфа-Банке.</p><p>Расскажу, где я работала, и подробно разберу два кейса: Альфу и МегаФон. Покажу, какие там были сложности и что я сделала, чтобы продукт дошёл до запуска.</p></aside>
   </section>
 
-  <!-- 2. about -->
-  <section class="slide" aria-roledescription="слайд" aria-label="Обо мне">
-    <span class="eyebrow" data-in><i class="ph-fill ph-star-four" aria-hidden="true"></i>Обо мне</span>
-    <h2 class="title" data-in>Проектирую продукты, которыми пользуются <span class="grad">миллионы людей</span></h2>
-    <div class="spheres" data-in="2"><span>E‑commerce</span><span>Telecom</span><span>Fintech</span><span>Retail</span><span>HR‑tech</span></div>
-    <div class="stats" data-in="3">
-      <div class="stat"><b>9+</b><span>лет в продуктовом дизайне</span></div>
-      <div class="stat"><b>17 млн</b><span>MAU приложения и сайта МегаФона</span></div>
-      <div class="stat"><b>10 млн</b><span>MAU приложения «Пятёрочка»</span></div>
-      <div class="stat"><b>0 → 1</b><span>запустила два новых продукта с нуля</span></div>
+  <section class="slide career" aria-roledescription="слайд" aria-label="Где я работала">
+    <div class="head" data-in><p class="label">Опыт</p><h2 class="h-lg">Где я работала</h2></div>
+    <div class="jobs" data-in="2">
+      <div class="job"><img src="images/home/exp/logo-alfa.webp" alt=""><div><b>Альфа-Банк</b><span>с 2025 · Senior Product Designer</span></div></div>
+      <div class="job"><img src="images/home/exp/logo-megafon.webp" alt=""><div><b>МегаФон</b><span>2023–2025 · Senior Product Designer</span></div></div>
+      <div class="job"><img src="images/home/exp/logo-x5.webp" alt=""><div><b>X5</b><span>2020–2023 · Senior Product Designer</span></div></div>
+      <div class="job"><img src="images/home/exp/logo-medacoustica.webp" alt=""><div><b>MedAcoustica</b><span>2018–2020 · Product Designer</span></div></div>
+      <div class="job"><img src="images/home/exp/logo-sber.webp" alt=""><div><b>Сбер</b><span>2016–2018 · Product Designer</span></div></div>
+      <div class="job"><img src="images/home/exp/logo-citi.webp" alt=""><div><b>Citi</b><span>2013–2016 · Analyst, UI Designer</span></div></div>
     </div>
+    <aside class="notes"><p>Коротко по пути. Начинала в Citi аналитиком и UI-дизайнером, автоматизировала процессы отдела. В Сбере проектировала дашборды для руководителей, стоимость подготовки отчётов снизилась на 87%.</p><p>В MedAcoustica с нуля сделала job board для врачей в Германии, Австрии и Швейцарии. В X5 перезапускали приложение «Пятёрочка» и программу лояльности. В МегаФоне работала над витриной тарифов и голосовым помощником «Ева». Сейчас в Альфа-Банке делаю новый e‑commerce продукт.</p><p>Образование: магистратура ВШЭ по бизнес-информатике и UX/UI в CalArts.</p></aside>
   </section>
 
-  <!-- 3. how I work -->
-  <section class="slide alt" aria-roledescription="слайд" aria-label="Как я работаю">
-    <span class="eyebrow" data-in><i class="ph-fill ph-star-four" aria-hidden="true"></i>Подход</span>
-    <h2 class="title" data-in>Как я работаю</h2>
-    <div class="powers" data-in="2">
-      <article class="power"><img src="images/home/powers/flows.webp" alt=""><span class="n">01</span><h3>Упрощаю сложные сценарии</h3><p>Замечаю, где люди теряются, и превращаю это в понятный путь</p></article>
-      <article class="power"><img src="images/home/powers/connect.webp" alt=""><span class="n">02</span><h3>Объединяю команды</h3><p>Помогаю бизнесу, разработке и дизайну двигаться в одну сторону</p></article>
-      <article class="power"><img src="images/home/powers/systems.webp" alt=""><span class="n">03</span><h3>Мыслю системно</h3><p>Люблю дизайн-системы, устойчивые паттерны и масштабируемые решения</p></article>
-      <article class="power"><img src="images/home/powers/launch.webp" alt=""><span class="n">04</span><h3>Довожу до запуска</h3><p>Думаю не только про макет, но и про реализацию, тестирование и результат</p></article>
+  <section class="slide alt" aria-roledescription="слайд" aria-label="Коротко">
+    <p class="label" data-in>Коротко</p>
+    <div class="trio" data-in="2">
+      <div><p class="num-big">9+</p><p class="num-cap">лет в продуктовом дизайне</p></div>
+      <div><p class="num-big">17 млн</p><p class="num-cap">пользователей в самом большом продукте</p></div>
+      <div><p class="num-big">0 → 1</p><p class="num-cap">два продукта запустила с нуля</p></div>
     </div>
+    <aside class="notes"><p>Если в трёх цифрах: больше 9 лет в продукте; самый крупный продукт — МегаФон, 17 миллионов пользователей в месяц; и два запуска с нуля — программа лояльности X5 Клуб и маркетплейс в Альфе.</p><p>Дальше два кейса: в одном я строила новое, в другом улучшала то, чем уже пользуются миллионы.</p></aside>
   </section>
 
-  <!-- 4. statement before the cases -->
-  <section class="slide statement on-glow" aria-roledescription="слайд" aria-label="Кейсы">
-    <div class="glow" aria-hidden="true"><div class="ribs"></div><div class="grain"></div></div>
-    <span class="eyebrow" data-in style="color:#fff"><i class="ph-fill ph-star-four" aria-hidden="true"></i>Избранные проекты</span>
-    <h2 data-in="2">Три продукта, три команды, миллионы пользователей</h2>
-    <p data-in="3">Альфа-Банк, МегаФон и Пятёрочка: от новых продуктов с нуля до редизайна сценариев, которыми люди пользуются каждый день</p>
+  <!-- ===================== Кейс 1: Альфа ===================== -->
+  <section class="slide case-cover" aria-roledescription="слайд" aria-label="Кейс 1: Альфа-Банк">
+    <p class="case-title" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Кейс 1 · Альфа-Банк</p>
+    <video data-in="2" muted loop playsinline preload="none" poster="images/home/cover-alfa.webp" width="1042" height="650" aria-label="Сценарий покупки в новом маркетплейсе Альфа-Банка"><source data-src="images/home/cover-alfa.webm" type="video/webm"></video>
+    <aside class="notes"><p>Первый кейс — Альфа-Банк. Это новый e‑commerce продукт: я с нуля проектировала сценарий покупки — корзину, оформление и управление заказами.</p><p>Здесь сразу видно итог, а дальше расскажу, как мы к нему пришли.</p></aside>
   </section>
 
-  <!-- 5. Alfa -->
-  <section class="slide case" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк">
-    <div class="text">
-      <span class="case-head" data-in><img src="images/home/exp/logo-alfa.webp" alt=""><span>Альфа-Банк · E‑commerce</span></span>
-      <h2 data-in>Спроектировала ключевые сценарии нового e‑commerce продукта</h2>
-      <p class="sub" data-in="2">Покупка, профиль, видеолента и BNPL‑оплата. С&nbsp;нуля собрала сценарий покупки в&nbsp;«Подели»: от&nbsp;мультиселлерной корзины до&nbsp;управления заказами</p>
-      <div class="kpis" data-in="3">
-        <div class="kpi"><b>0 → 1</b><span>новый продукт</span></div>
-        <div class="kpi"><b>4</b><span>ключевых сценария</span></div>
-        <div class="kpi"><b>2</b><span>канала запуска: «Подели» и&nbsp;Альфа-Банк</span></div>
-      </div>
+  <section class="slide alfa" aria-roledescription="слайд" aria-label="Альфа-Банк: завязка">
+    <p class="label" data-in>Альфа-Банк · Завязка</p>
+    <h2 class="h-lg" data-in="2">Покупатели уходили на&nbsp;сайты партнёров, а&nbsp;банк хотел свой маркетплейс</h2>
+    <aside class="notes"><p>У банка было приложение «Подели»: человек находил товар, нажимал «Смотреть в магазине» и уходил покупать на сайт партнёра. Банк зарабатывал только на переходах.</p><p>Бизнес решил превратить «Подели» в полноценный маркетплейс и брать комиссию с завершённых заказов — и в самом «Подели», и в WebView приложения Альфа-Банка. Для этого нужна была покупка внутри приложения. Это направление досталось мне.</p></aside>
+  </section>
+
+  <section class="slide tension-alfa" aria-roledescription="слайд" aria-label="Альфа-Банк: сложность">
+    <p class="label" data-in>Сложность</p>
+    <h2 class="h-xl" data-in="2">Товары разных продавцов нельзя оформить одним заказом</h2>
+    <p class="sub" data-in="3">И всего два месяца до запуска</p>
+    <aside class="notes"><p>Главная сложность была техническая: товары разных продавцов нельзя было оформить одним заказом. А пользователь привык к маркетплейсам, где одна корзина и одна кнопка «Оформить».</p><p>Нужно было придумать корзину, которая честно разделяет покупки по магазинам, но не пугает и не роняет конверсию. И сроки: старт в июне, запуск в августе. Чтобы успеть, я проектировала MVP и целевую версию параллельно.</p></aside>
+  </section>
+
+  <section class="slide alfa" aria-roledescription="слайд" aria-label="Альфа-Банк: что я сделала">
+    <div class="head" data-in><p class="label">Что я сделала</p><h2 class="h-md">Сначала разобралась, потом рисовала</h2></div>
+    <div class="trio" data-in="2" style="margin-top:24px">
+      <div><p class="num-big">11</p><p class="num-cap">интервью с покупателями маркетплейсов</p></div>
+      <div><p class="num-big">14</p><p class="num-cap">сервисов изучила в поисках паттерна</p></div>
+      <div><p class="num-big">CJM</p><p class="num-cap">целевой путь покупки с барьерами</p></div>
     </div>
-    <div class="media" data-in="2"><video muted loop playsinline preload="none" poster="images/home/cover-alfa.webp" aria-label="Альфа-Маркет — сценарий покупки"><source data-src="images/home/cover-alfa.webm" type="video/webm"></video></div>
+    <aside class="notes"><p>Я начала с discovery. Провела 11 интервью с людьми, которые регулярно покупают на Wildberries, Ozon и Яндекс Маркете. Выяснилось две вещи: кнопка «Смотреть в магазине» выглядела как реклама, а при переходе к партнёру люди боялись потерять цену, кешбэк и рассрочку.</p><p>Сформулировала JTBD: «хочу купить на самых выгодных условиях и быть уверенной в выборе». Собрала CJM, чтобы увидеть корзину не как экран, а как мост между выбором и оформлением.</p><p>И изучила 14 сервисов — Ozon, Wildberries, Lamoda, Самокат и другие. Решение для раздельных заказов нашлось только у Яндекс Еды и Shop от Shopify.</p></aside>
   </section>
 
-  <!-- Alfa deep dive: task -->
-  <section class="slide dd" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: задача">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · Задача</span>
-    <h2 data-in>Превратить «Подели» в&nbsp;полноценный маркетплейс</h2>
-    <div class="cols" style="grid-template-columns:1fr 820px" data-in="2">
-      <div class="stackc" style="justify-content:space-between">
-        <p class="text-lg">«Подели» работал по&nbsp;модели <b>clickout</b>: пользователь находил товар в&nbsp;приложении, а&nbsp;покупку завершал на&nbsp;сайте партнёра</p>
-        <p class="text-lg">Бизнес решил перейти от&nbsp;оплаты за&nbsp;переходы к&nbsp;<b>комиссии с&nbsp;завершённых заказов</b>. Для этого нужна покупка внутри приложения, в&nbsp;«Подели» и&nbsp;в&nbsp;WebView Альфа-Банка</p>
-        <div class="quote"><b>Ограничение:</b> товары разных продавцов нельзя оформить одним заказом. MVP и&nbsp;целевую версию проектировала параллельно</div>
-      </div>
-      <dl class="meta" style="margin:0">
-        <div><dt>Роль</dt><dd>Discovery, JTBD, UX/UI, прототипы, UX-тесты, дизайн-ревью</dd></div>
-        <div><dt>Команда</dt><dd>Продакт корзины, CPO B2C, аналитики, разработка, QA</dd></div>
-        <div><dt>Сроки</dt><dd>Июнь → август 2026</dd></div>
-        <div><dt>Каналы</dt><dd>«Подели» для iOS и&nbsp;Android, WebView в&nbsp;приложении Альфа-Банка</dd></div>
-      </dl>
+  <section class="slide alt alfa split" aria-roledescription="слайд" aria-label="Альфа-Банк: кульминация">
+    <div class="head" data-in style="width:620px"><p class="label">Кульминация</p><h2 class="h-lg">Табы или один экран?</h2></div>
+    <div class="shot light" data-in="2" style="width:948px;height:824px"><img src="images/alfa/options.webp" alt="Два варианта мультиселлерной корзины: табы и единый экран" loading="lazy"></div>
+    <aside class="notes"><p>Я сделала два варианта корзины. Первый — табы: у каждого магазина своя вкладка и одна кнопка оформления. Второй — всё на одном экране: товары сгруппированы по продавцам, у каждого блока своя кнопка.</p><p>У табов одна понятная цель, но их можно не заметить. У единого экрана вся корзина на виду, но повторяющиеся кнопки могли создать шум. Спорить на ощущениях не хотелось, поэтому я предложила проверить оба варианта на пользователях.</p></aside>
+  </section>
+
+  <section class="slide alfa hero-num" aria-roledescription="слайд" aria-label="Альфа-Банк: UX-тест">
+    <p class="label" data-in>UX-тест</p>
+    <p class="giant" data-in="2">100%</p>
+    <p class="what" data-in="3">выбрали единый список</p>
+    <aside class="notes"><p>Провели модерируемый UX-тест: люди собирали корзину и оформляли заказ, варианты показывали в разном порядке.</p><p>Результат однозначный: все участники выбрали единый список. В табах трое участников потеряли добавленные товары, а раздельное оформление понимали чаще только после подсказки. В едином списке этих проблем не было: сумма видна внутри блока продавца, достаточно одного скролла.</p></aside>
+  </section>
+
+  <section class="slide alt alfa" aria-roledescription="слайд" aria-label="Альфа-Банк: развязка" style="justify-content:flex-start">
+    <div class="head" data-in><p class="label">Развязка</p><h2 class="h-md">Запустили в&nbsp;августе в&nbsp;двух каналах</h2></div>
+    <div class="shot light" data-in="2" style="width:1664px;height:600px"><img src="images/alfa/profile-purchases.webp" alt="Раздел «Покупки» с доставками и платежами" loading="lazy"></div>
+    <aside class="notes"><p>В августе запустили покупку и в «Подели», и в приложении Альфа-Банка.</p><p>Две вещи я сделала сверх задачи. На интервью заметила, что корзину используют как место хранения, поэтому добавила частичный выбор: можно оформить часть товаров, а остальные оставить. И в разделе «Покупки», где раньше были только платежи по рассрочке, объединила доставки и платежи, чтобы не ломать привычный сценарий.</p><p>Цифр после запуска пока мало для выводов, следим за конверсией, MAU и GMV. Что бы я сделала иначе: раньше синхронизировалась бы с разработкой по ограничениям. Следующий шаг — единый чекаут для разных продавцов.</p></aside>
+  </section>
+
+  <!-- ===================== Кейс 2: МегаФон ===================== -->
+  <section class="slide case-cover" aria-roledescription="слайд" aria-label="Кейс 2: МегаФон">
+    <p class="case-title" data-in><img src="images/home/exp/logo-megafon.webp" alt="">Кейс 2 · МегаФон</p>
+    <video data-in="2" muted loop playsinline preload="none" poster="images/home/cover-megafon.webp" width="1317" height="838" aria-label="Редизайн витрины тарифов МегаФона"><source data-src="images/home/cover-megafon.webm" type="video/webm"></video>
+    <aside class="notes"><p>Второй кейс — МегаФон, витрина тарифов на сайте и в приложении. Продукт, которым пользуются 17 миллионов человек в месяц.</p><p>Здесь задача обратная: не строить с нуля, а улучшить то, что уже работает и приносит деньги.</p></aside>
+  </section>
+
+  <section class="slide mega split" aria-roledescription="слайд" aria-label="МегаФон: завязка">
+    <div class="head" data-in style="width:780px"><p class="label">МегаФон · Завязка</p><h2 class="h-md">Сайт продавал тарифы на&nbsp;44% хуже своего интернет-магазина</h2></div>
+    <div class="shot dark" data-in="2" style="width:796px;height:432px"><img src="images/megafon/before-shop-vs-site.webp" alt="Интернет-магазин и сайт МегаФона до редизайна" loading="lazy"></div>
+    <aside class="notes"><p>Интервью с бизнесом и анализ показали странную вещь: одни и те же тарифы в интернет-магазине МегаФона продавались заметно лучше, чем на основном сайте. Разница в конверсии — 44%.</p><p>Витрина тарифов — один из главных входов в подключение, поэтому каждая потерянная конверсия здесь — прямые деньги.</p></aside>
+  </section>
+
+  <section class="slide tension-mega" aria-roledescription="слайд" aria-label="МегаФон: сложность">
+    <p class="label" data-in>Сложность</p>
+    <h2 class="h-xl" data-in="2">Карточка тарифа была перегружена</h2>
+    <p class="sub" data-in="3">Домашний интернет, МегаСемья, pre‑5G, МегаСилы спорили за&nbsp;внимание</p>
+    <aside class="notes"><p>Почему так? На карточке тарифа конкурировали за внимание сразу несколько предложений: домашний интернет, МегаСемья, pre‑5G, МегаСилы. Над витриной работали пять бизнес-команд, и у каждой было своё.</p><p>UX-тест старой витрины показал: карточки перегружены и их сложно сравнивать, МегаСилы не вызывают интереса, непонятно, что такое «МегаФон 3.0» и зачем pre‑5G, а баннер воспринимается как реклама.</p></aside>
+  </section>
+
+  <section class="slide alt mega" aria-roledescription="слайд" aria-label="МегаФон: кульминация" style="justify-content:flex-start">
+    <div class="head" data-in><p class="label">Кульминация</p><h2 class="h-md">Бизнес предложил фильтры. Я&nbsp;предложила пересобрать карточку</h2></div>
+    <div class="pair" data-in="2">
+      <figure><div class="shot dark"><img src="images/megafon/before-after.webp" alt="Вариант бизнеса: фильтры по сценариям" loading="lazy"></div><figcaption>Вариант бизнеса</figcaption></figure>
+      <figure><div class="shot dark"><img src="images/megafon/card-redesign.webp" alt="Мой вариант: новая карточка тарифа" loading="lazy"></div><figcaption class="mine">Мой вариант</figcaption></figure>
     </div>
+    <aside class="notes"><p>Сначала я собрала CJM, JTBD и гипотезы с метриками: конверсия, Customer Effort Score, разница с интернет-магазином и время выбора.</p><p>Бизнес предложил свой вариант: пять фильтров по сценариям — для себя, для семьи, домашний интернет и так далее. Я его проработала и увидела проблемы: фильтров слишком много, при выборе карточка почти не меняется, МегаСилы всё так же теряются, а МегаСемья и МегаСилы сливаются.</p><p>Поэтому я предложила свой вариант: пересмотреть саму карточку. Оставили главное — гигабайты, минуты, МегаСилы и цену, сделали МегаСилы заметными с иконками, сократили фильтры с пяти до трёх, карточка стала ниже, и тарифы стало удобно сравнивать. Плюс вынесли домашний интернет в отдельную вкладку и сделали подбор МегаСемьи с подсказкой «Оптимально».</p></aside>
   </section>
 
-  <!-- Alfa deep dive: research -->
-  <section class="slide dd alt" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: исследование">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · Исследование</span>
-    <h2 data-in>11 интервью показали, что мешает дойти до&nbsp;покупки</h2>
-    <div class="cols" style="grid-template-columns:520px 1fr" data-in="2">
-      <div class="card" style="justify-content:space-between">
-        <h3>Сегменты аудитории</h3>
-        <div class="big"><b>55%</b><span>Shopper: выбирают и&nbsp;покупают</span></div>
-        <div class="big"><b>34%</b><span>BNPL: управляют рассрочкой</span></div>
-        <div class="big"><b>11%</b><span>Mixed: совмещают оба сценария</span></div>
-      </div>
-      <div class="stackc">
-        <div class="card"><h3>Неясный CTA на&nbsp;странице товара</h3><p>«Смотреть в&nbsp;магазине» воспринималась как реклама. Пользователи ждали привычного «Купить» или «В&nbsp;корзину»</p></div>
-        <div class="card"><h3>Хрупкий переход к&nbsp;партнёру</h3><p>Боялись потерять товар, цену, кешбэк или оплату частями и&nbsp;отказывались от&nbsp;перехода</p></div>
-        <div class="quote" style="margin-top:auto"><b>JTBD:</b> когда я&nbsp;хочу что‑то купить на&nbsp;маркетплейсе, я&nbsp;хочу получить самые выгодные условия, чтобы быть уверенной в&nbsp;своём выборе</div>
-      </div>
+  <section class="slide mega hero-num" aria-roledescription="слайд" aria-label="МегаФон: развязка">
+    <p class="label" data-in>Развязка</p>
+    <p class="giant" data-in="2">+44%</p>
+    <p class="what" data-in="2">конверсия в покупку тарифа</p>
+    <div class="more" data-in="3">
+      <div><b>+72%</b><span>подключения домашнего интернета</span></div>
+      <div><b>−17%</b><span>время выбора тарифа</span></div>
     </div>
+    <aside class="notes"><p>Запустили в мае 2024, через три месяца после старта. Конверсия в покупку тарифа выросла с 9 до 13 процентов — это плюс 44. Подключения домашнего интернета выросли на 72%, с 745 до 1283 в месяц. Время выбора сократилось на 17%, Customer Effort Score вырос с 3,4 до 4,2, а разница с интернет-магазином сократилась с 44 до 21 процента.</p><p>Был и неожиданный инсайт: МегаСилы не могут полностью заменить конструктор тарифов — часть людей хочет собирать тариф сама и не платить за лишнее. Это стало следующей задачей.</p></aside>
   </section>
 
-  <!-- Alfa deep dive: options -->
-  <section class="slide dd" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: варианты корзины">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · Варианты решений</span>
-    <h2 data-in>Два варианта мультиселлерной корзины</h2>
-    <div class="cols" style="grid-template-columns:700px 1fr" data-in="2">
-      <div class="img"><img src="images/alfa/options.webp" alt="Два варианта мультиселлерной корзины: табы и единый экран" loading="lazy"></div>
-      <div class="stackc">
-        <div class="card">
-          <h3>Табы по&nbsp;магазинам</h3>
-          <ul>
-            <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Одна целевая кнопка оформления</li>
-            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Табы можно не&nbsp;заметить, при многих продавцах навигация усложняется</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Всё на&nbsp;одном экране</h3>
-          <ul>
-            <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Вся корзина в&nbsp;одном списке</li>
-            <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Отдельные кнопки объясняют, что заказов несколько</li>
-            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Повторяющиеся кнопки добавляют визуальный шум</li>
-          </ul>
-        </div>
-        <p class="text-lg" style="font-size:28px">Паттерны искала у&nbsp;14 сервисов. Похожие кейсы нашлись в&nbsp;Яндекс Еде и&nbsp;Shop от&nbsp;Shopify</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Alfa deep dive: UX test -->
-  <section class="slide dd alt" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: UX-тест">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · UX-тестирование</span>
-    <h2 data-in><span style="color:#ff6a5f">100%</span> участников выбрали единый список</h2>
-    <div data-in="2">
-      <table>
-        <tr><th>Критерий</th><th>Табы</th><th>Единый список</th></tr>
-        <tr><td>Видимость корзины</td><td>Виден только активный таб</td><td>Все товары видны сразу</td></tr>
-        <tr><td>Риск потерять товар</td><td>Трое участников потеряли товар</td><td>Проблема не&nbsp;возникла</td></tr>
-        <tr><td>Понимание раздельного оформления</td><td>Чаще после подсказки</td><td>Без подсказки</td></tr>
-        <tr><td>Связь суммы с&nbsp;заказом</td><td>Слабее из-за скрытых вкладок</td><td>Сумма внутри блока продавца</td></tr>
-        <tr><td>Навигация</td><td>Нужно переключать вкладки</td><td>Достаточно одного скролла</td></tr>
-      </table>
-    </div>
-    <p class="text-lg" data-in="3" style="font-size:28px">Модерируемый тест: участники собирали корзину и&nbsp;оформляли заказ, варианты показывали в&nbsp;разном порядке</p>
-  </section>
-
-  <!-- 6. Alfa details -->
-  <section class="slide shot alt" aria-roledescription="слайд" aria-label="Альфа-Банк: раздел Покупки">
-    <div class="row" data-in>
-      <h2>Объединила доставки и платежи в&nbsp;разделе «Покупки»</h2>
-      <p class="note">Пользователь сразу видит статусы заказов и&nbsp;не&nbsp;теряет из&nbsp;виду ближайшие списания</p>
-    </div>
-    <div class="frame" data-in="2"><img src="images/alfa/profile-purchases.webp" alt="Раздел Покупки с доставками и платежами" loading="lazy"></div>
-  </section>
-
-  <!-- Alfa deep dive: results -->
-  <section class="slide dd alt" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: итоги">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · Итоги</span>
-    <h2 data-in>Запустили в&nbsp;августе 2026, собираем данные</h2>
-    <div class="cols" style="grid-template-columns:repeat(3,1fr)" data-in="2">
-      <div class="card">
-        <h3>Что получилось</h3>
-        <ul>
-          <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Нашла понятную структуру корзины и&nbsp;подтвердила её тестом</li>
-          <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Добавила частичный выбор: корзину часто используют, чтобы хранить товары</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Что дальше</h3>
-        <ul>
-          <li><i class="ph-bold ph-arrow-right" aria-hidden="true"></i>Единый чекаут для разных продавцов</li>
-          <li><i class="ph-bold ph-arrow-right" aria-hidden="true"></i>Следить за&nbsp;конверсией, MAU, GMV и&nbsp;доходом</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Что возьму в&nbsp;следующие проекты</h3>
-        <ul>
-          <li><i class="ph-fill ph-lightbulb" aria-hidden="true" style="color:#ffd27a"></i>Проверять архитектуру на&nbsp;реальном контенте</li>
-          <li><i class="ph-fill ph-lightbulb" aria-hidden="true" style="color:#ffd27a"></i>Раньше сверяться с&nbsp;разработкой по&nbsp;ограничениям</li>
-        </ul>
-      </div>
-    </div>
-    <a class="case-link" href="case-alfa.html" data-in="3">Смотреть кейс покупки <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
-  </section>
-
-  <!-- 7. MegaFon -->
-  <section class="slide case" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон">
-    <div class="text">
-      <span class="case-head" data-in><img src="images/home/exp/logo-megafon.webp" alt=""><span>МегаФон · Телеком</span></span>
-      <h2 data-in>Упростила выбор тарифа для 17&nbsp;млн пользователей</h2>
-      <p class="sub" data-in="2">Перепроектировала сценарий выбора тарифа и&nbsp;участвовала в&nbsp;развитии голосового помощника «Ева»</p>
-      <div class="kpis" data-in="3">
-        <div class="kpi"><b>+44%</b><span>конверсия, с&nbsp;9% до&nbsp;13%</span></div>
-        <div class="kpi"><b>+72%</b><span>подключения домашнего интернета</span></div>
-        <div class="kpi"><b>−17%</b><span>время выбора тарифа</span></div>
-      </div>
-    </div>
-    <div class="media" data-in="2"><video muted loop playsinline preload="none" poster="images/home/cover-megafon.webp" aria-label="МегаФон — редизайн тарифов"><source data-src="images/home/cover-megafon.webm" type="video/webm"></video></div>
-  </section>
-
-  <!-- MegaFon deep dive: problem -->
-  <section class="slide dd" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: проблема">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Что болело</span>
-    <h2 data-in>Сайт продавал тарифы хуже интернет-магазина</h2>
-    <div class="cols" style="grid-template-columns:860px 1fr" data-in="2">
-      <div class="img dark"><img src="images/megafon/before-shop-vs-site.webp" alt="Интернет-магазин и сайт МегаФона до редизайна" loading="lazy"></div>
-      <div class="stackc">
-        <div class="big"><b>44%</b><span>разница в&nbsp;конверсии между сайтом и&nbsp;интернет-магазином</span></div>
-        <div class="card">
-          <h3>UX-тест старой витрины</h3>
-          <ul>
-            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Карточки перегружены, их&nbsp;сложно сравнивать</li>
-            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>МегаСилы не&nbsp;вызывают интереса</li>
-            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Непонятно, что такое «МегаФон 3.0» и&nbsp;pre‑5G</li>
-            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Баннер считывается как реклама</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MegaFon deep dive: JTBD and hypotheses -->
-  <section class="slide dd alt" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: гипотезы">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Гипотезы</span>
-    <h2 data-in>От&nbsp;CJM и&nbsp;JTBD к&nbsp;гипотезам и&nbsp;метрикам</h2>
-    <div class="quote" data-in="2"><b>JTBD:</b> когда я&nbsp;выбираю тариф, я&nbsp;хочу быстро понять, что мне подходит, чтобы быть уверенным, что не&nbsp;переплачиваю</div>
-    <div class="cols" style="grid-template-columns:repeat(2,1fr);flex:none" data-in="3">
-      <div class="card"><h3>Упростить карточку</h3><p>Оставить только ГБ, минуты и&nbsp;цену, чтобы выбор стал быстрее</p></div>
-      <div class="card"><h3>Усилить МегаСилы</h3><p>Дать настроить тариф под себя без отдельного конструктора</p></div>
-      <div class="card"><h3>Добавить фильтры</h3><p>Карточки подстраиваются под потребности и&nbsp;упрощают навигацию</p></div>
-      <div class="card"><h3>Вынести домашний интернет</h3><p>Снизить нагрузку при сравнении бонусных ГБ и&nbsp;минут</p></div>
-    </div>
-    <p class="text-lg" data-in="4" style="font-size:28px"><b>Метрики:</b> конверсия в&nbsp;покупку, Customer Effort Score, разница с&nbsp;интернет-магазином, время выбора</p>
-  </section>
-
-  <!-- MegaFon deep dive: business option -->
-  <section class="slide dd" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: вариант бизнеса">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Вариант 1</span>
-    <h2 data-in>Предложение бизнеса: фильтры по&nbsp;сценариям</h2>
-    <div class="cols" style="grid-template-columns:1000px 1fr" data-in="2">
-      <div class="img dark"><img src="images/megafon/before-after.webp" alt="Вариант с фильтрами первого уровня" loading="lazy"></div>
-      <div class="card">
-        <h3>Почему не&nbsp;сработало</h3>
-        <ul>
-          <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Пять фильтров первого уровня: пользователь теряется</li>
-          <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Фильтр срабатывает незаметно, карточка почти не&nbsp;меняется</li>
-          <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>МегаСилы по‑прежнему теряются</li>
-          <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>МегаСемья и&nbsp;МегаСилы сливаются рядом</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. MegaFon details -->
-  <section class="slide shot alt" aria-roledescription="слайд" aria-label="МегаФон: карточка тарифа">
-    <div class="row" data-in>
-      <h2>Вариант 2: убрали всё, что отвлекало, и&nbsp;усилили то, что помогает выбрать</h2>
-      <p class="note">Акцент на&nbsp;главных параметрах тарифа: гигабайты, минуты, МегаСилы и&nbsp;цена</p>
-    </div>
-    <div class="frame dark" data-in="2" style="background:#161616"><img src="images/megafon/card-redesign.webp" alt="Редизайн карточки тарифа" loading="lazy"></div>
-  </section>
-
-  <!-- MegaFon deep dive: features -->
-  <section class="slide dd" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: решения">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Решения</span>
-    <h2 data-in>Витрина подстраивается под&nbsp;задачу пользователя</h2>
-    <div class="feat" data-in="2">
-      <div class="card"><div class="img dark"><img src="images/megafon/megasemya.webp" alt="Выбор МегаСемьи" loading="lazy"></div><div class="cap"><h3>МегаСемья</h3><p>Выбираешь число номеров, и&nbsp;тарифы пересортировываются с&nbsp;плашкой «Оптимально»</p></div></div>
-      <div class="card"><div class="img dark"><img src="images/megafon/more-internet.webp" alt="Тарифы с акцентом на домашний интернет" loading="lazy"></div><div class="cap"><h3>Домашний интернет</h3><p>Отдельная вкладка, выбор скорости чипсами, выгода сразу в&nbsp;цене</p></div></div>
-      <div class="card"><div class="img dark"><img src="images/megafon/megasily.webp" alt="Карточки МегаСил" loading="lazy"></div><div class="cap"><h3>МегаСилы</h3><p>Иконки сервисов, подробности по&nbsp;тапу и&nbsp;видно, сколько экономишь</p></div></div>
-    </div>
-  </section>
-
-  <!-- MegaFon deep dive: results -->
-  <section class="slide dd alt" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: результаты">
-    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Результаты</span>
-    <h2 data-in>Запустили в&nbsp;мае 2024, через 3&nbsp;месяца после старта</h2>
-    <div class="metrics" data-in="2">
-      <div class="card"><b class="hl">+44%</b><span>конверсия в&nbsp;покупку тарифа, с&nbsp;9% до&nbsp;13%</span></div>
-      <div class="card"><b>44% → 21%</b><span>разница с&nbsp;интернет-магазином</span></div>
-      <div class="card"><b>3,4 → 4,2</b><span>Customer Effort Score</span></div>
-      <div class="card"><b>+72%</b><span>подключения домашнего интернета, 745 → 1283 в&nbsp;месяц</span></div>
-      <div class="card"><b>−17%</b><span>время выбора тарифа</span></div>
-      <div class="card"><b>+11%</b><span>подключения МегаСил</span></div>
-    </div>
-    <div class="cols" style="grid-template-columns:1fr auto;align-items:end;flex:none" data-in="3">
-      <p class="text-lg" style="font-size:28px"><b>Вывод:</b> МегаСилы не&nbsp;заменяют конструктор полностью. Часть пользователей хочет сама собирать тариф и&nbsp;не&nbsp;платить за&nbsp;лишнее</p>
-      <a class="case-link" href="case-megafon.html">Смотреть кейс тарифов <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
-    </div>
-  </section>
-
-  <!-- 9. Pyaterochka -->
-  <section class="slide case" style="--case:#9bd11f" aria-roledescription="слайд" aria-label="Пятёрочка">
-    <div class="text">
-      <span class="case-head" data-in><img src="images/home/exp/logo-x5.webp" alt=""><span>Пятёрочка · Ритейл</span></span>
-      <h2 data-in>Запустила программу лояльности X5&nbsp;Клуб</h2>
-      <p class="sub" data-in="2">Развивала ключевые сценарии программы лояльности: карту, баллы, персональные предложения и&nbsp;сторис</p>
-      <div class="kpis" data-in="3">
-        <div class="kpi"><b>0 → 1</b><span>новый продукт</span></div>
-        <div class="kpi"><b>+8%</b><span>средний чек</span></div>
-        <div class="kpi"><b>10 млн</b><span>MAU приложения</span></div>
-      </div>
-    </div>
-    <div class="media" data-in="2"><video muted loop playsinline preload="none" poster="images/home/cover-loyalty-ru.webp" aria-label="Пятёрочка — программа лояльности"><source data-src="images/home/cover-loyalty-ru.webm" type="video/webm"><source data-src="images/home/cover-loyalty-ru.mp4" type="video/mp4"></video></div>
-  </section>
-
-  <!-- 10. Pyaterochka details -->
-  <section class="slide shot alt" aria-roledescription="слайд" aria-label="Пятёрочка: экраны X5 Клуба">
-    <div class="row" data-in>
-      <h2>Карта, баллы, персональные предложения и&nbsp;сторис</h2>
-      <p class="note">Перезапустили приложение «Пятёрочка» и&nbsp;построили систему метрик на&nbsp;базе Google HEART</p>
-    </div>
-    <div class="frame dark" data-in="2"><img src="images/loyalty/screens-2.webp" alt="Экраны программы лояльности X5 Клуб" loading="lazy"></div>
-    <a class="case-link" href="case-loyalty.html" data-in="3" style="margin-top:0">Смотреть кейс <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
-  </section>
-
-  <!-- 11. experience -->
-  <section class="slide" aria-roledescription="слайд" aria-label="Где работала">
-    <span class="eyebrow" data-in><i class="ph-fill ph-star-four" aria-hidden="true"></i>Опыт</span>
-    <h2 class="title" data-in>Где работала</h2>
-    <ol class="timeline" data-in="2">
-      <li><img src="images/home/exp/logo-alfa.webp" alt=""><div><p class="co">Альфа-Банк</p><p class="meta">Senior Product Designer · с&nbsp;2025</p></div><p class="fact">0 → 1<small>новый продукт</small></p></li>
-      <li><img src="images/home/exp/logo-megafon.webp" alt=""><div><p class="co">МегаФон</p><p class="meta">Senior Product Designer · 2023–2025</p></div><p class="fact">+44%<small>конверсия</small></p></li>
-      <li><img src="images/home/exp/logo-x5.webp" alt=""><div><p class="co">X5</p><p class="meta">Senior Product Designer · 2020–2023</p></div><p class="fact">+8%<small>средний чек</small></p></li>
-      <li><img src="images/home/exp/logo-medacoustica.webp" alt=""><div><p class="co">MedAcoustica</p><p class="meta">Product Designer · 2018–2020</p></div><p class="fact">0 → 1<small>job board для врачей</small></p></li>
-      <li><img src="images/home/exp/logo-sber.webp" alt=""><div><p class="co">Сбер</p><p class="meta">Product Designer · 2016–2018</p></div><p class="fact">−87%<small>стоимость отчётов</small></p></li>
-      <li><img src="images/home/exp/logo-citi.webp" alt=""><div><p class="co">Citi</p><p class="meta">Analyst, UI Designer · 2013–2016</p></div><p class="fact">Быстрее<small>процессы отдела</small></p></li>
-    </ol>
-  </section>
-
-  <!-- 12. education -->
-  <section class="slide alt" aria-roledescription="слайд" aria-label="Где училась">
-    <span class="eyebrow" data-in><i class="ph-fill ph-star-four" aria-hidden="true"></i>Образование</span>
-    <h2 class="title" data-in>Где училась</h2>
-    <ul class="edu" data-in="2">
-      <li><img src="images/home/edu-calarts.webp" alt=""><div><p class="school">California Institute of the Arts</p><p class="degree">UX/UI Design, Graphic Design</p></div></li>
-      <li><img src="images/home/edu-hse.webp" alt=""><div><p class="school">Высшая школа экономики</p><p class="degree">Магистратура, бизнес-информатика</p></div></li>
-    </ul>
-  </section>
-
-  <!-- 13. contact -->
-  <section class="slide contact on-glow" aria-roledescription="слайд" aria-label="Контакты">
-    <div class="glow" aria-hidden="true"><div class="ribs"></div><div class="grain"></div></div>
+  <!-- ===================== Пятёрочка ===================== -->
+  <section class="slide alt x5" aria-roledescription="слайд" aria-label="Пятёрочка">
     <div class="head" data-in>
-      <img class="face" src="images/home/photo.webp" alt="" width="1151" height="1053">
-      <div>
-        <h2>Давайте делать классные продукты вместе</h2>
-        <p class="sub">Если вам кажется, что мы можем сработаться — напишите мне</p>
-      </div>
+      <p class="case-title"><img src="images/home/exp/logo-x5.webp" alt="">Пятёрочка</p>
+      <h2 class="h-md" style="font-size:64px">Запустила программу лояльности X5&nbsp;Клуб</h2>
+      <div class="kp"><div><b>+8%</b><span>средний чек</span></div><div><b>10 млн</b><span>MAU</span></div></div>
     </div>
-    <div class="links" data-in="2">
+    <video data-in="2" muted loop playsinline preload="none" poster="images/home/cover-loyalty-ru.webp" width="1400" height="844" aria-label="Программа лояльности X5 Клуб в приложении «Пятёрочка»"><source data-src="images/home/cover-loyalty-ru.webm" type="video/webm"><source data-src="images/home/cover-loyalty-ru.mp4" type="video/mp4"></video>
+    <aside class="notes"><p>И коротко про ещё один запуск с нуля. В X5 мы перезапускали приложение «Пятёрочка» с 10 миллионами пользователей в месяц. Я проектировала программу лояльности X5 Клуб: карту, баллы, активацию, персональные предложения и сторис. Новые фичи подняли средний чек на 8%.</p><p>Ещё проводила UX и A/B-тесты с UX-лабораторией, построила систему метрик на базе Google HEART и развивала дизайн-систему вместе с командой из четырёх дизайнеров. Если интересно, могу рассказать подробнее.</p></aside>
+  </section>
+
+  <!-- ===================== Финал ===================== -->
+  <section class="slide" aria-roledescription="слайд" aria-label="Как я работаю">
+    <p class="label" data-in>Как я работаю</p>
+    <div class="ways" data-in="2">
+      <p>Упрощаю сложные сценарии</p>
+      <p>Объединяю команды</p>
+      <p>Мыслю системно</p>
+      <p>Довожу до запуска</p>
+    </div>
+    <aside class="notes"><p>Если обобщить оба кейса. Я упрощаю сложные сценарии — как с мультиселлерной корзиной. Объединяю команды: помогаю бизнесу, разработке и дизайну двигаться в одну сторону. Мыслю системно — люблю дизайн-системы и решения, которые масштабируются.</p><p>И довожу до запуска: думаю не только про макет, но и про ограничения разработки, тестирование и метрики после релиза.</p></aside>
+  </section>
+
+  <section class="slide thanks on-glow" aria-roledescription="слайд" aria-label="Спасибо">
+    <div class="glow" aria-hidden="true"><div class="ribs"></div><div class="grain"></div></div>
+    <div class="top" data-in><img class="face" src="images/home/photo.webp" alt="" width="1151" height="1053"><h2>Спасибо!</h2></div>
+    <div data-in="2">
       <a class="mail" href="mailto:maryvrbv@gmail.com" data-track="email_click" data-place="deck">maryvrbv@gmail.com</a>
-      <div class="btns">
-        <a class="btn primary" href="https://t.me/Maria_Vorobyeva" target="_blank" rel="noopener" data-track="telegram_click" data-place="deck"><i class="ph-fill ph-telegram-logo" aria-hidden="true"></i>Telegram</a>
-        <a class="btn" href="https://www.linkedin.com/in/marydis/" target="_blank" rel="noopener" data-track="linkedin_click" data-place="deck"><i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>LinkedIn</a>
-        <a class="btn" href="files/CV_Vorobyeva_Mariia_RU.pdf" target="_blank" rel="noopener" data-track="cv_click" data-place="deck"><i class="ph-fill ph-download-simple" aria-hidden="true"></i>CV</a>
-      </div>
+      <p class="links"><a href="https://t.me/Maria_Vorobyeva" target="_blank" rel="noopener" data-track="telegram_click" data-place="deck">t.me/Maria_Vorobyeva</a> · <a href="index.html">marydis.com</a></p>
     </div>
+    <aside class="notes"><p>Спасибо! Буду рада вопросам. Все кейсы подробно есть на сайте marydis.com.</p></aside>
   </section>
 
 </div>
 </main>
 
+<div class="talk" id="talk" hidden role="note" aria-live="polite"><b>Что рассказать</b><div id="talkText"></div></div>
+
 <nav class="controls" id="controls" aria-label="Управление презентацией">
   <a href="index.html" aria-label="На сайт"><i class="ph-bold ph-house" aria-hidden="true"></i></a>
   <button type="button" id="prev" aria-label="Предыдущий слайд"><i class="ph-bold ph-arrow-left" aria-hidden="true"></i></button>
-  <span class="count" id="count" aria-live="polite">1 / 23</span>
+  <span class="count" id="count" aria-live="polite">1 / 18</span>
   <button type="button" id="next" aria-label="Следующий слайд"><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
+  <button type="button" id="help" class="help" aria-pressed="false" aria-controls="talk" aria-label="Что рассказать на этом слайде">?</button>
   <button type="button" id="full" aria-label="Во весь экран"><i class="ph-bold ph-arrows-out" aria-hidden="true"></i></button>
 </nav>
 
@@ -748,6 +464,9 @@
   var progress = document.getElementById('progress');
   var prev = document.getElementById('prev');
   var next = document.getElementById('next');
+  var help = document.getElementById('help');
+  var talk = document.getElementById('talk');
+  var talkText = document.getElementById('talkText');
   var controls = document.getElementById('controls');
   var total = slides.length;
   var cur = -1;
@@ -780,6 +499,18 @@
     });
   }
 
+  // talk track: the current slide's notes in the "?" panel
+  function syncTalk(){
+    var n = slides[cur].querySelector('.notes');
+    talkText.innerHTML = n ? n.innerHTML : '';
+  }
+  function setTalk(on){
+    talk.hidden = !on;
+    help.setAttribute('aria-pressed', on ? 'true' : 'false');
+    try{ localStorage.setItem('deckTalk', on ? '1' : '0'); }catch(e){}
+  }
+  help.addEventListener('click', function(){ setTalk(talk.hidden); });
+
   function go(i, push){
     i = Math.max(0, Math.min(total - 1, i));
     if (i === cur) return;
@@ -793,6 +524,7 @@
     next.disabled = cur === total - 1;
     if (push !== false) history.replaceState(null, '', '#' + (cur + 1));
     syncVideos();
+    syncTalk();
   }
 
   function fromHash(){
@@ -814,7 +546,9 @@
     else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey)){ e.preventDefault(); go(cur - 1); }
     else if (k === 'Home'){ go(0); }
     else if (k === 'End'){ go(total - 1); }
-    else if (k === 'f' || k === 'F'){ document.getElementById('full').click(); }
+    else if (k === 'f' || k === 'F' || k === 'а' || k === 'А'){ document.getElementById('full').click(); }
+    else if (k === '?' || k === 'n' || k === 'N' || k === 'т' || k === 'Т' || k === ','){ setTalk(talk.hidden); }
+    else if (k === 'Escape' && !talk.hidden){ setTalk(false); }
   });
 
   // swipe on touch screens
@@ -834,7 +568,7 @@
     go(cur + (e.clientX < r.left + r.width * 0.3 ? -1 : 1));
   });
 
-  // controls fade out while the mouse rests
+  // controls and cursor fade out while the mouse rests
   var idleT;
   function wake(){
     controls.classList.remove('idle'); document.body.classList.remove('idle');
@@ -855,6 +589,9 @@
   window.addEventListener('hashchange', function(){ go(fromHash(), false); });
   fit();
   go(fromHash(), false);
+  var talkOn = false;
+  try{ talkOn = localStorage.getItem('deckTalk') === '1'; }catch(e){}
+  setTalk(talkOn);
   wake();
 })();
 </script>
