@@ -1020,8 +1020,8 @@ img{ max-width: 100%; height: auto; display: block; }
     align-self: stretch; justify-content: center;
     min-height: 48px; margin-top: 12px; padding: 0 20px;
     border-radius: var(--radius-full);
-    border: 1px solid color-mix(in srgb, var(--case) 45%, transparent);
-    background: color-mix(in srgb, var(--case) 14%, transparent);
+    border: 0;
+    background: color-mix(in srgb, var(--case) 18%, transparent);
   }
 }
 
