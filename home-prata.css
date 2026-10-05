@@ -1,0 +1,34 @@
+/* ==========================================================================
+   Font trial for the homepage (index-prata.html, index-en-prata.html):
+   Prata, a high-contrast Didone serif with Cyrillic, for headings and
+   figures; Inter for everything else. Loaded after home-v10.css.
+   Prata has a single weight, so headings are set at 400 (no faux bold)
+   and a touch larger, with normal tracking — serifs don't like the tight
+   letter-spacing the grotesque used
+   ========================================================================== */
+:root{
+  --font-display: 'Prata', Georgia, 'Times New Roman', serif;
+  --font-accent: 'Prata', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+body{ font-family: var(--font-body); }
+.nav-name{ font-family: var(--font-body); font-weight: 600; }
+
+.hero-title, .hero-glow .hero-copy .hero-title,
+.section-title, .case-card h3, .postcard h3, .contact-title,
+.kpi b, .exp-company, .case-metrics b{
+  font-weight: 400;
+  font-variation-settings: normal;
+  letter-spacing: -0.01em;
+}
+.hero-glow .hero-copy .hero-title{ line-height: 1.08; }
+@media (min-width: 901px){
+  .hero-glow .hero-copy .hero-title{ font-size: clamp(40px, 4.4vw, 80px); }
+}
+.section-title{ line-height: 1.08; }
+.case-card h3{ line-height: 1.15; }
+.contact-title{ line-height: 1.15; }
+/* the contact address reads better in the text face */
+.contact-mail{ font-family: var(--font-body); font-weight: 500; letter-spacing: -0.02em; }
+/* lead emphasis: Inter medium instead of the grotesque weight */
+.hero-lead em{ font-weight: 500; }
