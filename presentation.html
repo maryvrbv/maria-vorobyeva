@@ -269,6 +269,59 @@
   .btn.primary{ background: #0c0a14; border-color: #0c0a14; }
   .btn i{ font-size: 30px; }
 
+
+  /* ---------- case deep dive (Alfa, MegaFon) ---------- */
+  .dd{ gap: 44px; }
+  .dd .eyebrow{ color: var(--case-text, var(--case)); margin-bottom: 0; }
+  .dd .eyebrow img{ width: 36px; height: 36px; border-radius: 10px; }
+  .dd h2{ font: 800 64px/1.06 var(--font-display); letter-spacing: -.025em; max-width: 1500px; text-wrap: balance; margin-top: -16px; }
+  .dd .cols{ flex: 1; min-height: 0; display: grid; gap: 32px; }
+  .dd .stackc{ display: flex; flex-direction: column; gap: 24px; min-height: 0; }
+  .dd .card{ background: var(--card); border-radius: 32px; padding: 40px 44px; display: flex; flex-direction: column; gap: 14px; }
+  .dd .card h3{ font: 800 34px/1.15 var(--font-display); letter-spacing: -.01em; }
+  .dd .card p, .dd .card li{ font: 400 26px/1.42 var(--font-body); color: var(--ink-soft); }
+  .dd .card p b, .dd .card li b{ color: var(--ink); font-weight: 600; }
+  .dd .card ul{ margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .dd .card li{ display: flex; gap: 14px; }
+  .dd .card li i{ font-size: 30px; flex: none; margin-top: 2px; }
+  .dd .plus i{ color: #6fd39b; }
+  .dd .minus i{ color: #ff8a80; }
+  .dd .text-lg{ font: 400 32px/1.45 var(--font-body); color: var(--ink-soft); text-wrap: pretty; }
+  .dd .text-lg b{ color: var(--ink); font-weight: 600; }
+  .dd .meta{ display: grid; grid-template-columns: 1fr; gap: 0; background: var(--card); border-radius: 32px; padding: 12px 44px; }
+  .dd .meta div{ padding: 26px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+  .dd .meta div:first-child{ border-top: 0; }
+  .dd .meta dt{ font: 600 24px/1.4 var(--font-body); color: var(--ink-faint); }
+  .dd .meta dd{ margin: 0; font: 400 26px/1.4 var(--font-body); color: var(--ink); }
+  .dd .quote{
+    background: color-mix(in srgb, var(--case) 14%, var(--card)); border-radius: 32px; padding: 36px 44px;
+    font: 500 30px/1.45 var(--font-body); color: var(--ink);
+  }
+  .dd .quote b{ font-weight: 700; color: var(--case-text, var(--case)); }
+  .dd .big{ display: flex; flex-direction: column; gap: 8px; }
+  .dd .big b{ font: 800 84px/1 var(--font-display); letter-spacing: -.035em; color: #fff; white-space: nowrap; }
+  .dd .big span{ font: 400 26px/1.35 var(--font-body); color: var(--ink-soft); }
+  .dd .img{ border-radius: 32px; overflow: hidden; background: #f3f1f7; display: grid; place-items: center; min-height: 0; }
+  .dd .img.dark{ background: #161616; }
+  .dd .img img{ width: 100%; height: 100%; object-fit: contain; }
+  .dd table{ width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border-radius: 32px; overflow: hidden; }
+  .dd th, .dd td{ text-align: left; padding: 22px 36px; font: 400 26px/1.35 var(--font-body); border-top: 1px solid var(--line); }
+  .dd th{ font: 700 26px/1.3 var(--font-body); color: var(--ink-faint); border-top: 0; }
+  .dd td:first-child{ color: var(--ink); font-weight: 600; width: 34%; }
+  .dd td:nth-child(2){ color: var(--ink-faint); }
+  .dd td:nth-child(3){ color: var(--ink); }
+  .dd th:nth-child(3){ color: #6fd39b; }
+  .dd .metrics{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .dd .metrics .card{ gap: 10px; padding: 36px 40px; }
+  .dd .metrics b{ font: 800 64px/1 var(--font-display); letter-spacing: -.03em; color: #fff; white-space: nowrap; }
+  .dd .metrics b.hl{ color: var(--case-text, var(--case)); }
+  .dd .metrics span{ font: 400 24px/1.35 var(--font-body); color: var(--ink-soft); }
+  .dd .feat{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; flex: 1; min-height: 0; }
+  .dd .feat .card{ padding: 0; overflow: hidden; gap: 0; }
+  .dd .feat .img{ border-radius: 0; flex: 1; min-height: 0; }
+  .dd .feat .cap{ padding: 32px 36px 36px; display: flex; flex-direction: column; gap: 10px; }
+  .dd .case-link{ margin-top: 0; }
+
   /* slide number, bottom right of each slide */
   .num{ position: absolute !important; right: 128px; bottom: 52px; font: 500 22px/1 var(--font-body); color: var(--ink-faint); }
   .on-glow .num{ color: rgba(255,255,255,.65); }
@@ -380,6 +433,88 @@
     <div class="media" data-in="2"><video muted loop playsinline preload="none" poster="images/home/cover-alfa.webp" aria-label="Альфа-Маркет — сценарий покупки"><source data-src="images/home/cover-alfa.webm" type="video/webm"></video></div>
   </section>
 
+  <!-- Alfa deep dive: task -->
+  <section class="slide dd" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: задача">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · Задача</span>
+    <h2 data-in>Превратить «Подели» в&nbsp;полноценный маркетплейс</h2>
+    <div class="cols" style="grid-template-columns:1fr 820px" data-in="2">
+      <div class="stackc" style="justify-content:space-between">
+        <p class="text-lg">«Подели» работал по&nbsp;модели <b>clickout</b>: пользователь находил товар в&nbsp;приложении, а&nbsp;покупку завершал на&nbsp;сайте партнёра</p>
+        <p class="text-lg">Бизнес решил перейти от&nbsp;оплаты за&nbsp;переходы к&nbsp;<b>комиссии с&nbsp;завершённых заказов</b>. Для этого нужна покупка внутри приложения, в&nbsp;«Подели» и&nbsp;в&nbsp;WebView Альфа-Банка</p>
+        <div class="quote"><b>Ограничение:</b> товары разных продавцов нельзя оформить одним заказом. MVP и&nbsp;целевую версию проектировала параллельно</div>
+      </div>
+      <dl class="meta" style="margin:0">
+        <div><dt>Роль</dt><dd>Discovery, JTBD, UX/UI, прототипы, UX-тесты, дизайн-ревью</dd></div>
+        <div><dt>Команда</dt><dd>Продакт корзины, CPO B2C, аналитики, разработка, QA</dd></div>
+        <div><dt>Сроки</dt><dd>Июнь → август 2026</dd></div>
+        <div><dt>Каналы</dt><dd>«Подели» для iOS и&nbsp;Android, WebView в&nbsp;приложении Альфа-Банка</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Alfa deep dive: research -->
+  <section class="slide dd alt" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: исследование">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · Исследование</span>
+    <h2 data-in>11 интервью показали, что мешает дойти до&nbsp;покупки</h2>
+    <div class="cols" style="grid-template-columns:520px 1fr" data-in="2">
+      <div class="card" style="justify-content:space-between">
+        <h3>Сегменты аудитории</h3>
+        <div class="big"><b>55%</b><span>Shopper: выбирают и&nbsp;покупают</span></div>
+        <div class="big"><b>34%</b><span>BNPL: управляют рассрочкой</span></div>
+        <div class="big"><b>11%</b><span>Mixed: совмещают оба сценария</span></div>
+      </div>
+      <div class="stackc">
+        <div class="card"><h3>Неясный CTA на&nbsp;странице товара</h3><p>«Смотреть в&nbsp;магазине» воспринималась как реклама. Пользователи ждали привычного «Купить» или «В&nbsp;корзину»</p></div>
+        <div class="card"><h3>Хрупкий переход к&nbsp;партнёру</h3><p>Боялись потерять товар, цену, кешбэк или оплату частями и&nbsp;отказывались от&nbsp;перехода</p></div>
+        <div class="quote" style="margin-top:auto"><b>JTBD:</b> когда я&nbsp;хочу что‑то купить на&nbsp;маркетплейсе, я&nbsp;хочу получить самые выгодные условия, чтобы быть уверенной в&nbsp;своём выборе</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alfa deep dive: options -->
+  <section class="slide dd" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: варианты корзины">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · Варианты решений</span>
+    <h2 data-in>Два варианта мультиселлерной корзины</h2>
+    <div class="cols" style="grid-template-columns:700px 1fr" data-in="2">
+      <div class="img"><img src="images/alfa/options.webp" alt="Два варианта мультиселлерной корзины: табы и единый экран" loading="lazy"></div>
+      <div class="stackc">
+        <div class="card">
+          <h3>Табы по&nbsp;магазинам</h3>
+          <ul>
+            <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Одна целевая кнопка оформления</li>
+            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Табы можно не&nbsp;заметить, при многих продавцах навигация усложняется</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Всё на&nbsp;одном экране</h3>
+          <ul>
+            <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Вся корзина в&nbsp;одном списке</li>
+            <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Отдельные кнопки объясняют, что заказов несколько</li>
+            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Повторяющиеся кнопки добавляют визуальный шум</li>
+          </ul>
+        </div>
+        <p class="text-lg" style="font-size:28px">Паттерны искала у&nbsp;14 сервисов. Похожие кейсы нашлись в&nbsp;Яндекс Еде и&nbsp;Shop от&nbsp;Shopify</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alfa deep dive: UX test -->
+  <section class="slide dd alt" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: UX-тест">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · UX-тестирование</span>
+    <h2 data-in><span style="color:#ff6a5f">100%</span> участников выбрали единый список</h2>
+    <div data-in="2">
+      <table>
+        <tr><th>Критерий</th><th>Табы</th><th>Единый список</th></tr>
+        <tr><td>Видимость корзины</td><td>Виден только активный таб</td><td>Все товары видны сразу</td></tr>
+        <tr><td>Риск потерять товар</td><td>Трое участников потеряли товар</td><td>Проблема не&nbsp;возникла</td></tr>
+        <tr><td>Понимание раздельного оформления</td><td>Чаще после подсказки</td><td>Без подсказки</td></tr>
+        <tr><td>Связь суммы с&nbsp;заказом</td><td>Слабее из-за скрытых вкладок</td><td>Сумма внутри блока продавца</td></tr>
+        <tr><td>Навигация</td><td>Нужно переключать вкладки</td><td>Достаточно одного скролла</td></tr>
+      </table>
+    </div>
+    <p class="text-lg" data-in="3" style="font-size:28px">Модерируемый тест: участники собирали корзину и&nbsp;оформляли заказ, варианты показывали в&nbsp;разном порядке</p>
+  </section>
+
   <!-- 6. Alfa details -->
   <section class="slide shot alt" aria-roledescription="слайд" aria-label="Альфа-Банк: раздел Покупки">
     <div class="row" data-in>
@@ -387,7 +522,36 @@
       <p class="note">Пользователь сразу видит статусы заказов и&nbsp;не&nbsp;теряет из&nbsp;виду ближайшие списания</p>
     </div>
     <div class="frame" data-in="2"><img src="images/alfa/profile-purchases.webp" alt="Раздел Покупки с доставками и платежами" loading="lazy"></div>
-    <a class="case-link" href="case-alfa.html" data-in="3" style="margin-top:0">Смотреть кейс покупки <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
+  </section>
+
+  <!-- Alfa deep dive: results -->
+  <section class="slide dd alt" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк: итоги">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-alfa.webp" alt="">Альфа-Банк · Итоги</span>
+    <h2 data-in>Запустили в&nbsp;августе 2026, собираем данные</h2>
+    <div class="cols" style="grid-template-columns:repeat(3,1fr)" data-in="2">
+      <div class="card">
+        <h3>Что получилось</h3>
+        <ul>
+          <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Нашла понятную структуру корзины и&nbsp;подтвердила её тестом</li>
+          <li class="plus"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Добавила частичный выбор: корзину часто используют, чтобы хранить товары</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Что дальше</h3>
+        <ul>
+          <li><i class="ph-bold ph-arrow-right" aria-hidden="true"></i>Единый чекаут для разных продавцов</li>
+          <li><i class="ph-bold ph-arrow-right" aria-hidden="true"></i>Следить за&nbsp;конверсией, MAU, GMV и&nbsp;доходом</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Что возьму в&nbsp;следующие проекты</h3>
+        <ul>
+          <li><i class="ph-fill ph-lightbulb" aria-hidden="true" style="color:#ffd27a"></i>Проверять архитектуру на&nbsp;реальном контенте</li>
+          <li><i class="ph-fill ph-lightbulb" aria-hidden="true" style="color:#ffd27a"></i>Раньше сверяться с&nbsp;разработкой по&nbsp;ограничениям</li>
+        </ul>
+      </div>
+    </div>
+    <a class="case-link" href="case-alfa.html" data-in="3">Смотреть кейс покупки <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
   </section>
 
   <!-- 7. MegaFon -->
@@ -405,14 +569,95 @@
     <div class="media" data-in="2"><video muted loop playsinline preload="none" poster="images/home/cover-megafon.webp" aria-label="МегаФон — редизайн тарифов"><source data-src="images/home/cover-megafon.webm" type="video/webm"></video></div>
   </section>
 
+  <!-- MegaFon deep dive: problem -->
+  <section class="slide dd" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: проблема">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Что болело</span>
+    <h2 data-in>Сайт продавал тарифы хуже интернет-магазина</h2>
+    <div class="cols" style="grid-template-columns:860px 1fr" data-in="2">
+      <div class="img dark"><img src="images/megafon/before-shop-vs-site.webp" alt="Интернет-магазин и сайт МегаФона до редизайна" loading="lazy"></div>
+      <div class="stackc">
+        <div class="big"><b>44%</b><span>разница в&nbsp;конверсии между сайтом и&nbsp;интернет-магазином</span></div>
+        <div class="card">
+          <h3>UX-тест старой витрины</h3>
+          <ul>
+            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Карточки перегружены, их&nbsp;сложно сравнивать</li>
+            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>МегаСилы не&nbsp;вызывают интереса</li>
+            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Непонятно, что такое «МегаФон 3.0» и&nbsp;pre‑5G</li>
+            <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Баннер считывается как реклама</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MegaFon deep dive: JTBD and hypotheses -->
+  <section class="slide dd alt" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: гипотезы">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Гипотезы</span>
+    <h2 data-in>От&nbsp;CJM и&nbsp;JTBD к&nbsp;гипотезам и&nbsp;метрикам</h2>
+    <div class="quote" data-in="2"><b>JTBD:</b> когда я&nbsp;выбираю тариф, я&nbsp;хочу быстро понять, что мне подходит, чтобы быть уверенным, что не&nbsp;переплачиваю</div>
+    <div class="cols" style="grid-template-columns:repeat(2,1fr);flex:none" data-in="3">
+      <div class="card"><h3>Упростить карточку</h3><p>Оставить только ГБ, минуты и&nbsp;цену, чтобы выбор стал быстрее</p></div>
+      <div class="card"><h3>Усилить МегаСилы</h3><p>Дать настроить тариф под себя без отдельного конструктора</p></div>
+      <div class="card"><h3>Добавить фильтры</h3><p>Карточки подстраиваются под потребности и&nbsp;упрощают навигацию</p></div>
+      <div class="card"><h3>Вынести домашний интернет</h3><p>Снизить нагрузку при сравнении бонусных ГБ и&nbsp;минут</p></div>
+    </div>
+    <p class="text-lg" data-in="4" style="font-size:28px"><b>Метрики:</b> конверсия в&nbsp;покупку, Customer Effort Score, разница с&nbsp;интернет-магазином, время выбора</p>
+  </section>
+
+  <!-- MegaFon deep dive: business option -->
+  <section class="slide dd" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: вариант бизнеса">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Вариант 1</span>
+    <h2 data-in>Предложение бизнеса: фильтры по&nbsp;сценариям</h2>
+    <div class="cols" style="grid-template-columns:1000px 1fr" data-in="2">
+      <div class="img dark"><img src="images/megafon/before-after.webp" alt="Вариант с фильтрами первого уровня" loading="lazy"></div>
+      <div class="card">
+        <h3>Почему не&nbsp;сработало</h3>
+        <ul>
+          <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Пять фильтров первого уровня: пользователь теряется</li>
+          <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Фильтр срабатывает незаметно, карточка почти не&nbsp;меняется</li>
+          <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>МегаСилы по‑прежнему теряются</li>
+          <li class="minus"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>МегаСемья и&nbsp;МегаСилы сливаются рядом</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <!-- 8. MegaFon details -->
   <section class="slide shot alt" aria-roledescription="слайд" aria-label="МегаФон: карточка тарифа">
     <div class="row" data-in>
-      <h2>Убрали всё, что отвлекало, и&nbsp;усилили то, что помогает выбрать</h2>
+      <h2>Вариант 2: убрали всё, что отвлекало, и&nbsp;усилили то, что помогает выбрать</h2>
       <p class="note">Акцент на&nbsp;главных параметрах тарифа: гигабайты, минуты, МегаСилы и&nbsp;цена</p>
     </div>
-    <div class="frame" data-in="2"><img src="images/megafon/card-redesign.webp" alt="Редизайн карточки тарифа" loading="lazy"></div>
-    <a class="case-link" href="case-megafon.html" data-in="3" style="margin-top:0">Смотреть кейс тарифов <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
+    <div class="frame dark" data-in="2" style="background:#161616"><img src="images/megafon/card-redesign.webp" alt="Редизайн карточки тарифа" loading="lazy"></div>
+  </section>
+
+  <!-- MegaFon deep dive: features -->
+  <section class="slide dd" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: решения">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Решения</span>
+    <h2 data-in>Витрина подстраивается под&nbsp;задачу пользователя</h2>
+    <div class="feat" data-in="2">
+      <div class="card"><div class="img dark"><img src="images/megafon/megasemya.webp" alt="Выбор МегаСемьи" loading="lazy"></div><div class="cap"><h3>МегаСемья</h3><p>Выбираешь число номеров, и&nbsp;тарифы пересортировываются с&nbsp;плашкой «Оптимально»</p></div></div>
+      <div class="card"><div class="img dark"><img src="images/megafon/more-internet.webp" alt="Тарифы с акцентом на домашний интернет" loading="lazy"></div><div class="cap"><h3>Домашний интернет</h3><p>Отдельная вкладка, выбор скорости чипсами, выгода сразу в&nbsp;цене</p></div></div>
+      <div class="card"><div class="img dark"><img src="images/megafon/megasily.webp" alt="Карточки МегаСил" loading="lazy"></div><div class="cap"><h3>МегаСилы</h3><p>Иконки сервисов, подробности по&nbsp;тапу и&nbsp;видно, сколько экономишь</p></div></div>
+    </div>
+  </section>
+
+  <!-- MegaFon deep dive: results -->
+  <section class="slide dd alt" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон: результаты">
+    <span class="eyebrow" data-in><img src="images/home/exp/logo-megafon.webp" alt="">МегаФон · Результаты</span>
+    <h2 data-in>Запустили в&nbsp;мае 2024, через 3&nbsp;месяца после старта</h2>
+    <div class="metrics" data-in="2">
+      <div class="card"><b class="hl">+44%</b><span>конверсия в&nbsp;покупку тарифа, с&nbsp;9% до&nbsp;13%</span></div>
+      <div class="card"><b>44% → 21%</b><span>разница с&nbsp;интернет-магазином</span></div>
+      <div class="card"><b>3,4 → 4,2</b><span>Customer Effort Score</span></div>
+      <div class="card"><b>+72%</b><span>подключения домашнего интернета, 745 → 1283 в&nbsp;месяц</span></div>
+      <div class="card"><b>−17%</b><span>время выбора тарифа</span></div>
+      <div class="card"><b>+11%</b><span>подключения МегаСил</span></div>
+    </div>
+    <div class="cols" style="grid-template-columns:1fr auto;align-items:end;flex:none" data-in="3">
+      <p class="text-lg" style="font-size:28px"><b>Вывод:</b> МегаСилы не&nbsp;заменяют конструктор полностью. Часть пользователей хочет сама собирать тариф и&nbsp;не&nbsp;платить за&nbsp;лишнее</p>
+      <a class="case-link" href="case-megafon.html">Смотреть кейс тарифов <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
+    </div>
   </section>
 
   <!-- 9. Pyaterochka -->
@@ -490,7 +735,7 @@
 <nav class="controls" id="controls" aria-label="Управление презентацией">
   <a href="index.html" aria-label="На сайт"><i class="ph-bold ph-house" aria-hidden="true"></i></a>
   <button type="button" id="prev" aria-label="Предыдущий слайд"><i class="ph-bold ph-arrow-left" aria-hidden="true"></i></button>
-  <span class="count" id="count" aria-live="polite">1 / 13</span>
+  <span class="count" id="count" aria-live="polite">1 / 23</span>
   <button type="button" id="next" aria-label="Следующий слайд"><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
   <button type="button" id="full" aria-label="Во весь экран"><i class="ph-bold ph-arrows-out" aria-hidden="true"></i></button>
 </nav>
