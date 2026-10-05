@@ -767,7 +767,7 @@ function initEmailCopy() {
     const email = el.href.replace(/^mailto:/, '').split('?')[0];
     const isRu = document.documentElement.lang === 'ru';
     navigator.clipboard.writeText(email).then(() => {
-      showToast(isRu ? `Email ${email} скопирован в буфер обмена` : `Email ${email} copied to clipboard`, el);
+      showToast(isRu ? 'Почта скопирована' : 'Email copied', el);
     }).catch(() => {
       window.location.href = el.href; // Clipboard API unavailable — fall back to opening mail client
     });
