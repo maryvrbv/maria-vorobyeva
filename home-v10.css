@@ -957,3 +957,27 @@ img{ max-width: 100%; height: auto; display: block; }
   /* keep the greeting on one line on phones too */
   .hero-glow .hero-copy .hero-title{ white-space: nowrap; font-size: clamp(24px, calc((100vw - 88px) / 10.6), 52px); }
 }
+
+/* ---------- photo orbit ----------
+   The photo and the chrome objects sit in one square that scales as a
+   unit (the largest square the card allows, 80% of its height at most),
+   so the pen, tile and sparkles keep their place around the photo at any
+   screen size instead of drifting with the card's proportions */
+.profile-card{ container-type: size; }
+.photo-orbit{
+  position: relative;
+  width: min(100cqw, 80cqh); aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.photo-orbit .profile-photo{ width: 64%; margin: 0; }
+.profile-card .photo-orbit canvas{ position: absolute; z-index: 2; aspect-ratio: 1; margin: 0; }
+.profile-card .photo-orbit .pen-rig{ width: 31.5%; right: 5.25%; top: -3.75%; left: auto; }
+.profile-card .photo-orbit .type-rig{ width: 24%; left: 5%; top: 25%; right: auto; }
+.profile-card .photo-orbit .sparkle-rig{ width: 36%; right: 3%; top: 61.9%; left: auto; }
+@media (max-width: 900px){
+  /* the chips are gone, so on phones the square can fill more of the card */
+  .photo-orbit{ width: min(100cqw, 92cqh); }
+  .profile-card .photo-orbit .pen-rig{ width: 31.5%; right: 5.25%; top: -3.75%; }
+  .profile-card .photo-orbit .type-rig{ width: 24%; left: 5%; top: 25%; }
+  .profile-card .photo-orbit .sparkle-rig{ width: 36%; right: 3%; top: 61.9%; }
+}

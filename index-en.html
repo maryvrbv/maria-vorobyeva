@@ -93,15 +93,15 @@
     </div>
 
     <div class="profile-card">
-      <figure class="profile-photo">
-        <img src="images/home/photo.webp" alt="Maria Vorobyeva" width="1151" height="1053">
-      </figure>
-      <canvas class="figma-rig pen-rig" data-figma-rig aria-hidden="true"></canvas>
-      <canvas class="type-rig" data-type-rig aria-hidden="true"></canvas>
-      <canvas class="sparkle-rig" data-sparkle-rig aria-hidden="true"></canvas>
-      <div class="profile-meta">
-        <p class="glass-pill">9+ years in product design</p>
-        <p class="glass-pill">e‑commerce · telecom · fintech · HR‑tech</p>
+      <!-- photo and chrome objects share one square, so the objects stay
+           put relative to the photo at any card size -->
+      <div class="photo-orbit">
+        <figure class="profile-photo">
+          <img src="images/home/photo.webp" alt="Maria Vorobyeva" width="1151" height="1053">
+        </figure>
+        <canvas class="figma-rig pen-rig" data-figma-rig aria-hidden="true"></canvas>
+        <canvas class="type-rig" data-type-rig aria-hidden="true"></canvas>
+        <canvas class="sparkle-rig" data-sparkle-rig aria-hidden="true"></canvas>
       </div>
     </div>
     </div>
