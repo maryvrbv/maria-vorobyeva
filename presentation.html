@@ -283,6 +283,8 @@
     transition: opacity .3s ease;
   }
   .controls.idle{ opacity: 0; }
+  /* while presenting, the cursor hides together with the controls */
+  body.idle, body.idle *{ cursor: none !important; }
   .controls button, .controls a{
     all: unset; cursor: pointer; box-sizing: border-box;
     width: 40px; height: 40px; border-radius: 50%;
@@ -590,9 +592,9 @@
   // controls fade out while the mouse rests
   var idleT;
   function wake(){
-    controls.classList.remove('idle');
+    controls.classList.remove('idle'); document.body.classList.remove('idle');
     clearTimeout(idleT);
-    idleT = setTimeout(function(){ controls.classList.add('idle'); }, 2500);
+    idleT = setTimeout(function(){ controls.classList.add('idle'); document.body.classList.add('idle'); }, 2500);
   }
   document.addEventListener('mousemove', wake);
   document.addEventListener('keydown', wake);
