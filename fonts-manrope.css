@@ -1,0 +1,16 @@
+/* ==========================================================================
+   Site typography for the case pages and the styleguide: Manrope (a
+   geometric grotesque with Cyrillic) for headings, figures and the name in
+   the nav; body text stays Inter from styles.css. Matches the homepage,
+   where home-manrope.css does the same on top of home-v10.css
+   ========================================================================== */
+h1, h2, h3, .nav-name, .section-title,
+.case-h2, .case-h3, .case-block h2, .case-nav .title,
+.metric .num-big, .num-big{
+  font-family: 'Manrope', 'Inter', -apple-system, system-ui, sans-serif;
+}
+h1{ font-weight: 800; letter-spacing: -0.03em; }
+h2, .section-title, .case-h2, .case-block h2{ font-weight: 800; letter-spacing: -0.02em; }
+h3, .case-h3{ font-weight: 700; letter-spacing: -0.01em; }
+.metric .num-big, .num-big{ font-weight: 800; letter-spacing: -0.02em; }
+.nav-name{ font-weight: 700; }
