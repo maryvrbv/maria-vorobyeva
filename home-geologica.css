@@ -1,0 +1,28 @@
+/* ==========================================================================
+   Font trial for the homepage (index-geologica.html, index-en-geologica.html):
+   Geologica for headings and figures, Inter for everything else. Loaded
+   after home-v10.css. Geologica is a grotesque with Cyrillic and a
+   Sharpness axis: SHRP 100 cuts the stroke ends at an angle, which gives
+   it some of Bricolage Grotesque's character
+   ========================================================================== */
+:root{
+  --font-display: 'Geologica', 'Inter', system-ui, sans-serif;
+  --font-accent: 'Geologica', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+body{ font-family: var(--font-body); }
+
+.hero-title, .hero-glow .hero-copy .hero-title,
+.section-title, .case-card h3, .postcard h3, .contact-title,
+.kpi b, .exp-company, .case-metrics b, .nav-name{
+  font-variation-settings: 'SHRP' 100, 'CRSV' 0;
+}
+.hero-glow .hero-copy .hero-title{ font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; }
+@media (min-width: 901px){
+  .hero-glow .hero-copy .hero-title{ font-size: clamp(42px, 4.6vw, 84px); }
+}
+.section-title{ font-weight: 700; letter-spacing: -0.035em; }
+.case-card h3, .contact-title, .postcard h3{ font-weight: 700; letter-spacing: -0.025em; }
+.kpi b{ font-weight: 700; letter-spacing: -0.03em; }
+.contact-mail{ font-family: var(--font-body); font-weight: 500; letter-spacing: -0.02em; }
+.hero-lead em{ font-weight: 600; }
