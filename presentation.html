@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FHZS0V3GJE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FHZS0V3GJE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Маша Воробьева — презентация</title>
+<meta name="description" content="Презентация о себе: Senior Product Designer, кейсы Альфа-Банка, МегаФона и Пятёрочки, опыт и подход к работе.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Маша Воробьева — презентация">
+<meta property="og:description" content="Senior Product Designer: кейсы, подход и опыт">
+<meta property="og:image" content="https://marydis.com/images/home/og-image.png">
+<meta property="og:url" content="https://marydis.com/presentation.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<style>
+  /* ==========================================================================
+     Presentation (RU). Every slide is drawn on a fixed 1920×1080 canvas and
+     scaled to fit the window (--s, set by the script below). Arrows, space,
+     swipe or the buttons move between slides; #n in the URL opens slide n.
+     Printing (Cmd/Ctrl+P) gives one slide per page, ready to save as PDF.
+     ========================================================================== */
+  :root{
+    --bg: #0c0a14;
+    --bg-2: #15121f;
+    --card: #1b1728;
+    --ink: #f4f2fa;
+    --ink-soft: #b4afc4;
+    --ink-faint: #8a849c;
+    --line: rgba(255,255,255,.1);
+    --lilac: #baa3ff;
+    --peach: #ffbab3;
+    --blue: #6e7df0;
+    --deep: #26195c;
+    --font-display: 'Manrope', 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    --s: 1;
+  }
+  *{ box-sizing: border-box; }
+  html, body{ height: 100%; }
+  body{
+    margin: 0; overflow: hidden;
+    background: #050409; color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, p{ margin: 0; }
+  a{ color: inherit; }
+  img, video{ display: block; }
+
+  /* ---------- stage ---------- */
+  .deck{ position: fixed; inset: 0; overflow: hidden; }
+  .stage{
+    position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px;
+    transform: translate(-50%, -50%) scale(var(--s));
+  }
+  .slide{
+    position: absolute; inset: 0; overflow: hidden;
+    background: var(--bg);
+    padding: 120px 128px;
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transition: opacity .5s ease, visibility 0s linear .5s;
+  }
+  .slide.is-active{ opacity: 1; visibility: visible; transition: opacity .5s ease, visibility 0s; }
+  .slide > *{ position: relative; }
+  .slide.alt{ background: var(--bg-2); }
+
+  /* gentle rise for slide content on enter */
+  .slide [data-in]{ opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s cubic-bezier(.22,1,.36,1); }
+  .slide.is-active [data-in]{ opacity: 1; transform: none; }
+  .slide.is-active [data-in="2"]{ transition-delay: .12s; }
+  .slide.is-active [data-in="3"]{ transition-delay: .24s; }
+  .slide.is-active [data-in="4"]{ transition-delay: .36s; }
+
+  /* ---------- type ---------- */
+  .eyebrow{
+    display: inline-flex; align-items: center; gap: 12px;
+    font: 600 26px/1 var(--font-body); color: var(--lilac);
+    letter-spacing: .02em; margin-bottom: 28px;
+  }
+  .eyebrow i{ font-size: 24px; }
+  .title{
+    font: 800 88px/1.04 var(--font-display); letter-spacing: -.03em;
+    max-width: 1500px; text-wrap: balance;
+  }
+  .lead{ font: 400 34px/1.45 var(--font-body); color: var(--ink-soft); max-width: 1180px; text-wrap: pretty; }
+  .lead em{ font-style: normal; color: var(--ink); }
+  .grad{
+    background: linear-gradient(100deg, var(--lilac) 0%, var(--peach) 55%, #9aa6ff 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* ---------- moving gradient (cover, statement, contact) ---------- */
+  .glow{ position: absolute !important; inset: 0; overflow: hidden; background: var(--deep); }
+  .glow::before, .glow::after{
+    content: ""; position: absolute; inset: -30%;
+    background:
+      radial-gradient(38% 46% at 22% 30%, var(--lilac) 0%, transparent 70%),
+      radial-gradient(34% 40% at 78% 24%, var(--peach) 0%, transparent 70%),
+      radial-gradient(44% 50% at 64% 80%, var(--blue) 0%, transparent 72%),
+      radial-gradient(40% 40% at 12% 86%, #8f7bff 0%, transparent 70%);
+    filter: blur(40px);
+    animation: drift 22s ease-in-out infinite alternate;
+  }
+  .glow::after{
+    opacity: .55; mix-blend-mode: screen;
+    animation-duration: 30s; animation-direction: alternate-reverse;
+  }
+  @keyframes drift{
+    0%{ transform: translate(0,0) rotate(0deg) scale(1); }
+    50%{ transform: translate(4%,-3%) rotate(8deg) scale(1.06); }
+    100%{ transform: translate(-3%,4%) rotate(-6deg) scale(1.02); }
+  }
+  /* vertical "fluted glass" ribs and film grain over the gradient */
+  .glow .ribs{
+    position: absolute; inset: 0; z-index: 1;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, transparent 2px 44px, rgba(0,0,0,.06) 44px 46px, transparent 46px 88px);
+  }
+  .glow .grain{
+    position: absolute; inset: 0; z-index: 2; opacity: .22; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- 1. cover ---------- */
+  .cover{ flex-direction: row; align-items: center; gap: 96px; padding: 96px 128px; }
+  .cover .photo{
+    width: 720px; height: 820px; flex: none;
+    border-radius: 48px; overflow: hidden;
+    box-shadow: 0 40px 120px rgba(20,10,60,.45);
+  }
+  .cover .photo img{ width: 100%; height: 100%; object-fit: cover; object-position: 40% 30%; }
+  .cover .copy{ display: flex; flex-direction: column; gap: 40px; }
+  .cover h1{ font: 800 150px/.98 var(--font-display); letter-spacing: -.045em; color: #fff; }
+  .cover .role{ font: 700 44px/1.1 var(--font-display); color: #fff; letter-spacing: -.01em; }
+  .cover .lead{ color: rgba(255,255,255,.8); max-width: 860px; }
+  .cover .lead em{ color: #fff; }
+  .cover .site{ font: 500 28px/1 var(--font-body); color: rgba(255,255,255,.75); text-decoration: none; }
+
+  /* ---------- 2. about: big numbers ---------- */
+  .stats{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: auto; }
+  .stat{
+    background: var(--card); border-radius: 36px; padding: 48px 44px 44px;
+    display: flex; flex-direction: column; gap: 18px; min-height: 300px;
+  }
+  .stat b{ font: 800 92px/1 var(--font-display); letter-spacing: -.04em; white-space: nowrap; }
+  .stat span{ font: 400 28px/1.35 var(--font-body); color: var(--ink-soft); }
+  .spheres{ display: flex; gap: 14px; flex-wrap: wrap; margin-top: 48px; }
+  .spheres span{
+    font: 500 28px/1 var(--font-body); color: var(--ink);
+    padding: 18px 28px; border-radius: 999px; background: rgba(186,163,255,.14);
+  }
+
+  /* ---------- 3. how I work ---------- */
+  .powers{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: auto; }
+  .power{
+    position: relative; overflow: hidden; border-radius: 36px; min-height: 560px;
+    padding: 44px 40px; display: flex; flex-direction: column; justify-content: flex-end; gap: 18px;
+    background: var(--card);
+  }
+  .power img{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .power::after{ content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(12,10,20,0) 20%, rgba(12,10,20,.82) 100%); }
+  .power h3, .power p{ position: relative; z-index: 1; }
+  .power h3{ font: 800 40px/1.1 var(--font-display); letter-spacing: -.02em; }
+  .power p{ font: 400 26px/1.4 var(--font-body); color: rgba(255,255,255,.82); }
+  .power .n{ position: absolute; z-index: 1; top: 36px; left: 40px; font: 700 28px/1 var(--font-display); color: rgba(255,255,255,.85); }
+
+  /* ---------- case slides ---------- */
+  .case{ flex-direction: row; gap: 80px; align-items: stretch; }
+  .case .text{ width: 760px; flex: none; display: flex; flex-direction: column; }
+  .case-head{ display: inline-flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+  .case-head img{ width: 56px; height: 56px; border-radius: 14px; }
+  .case-head span{
+    font: 600 26px/1 var(--font-body); padding: 15px 22px; border-radius: 999px;
+    background: color-mix(in srgb, var(--case) 22%, transparent); color: #fff;
+  }
+  .case h2{ font: 800 70px/1.06 var(--font-display); letter-spacing: -.03em; text-wrap: balance; }
+  .case .sub{ font: 400 32px/1.45 var(--font-body); color: var(--ink-soft); margin-top: 32px; text-wrap: pretty; }
+  .kpis{ display: flex; gap: 48px; margin-top: auto; padding-top: 48px; }
+  .kpi{ display: flex; flex-direction: column; gap: 12px; max-width: 260px; }
+  .kpi b{ font: 800 76px/1 var(--font-display); letter-spacing: -.03em; color: #fff; white-space: nowrap; }
+  .kpi span{ font: 400 26px/1.35 var(--font-body); color: var(--ink-soft); }
+  .kpi:first-child b{ color: var(--case-text, var(--case)); }
+  .case .media{
+    flex: 1; min-width: 0; border-radius: 40px; overflow: hidden;
+    background: color-mix(in srgb, var(--case) 16%, #0c0a14);
+    display: grid; place-items: center;
+  }
+  .case .media video, .case .media img{ width: 100%; height: 100%; object-fit: cover; }
+  .case-link{
+    align-self: flex-start; margin-top: 40px;
+    display: inline-flex; align-items: center; gap: 12px;
+    font: 600 26px/1 var(--font-body); text-decoration: none; color: #fff;
+    padding: 20px 30px; border-radius: 999px; background: rgba(255,255,255,.1);
+  }
+  .case-link:hover{ background: rgba(255,255,255,.18); }
+
+  /* ---------- case details: one big screenshot ---------- */
+  .shot{ gap: 44px; }
+  .shot .row{ display: flex; justify-content: space-between; align-items: flex-end; gap: 64px; }
+  .shot h2{ font: 800 60px/1.08 var(--font-display); letter-spacing: -.025em; max-width: 1000px; text-wrap: balance; }
+  .shot .note{ font: 400 28px/1.45 var(--font-body); color: var(--ink-soft); max-width: 600px; }
+  .shot .frame{
+    flex: 1; min-height: 0; border-radius: 36px; overflow: hidden;
+    background: #f3f1f7; display: grid; place-items: center;
+  }
+  .shot .frame img{ width: 100%; height: 100%; object-fit: contain; }
+  .shot .frame.dark{ background: #191527; }
+
+  /* ---------- experience ---------- */
+  .timeline{ list-style: none; margin: auto 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; }
+  .timeline li{
+    display: flex; align-items: center; gap: 28px;
+    background: var(--card); border-radius: 32px; padding: 30px 36px;
+  }
+  .timeline img{ width: 80px; height: 80px; border-radius: 20px; flex: none; }
+  .timeline .co{ font: 800 38px/1.1 var(--font-display); letter-spacing: -.015em; }
+  .timeline .meta{ font: 400 26px/1.35 var(--font-body); color: var(--ink-soft); margin-top: 6px; }
+  .timeline .fact{ margin-left: auto; text-align: right; font: 700 30px/1.2 var(--font-display); color: var(--lilac); white-space: nowrap; }
+  .timeline .fact small{ display: block; font: 400 22px/1.3 var(--font-body); color: var(--ink-faint); margin-top: 4px; }
+
+  /* ---------- education ---------- */
+  .edu{ display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: auto; }
+  .edu li{ list-style: none; background: var(--card); border-radius: 36px; padding: 48px; display: flex; flex-direction: column; gap: 36px; min-height: 420px; }
+  .edu img{ width: 120px; height: 120px; border-radius: 28px; }
+  .edu .school{ font: 800 48px/1.1 var(--font-display); letter-spacing: -.02em; margin-top: auto; }
+  .edu .degree{ font: 400 30px/1.4 var(--font-body); color: var(--ink-soft); margin-top: 14px; }
+  .edu ul{ padding: 0; margin: 0; }
+
+  /* ---------- statement ---------- */
+  .statement{ justify-content: center; }
+  .statement h2{ font: 800 112px/1.02 var(--font-display); letter-spacing: -.04em; color: #fff; max-width: 1500px; text-wrap: balance; }
+  .statement p{ font: 400 36px/1.45 var(--font-body); color: rgba(255,255,255,.82); max-width: 1100px; margin-top: 48px; }
+
+  /* ---------- contact ---------- */
+  .contact{ justify-content: space-between; }
+  .contact .head{ display: flex; align-items: center; gap: 56px; }
+  .contact .face{ width: 260px; height: 260px; border-radius: 50%; object-fit: cover; object-position: 40% 30%; flex: none; }
+  .contact h2{ font: 800 100px/1.02 var(--font-display); letter-spacing: -.04em; color: #fff; max-width: 1240px; text-wrap: balance; }
+  .contact .sub{ font: 400 36px/1.4 var(--font-body); color: rgba(255,255,255,.82); margin-top: 28px; }
+  .contact .links{ display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; }
+  .contact .mail{
+    font: 700 56px/1.1 var(--font-display); color: #fff; text-decoration: none;
+    border-bottom: 3px solid rgba(255,255,255,.5); padding-bottom: 8px; letter-spacing: -.01em;
+  }
+  .contact .mail:hover{ border-color: #fff; }
+  .btns{ display: flex; gap: 16px; }
+  .btn{
+    display: inline-flex; align-items: center; gap: 12px;
+    font: 600 28px/1 var(--font-body); color: #fff; text-decoration: none;
+    padding: 22px 32px; border-radius: 999px;
+    background: rgba(255,255,255,.16); border: 2px solid rgba(255,255,255,.35);
+  }
+  .btn:hover{ background: rgba(255,255,255,.26); }
+  .btn.primary{ background: #0c0a14; border-color: #0c0a14; }
+  .btn i{ font-size: 30px; }
+
+  /* slide number, bottom right of each slide */
+  .num{ position: absolute !important; right: 128px; bottom: 52px; font: 500 22px/1 var(--font-body); color: var(--ink-faint); }
+  .on-glow .num{ color: rgba(255,255,255,.65); }
+
+  /* ---------- controls (outside the canvas, not scaled) ---------- */
+  .controls{
+    position: fixed; z-index: 10; left: 50%; bottom: 18px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px; border-radius: 999px;
+    background: rgba(20,17,32,.72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 10px 30px rgba(0,0,0,.4);
+    transition: opacity .3s ease;
+  }
+  .controls.idle{ opacity: 0; }
+  .controls button, .controls a{
+    all: unset; cursor: pointer; box-sizing: border-box;
+    width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center; color: #fff; font-size: 18px;
+  }
+  .controls button:hover, .controls a:hover{ background: rgba(255,255,255,.12); }
+  .controls button:focus-visible, .controls a:focus-visible{ outline: 2px solid var(--lilac); outline-offset: 2px; }
+  .controls button:disabled{ opacity: .3; cursor: default; background: none; }
+  .controls .count{ font: 500 14px/1 var(--font-body); color: var(--ink-soft); min-width: 56px; text-align: center; font-variant-numeric: tabular-nums; }
+  .progress{ position: fixed; z-index: 10; left: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--lilac), var(--peach)); transition: width .4s ease; }
+
+  @media (prefers-reduced-motion: reduce){
+    .glow::before, .glow::after{ animation: none; }
+    .slide, .slide [data-in]{ transition: none !important; }
+  }
+
+  /* ---------- print / save as PDF: one slide per page ---------- */
+  @media print{
+    @page{ size: 1920px 1080px; margin: 0; }
+    html, body{ height: auto; overflow: visible; background: var(--bg); }
+    .deck{ position: static; display: block; }
+    .stage{ position: static; transform: none; width: 1920px; height: auto; }
+    .slide{ position: relative; width: 1920px; height: 1080px; opacity: 1; visibility: visible; break-after: page; page-break-after: always; }
+    .slide [data-in]{ opacity: 1; transform: none; }
+    .glow::before, .glow::after{ animation: none; }
+    .controls, .progress{ display: none; }
+    *{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<main class="deck" aria-roledescription="презентация" aria-label="Маша Воробьева — презентация">
+<div class="stage" id="stage">
+
+  <!-- 1. cover -->
+  <section class="slide cover on-glow" aria-roledescription="слайд" aria-label="Привет! Я Маша">
+    <div class="glow" aria-hidden="true"><div class="ribs"></div><div class="grain"></div></div>
+    <figure class="photo" data-in style="margin:0"><img src="images/home/photo.webp" alt="Маша Воробьева" width="1151" height="1053"></figure>
+    <div class="copy">
+      <h1 data-in="2">Привет!<br>Я Маша</h1>
+      <p class="role" data-in="2">Senior Product Designer</p>
+      <p class="lead" data-in="3">Больше 9 лет проектирую B2C и B2B продукты <em>для миллионов пользователей</em> в&nbsp;сферах e‑commerce, telecom, fintech и HR‑tech</p>
+      <a class="site" href="index.html" data-in="4">marydis.com</a>
+    </div>
+  </section>
+
+  <!-- 2. about -->
+  <section class="slide" aria-roledescription="слайд" aria-label="Обо мне">
+    <span class="eyebrow" data-in><i class="ph-fill ph-star-four" aria-hidden="true"></i>Обо мне</span>
+    <h2 class="title" data-in>Проектирую продукты, которыми пользуются <span class="grad">миллионы людей</span></h2>
+    <div class="spheres" data-in="2"><span>E‑commerce</span><span>Telecom</span><span>Fintech</span><span>Retail</span><span>HR‑tech</span></div>
+    <div class="stats" data-in="3">
+      <div class="stat"><b>9+</b><span>лет в продуктовом дизайне</span></div>
+      <div class="stat"><b>17 млн</b><span>MAU приложения и сайта МегаФона</span></div>
+      <div class="stat"><b>10 млн</b><span>MAU приложения «Пятёрочка»</span></div>
+      <div class="stat"><b>0 → 1</b><span>запустила два новых продукта с нуля</span></div>
+    </div>
+  </section>
+
+  <!-- 3. how I work -->
+  <section class="slide alt" aria-roledescription="слайд" aria-label="Как я работаю">
+    <span class="eyebrow" data-in><i class="ph-fill ph-star-four" aria-hidden="true"></i>Подход</span>
+    <h2 class="title" data-in>Как я работаю</h2>
+    <div class="powers" data-in="2">
+      <article class="power"><img src="images/home/powers/flows.webp" alt=""><span class="n">01</span><h3>Упрощаю сложные сценарии</h3><p>Замечаю, где люди теряются, и превращаю это в понятный путь</p></article>
+      <article class="power"><img src="images/home/powers/connect.webp" alt=""><span class="n">02</span><h3>Объединяю команды</h3><p>Помогаю бизнесу, разработке и дизайну двигаться в одну сторону</p></article>
+      <article class="power"><img src="images/home/powers/systems.webp" alt=""><span class="n">03</span><h3>Мыслю системно</h3><p>Люблю дизайн-системы, устойчивые паттерны и масштабируемые решения</p></article>
+      <article class="power"><img src="images/home/powers/launch.webp" alt=""><span class="n">04</span><h3>Довожу до запуска</h3><p>Думаю не только про макет, но и про реализацию, тестирование и результат</p></article>
+    </div>
+  </section>
+
+  <!-- 4. statement before the cases -->
+  <section class="slide statement on-glow" aria-roledescription="слайд" aria-label="Кейсы">
+    <div class="glow" aria-hidden="true"><div class="ribs"></div><div class="grain"></div></div>
+    <span class="eyebrow" data-in style="color:#fff"><i class="ph-fill ph-star-four" aria-hidden="true"></i>Избранные проекты</span>
+    <h2 data-in="2">Три продукта, три команды, миллионы пользователей</h2>
+    <p data-in="3">Альфа-Банк, МегаФон и Пятёрочка: от новых продуктов с нуля до редизайна сценариев, которыми люди пользуются каждый день</p>
+  </section>
+
+  <!-- 5. Alfa -->
+  <section class="slide case" style="--case:#ef3124;--case-text:#ff6a5f" aria-roledescription="слайд" aria-label="Альфа-Банк">
+    <div class="text">
+      <span class="case-head" data-in><img src="images/home/exp/logo-alfa.webp" alt=""><span>Альфа-Банк · E‑commerce</span></span>
+      <h2 data-in>Спроектировала ключевые сценарии нового e‑commerce продукта</h2>
+      <p class="sub" data-in="2">Покупка, профиль, видеолента и BNPL‑оплата. С&nbsp;нуля собрала сценарий покупки в&nbsp;«Подели»: от&nbsp;мультиселлерной корзины до&nbsp;управления заказами</p>
+      <div class="kpis" data-in="3">
+        <div class="kpi"><b>0 → 1</b><span>новый продукт</span></div>
+        <div class="kpi"><b>4</b><span>ключевых сценария</span></div>
+        <div class="kpi"><b>2</b><span>канала запуска: «Подели» и&nbsp;Альфа-Банк</span></div>
+      </div>
+    </div>
+    <div class="media" data-in="2"><video muted loop playsinline preload="none" poster="images/home/cover-alfa.webp" aria-label="Альфа-Маркет — сценарий покупки"><source data-src="images/home/cover-alfa.webm" type="video/webm"></video></div>
+  </section>
+
+  <!-- 6. Alfa details -->
+  <section class="slide shot alt" aria-roledescription="слайд" aria-label="Альфа-Банк: раздел Покупки">
+    <div class="row" data-in>
+      <h2>Объединила доставки и платежи в&nbsp;разделе «Покупки»</h2>
+      <p class="note">Пользователь сразу видит статусы заказов и&nbsp;не&nbsp;теряет из&nbsp;виду ближайшие списания</p>
+    </div>
+    <div class="frame" data-in="2"><img src="images/alfa/profile-purchases.webp" alt="Раздел Покупки с доставками и платежами" loading="lazy"></div>
+    <a class="case-link" href="case-alfa.html" data-in="3" style="margin-top:0">Смотреть кейс покупки <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
+  </section>
+
+  <!-- 7. MegaFon -->
+  <section class="slide case" style="--case:#00b956;--case-text:#2fd57c" aria-roledescription="слайд" aria-label="МегаФон">
+    <div class="text">
+      <span class="case-head" data-in><img src="images/home/exp/logo-megafon.webp" alt=""><span>МегаФон · Телеком</span></span>
+      <h2 data-in>Упростила выбор тарифа для 17&nbsp;млн пользователей</h2>
+      <p class="sub" data-in="2">Перепроектировала сценарий выбора тарифа и&nbsp;участвовала в&nbsp;развитии голосового помощника «Ева»</p>
+      <div class="kpis" data-in="3">
+        <div class="kpi"><b>+44%</b><span>конверсия, с&nbsp;9% до&nbsp;13%</span></div>
+        <div class="kpi"><b>+72%</b><span>подключения домашнего интернета</span></div>
+        <div class="kpi"><b>−17%</b><span>время выбора тарифа</span></div>
+      </div>
+    </div>
+    <div class="media" data-in="2"><video muted loop playsinline preload="none" poster="images/home/cover-megafon.webp" aria-label="МегаФон — редизайн тарифов"><source data-src="images/home/cover-megafon.webm" type="video/webm"></video></div>
+  </section>
+
+  <!-- 8. MegaFon details -->
+  <section class="slide shot alt" aria-roledescription="слайд" aria-label="МегаФон: карточка тарифа">
+    <div class="row" data-in>
+      <h2>Убрали всё, что отвлекало, и&nbsp;усилили то, что помогает выбрать</h2>
+      <p class="note">Акцент на&nbsp;главных параметрах тарифа: гигабайты, минуты, МегаСилы и&nbsp;цена</p>
+    </div>
+    <div class="frame" data-in="2"><img src="images/megafon/card-redesign.webp" alt="Редизайн карточки тарифа" loading="lazy"></div>
+    <a class="case-link" href="case-megafon.html" data-in="3" style="margin-top:0">Смотреть кейс тарифов <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
+  </section>
+
+  <!-- 9. Pyaterochka -->
+  <section class="slide case" style="--case:#9bd11f" aria-roledescription="слайд" aria-label="Пятёрочка">
+    <div class="text">
+      <span class="case-head" data-in><img src="images/home/exp/logo-x5.webp" alt=""><span>Пятёрочка · Ритейл</span></span>
+      <h2 data-in>Запустила программу лояльности X5&nbsp;Клуб</h2>
+      <p class="sub" data-in="2">Развивала ключевые сценарии программы лояльности: карту, баллы, персональные предложения и&nbsp;сторис</p>
+      <div class="kpis" data-in="3">
+        <div class="kpi"><b>0 → 1</b><span>новый продукт</span></div>
+        <div class="kpi"><b>+8%</b><span>средний чек</span></div>
+        <div class="kpi"><b>10 млн</b><span>MAU приложения</span></div>
+      </div>
+    </div>
+    <div class="media" data-in="2"><video muted loop playsinline preload="none" poster="images/home/cover-loyalty-ru.webp" aria-label="Пятёрочка — программа лояльности"><source data-src="images/home/cover-loyalty-ru.webm" type="video/webm"><source data-src="images/home/cover-loyalty-ru.mp4" type="video/mp4"></video></div>
+  </section>
+
+  <!-- 10. Pyaterochka details -->
+  <section class="slide shot alt" aria-roledescription="слайд" aria-label="Пятёрочка: экраны X5 Клуба">
+    <div class="row" data-in>
+      <h2>Карта, баллы, персональные предложения и&nbsp;сторис</h2>
+      <p class="note">Перезапустили приложение «Пятёрочка» и&nbsp;построили систему метрик на&nbsp;базе Google HEART</p>
+    </div>
+    <div class="frame dark" data-in="2"><img src="images/loyalty/screens-2.webp" alt="Экраны программы лояльности X5 Клуб" loading="lazy"></div>
+    <a class="case-link" href="case-loyalty.html" data-in="3" style="margin-top:0">Смотреть кейс <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
+  </section>
+
+  <!-- 11. experience -->
+  <section class="slide" aria-roledescription="слайд" aria-label="Где работала">
+    <span class="eyebrow" data-in><i class="ph-fill ph-star-four" aria-hidden="true"></i>Опыт</span>
+    <h2 class="title" data-in>Где работала</h2>
+    <ol class="timeline" data-in="2">
+      <li><img src="images/home/exp/logo-alfa.webp" alt=""><div><p class="co">Альфа-Банк</p><p class="meta">Senior Product Designer · с&nbsp;2025</p></div><p class="fact">0 → 1<small>новый продукт</small></p></li>
+      <li><img src="images/home/exp/logo-megafon.webp" alt=""><div><p class="co">МегаФон</p><p class="meta">Senior Product Designer · 2023–2025</p></div><p class="fact">+44%<small>конверсия</small></p></li>
+      <li><img src="images/home/exp/logo-x5.webp" alt=""><div><p class="co">X5</p><p class="meta">Senior Product Designer · 2020–2023</p></div><p class="fact">+8%<small>средний чек</small></p></li>
+      <li><img src="images/home/exp/logo-medacoustica.webp" alt=""><div><p class="co">MedAcoustica</p><p class="meta">Product Designer · 2018–2020</p></div><p class="fact">0 → 1<small>job board для врачей</small></p></li>
+      <li><img src="images/home/exp/logo-sber.webp" alt=""><div><p class="co">Сбер</p><p class="meta">Product Designer · 2016–2018</p></div><p class="fact">−87%<small>стоимость отчётов</small></p></li>
+      <li><img src="images/home/exp/logo-citi.webp" alt=""><div><p class="co">Citi</p><p class="meta">Analyst, UI Designer · 2013–2016</p></div><p class="fact">Быстрее<small>процессы отдела</small></p></li>
+    </ol>
+  </section>
+
+  <!-- 12. education -->
+  <section class="slide alt" aria-roledescription="слайд" aria-label="Где училась">
+    <span class="eyebrow" data-in><i class="ph-fill ph-star-four" aria-hidden="true"></i>Образование</span>
+    <h2 class="title" data-in>Где училась</h2>
+    <ul class="edu" data-in="2">
+      <li><img src="images/home/edu-calarts.webp" alt=""><div><p class="school">California Institute of the Arts</p><p class="degree">UX/UI Design, Graphic Design</p></div></li>
+      <li><img src="images/home/edu-hse.webp" alt=""><div><p class="school">Высшая школа экономики</p><p class="degree">Магистратура, бизнес-информатика</p></div></li>
+    </ul>
+  </section>
+
+  <!-- 13. contact -->
+  <section class="slide contact on-glow" aria-roledescription="слайд" aria-label="Контакты">
+    <div class="glow" aria-hidden="true"><div class="ribs"></div><div class="grain"></div></div>
+    <div class="head" data-in>
+      <img class="face" src="images/home/photo.webp" alt="" width="1151" height="1053">
+      <div>
+        <h2>Давайте делать классные продукты вместе</h2>
+        <p class="sub">Если вам кажется, что мы можем сработаться — напишите мне</p>
+      </div>
+    </div>
+    <div class="links" data-in="2">
+      <a class="mail" href="mailto:maryvrbv@gmail.com" data-track="email_click" data-place="deck">maryvrbv@gmail.com</a>
+      <div class="btns">
+        <a class="btn primary" href="https://t.me/Maria_Vorobyeva" target="_blank" rel="noopener" data-track="telegram_click" data-place="deck"><i class="ph-fill ph-telegram-logo" aria-hidden="true"></i>Telegram</a>
+        <a class="btn" href="https://www.linkedin.com/in/marydis/" target="_blank" rel="noopener" data-track="linkedin_click" data-place="deck"><i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>LinkedIn</a>
+        <a class="btn" href="files/CV_Vorobyeva_Mariia_RU.pdf" target="_blank" rel="noopener" data-track="cv_click" data-place="deck"><i class="ph-fill ph-download-simple" aria-hidden="true"></i>CV</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<nav class="controls" id="controls" aria-label="Управление презентацией">
+  <a href="index.html" aria-label="На сайт"><i class="ph-bold ph-house" aria-hidden="true"></i></a>
+  <button type="button" id="prev" aria-label="Предыдущий слайд"><i class="ph-bold ph-arrow-left" aria-hidden="true"></i></button>
+  <span class="count" id="count" aria-live="polite">1 / 13</span>
+  <button type="button" id="next" aria-label="Следующий слайд"><i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
+  <button type="button" id="full" aria-label="Во весь экран"><i class="ph-bold ph-arrows-out" aria-hidden="true"></i></button>
+</nav>
+
+<script>
+(function(){
+  var stage = document.getElementById('stage');
+  var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
+  var count = document.getElementById('count');
+  var progress = document.getElementById('progress');
+  var prev = document.getElementById('prev');
+  var next = document.getElementById('next');
+  var controls = document.getElementById('controls');
+  var total = slides.length;
+  var cur = -1;
+
+  // number every slide in its corner
+  slides.forEach(function(s, i){
+    var n = document.createElement('span');
+    n.className = 'num'; n.setAttribute('aria-hidden', 'true');
+    n.textContent = (i + 1) + ' / ' + total;
+    s.appendChild(n);
+  });
+
+  function fit(){
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    document.documentElement.style.setProperty('--s', s);
+  }
+
+  // videos load and play only on their own slide
+  function syncVideos(){
+    slides.forEach(function(s, i){
+      s.querySelectorAll('video').forEach(function(v){
+        if (i === cur){
+          if (!v.dataset.loaded){
+            v.querySelectorAll('source[data-src]').forEach(function(src){ src.src = src.dataset.src; });
+            v.load(); v.dataset.loaded = '1';
+          }
+          var p = v.play(); if (p && p.catch) p.catch(function(){});
+        } else if (!v.paused){ v.pause(); }
+      });
+    });
+  }
+
+  function go(i, push){
+    i = Math.max(0, Math.min(total - 1, i));
+    if (i === cur) return;
+    if (cur >= 0) slides[cur].classList.remove('is-active');
+    cur = i;
+    slides[cur].classList.add('is-active');
+    slides.forEach(function(s, k){ s.setAttribute('aria-hidden', k === cur ? 'false' : 'true'); s.inert = k !== cur; });
+    count.textContent = (cur + 1) + ' / ' + total;
+    progress.style.width = ((cur + 1) / total * 100) + '%';
+    prev.disabled = cur === 0;
+    next.disabled = cur === total - 1;
+    if (push !== false) history.replaceState(null, '', '#' + (cur + 1));
+    syncVideos();
+  }
+
+  function fromHash(){
+    var n = parseInt(location.hash.slice(1), 10);
+    return isNaN(n) ? 0 : n - 1;
+  }
+
+  prev.addEventListener('click', function(){ go(cur - 1); });
+  next.addEventListener('click', function(){ go(cur + 1); });
+  document.getElementById('full').addEventListener('click', function(){
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey)){ e.preventDefault(); go(cur + 1); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey)){ e.preventDefault(); go(cur - 1); }
+    else if (k === 'Home'){ go(0); }
+    else if (k === 'End'){ go(total - 1); }
+    else if (k === 'f' || k === 'F'){ document.getElementById('full').click(); }
+  });
+
+  // swipe on touch screens
+  var sx = null, sy = null;
+  document.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  document.addEventListener('touchend', function(e){
+    if (sx === null) return;
+    var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(cur + (dx < 0 ? 1 : -1));
+    sx = sy = null;
+  }, { passive: true });
+
+  // a click on empty space moves forward (links and buttons keep working)
+  document.querySelector('.deck').addEventListener('click', function(e){
+    if (e.target.closest('a, button, video')) return;
+    var r = stage.getBoundingClientRect();
+    go(cur + (e.clientX < r.left + r.width * 0.3 ? -1 : 1));
+  });
+
+  // controls fade out while the mouse rests
+  var idleT;
+  function wake(){
+    controls.classList.remove('idle');
+    clearTimeout(idleT);
+    idleT = setTimeout(function(){ controls.classList.add('idle'); }, 2500);
+  }
+  document.addEventListener('mousemove', wake);
+  document.addEventListener('keydown', wake);
+  controls.addEventListener('mouseenter', function(){ clearTimeout(idleT); });
+
+  // analytics: same events as the rest of the site
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('[data-track]');
+    if (a && window.gtag) gtag('event', a.dataset.track, { place: a.dataset.place || '' });
+  });
+
+  window.addEventListener('resize', fit);
+  window.addEventListener('hashchange', function(){ go(fromHash(), false); });
+  fit();
+  go(fromHash(), false);
+  wake();
+})();
+</script>
+</body>
+</html>
