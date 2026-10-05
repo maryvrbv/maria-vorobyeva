@@ -1028,14 +1028,16 @@ img{ max-width: 100%; height: auto; display: block; }
 /* company logo next to the case tag: a small rounded tile exactly as
    tall as the tag (tag line-height fixed so both are 32px) */
 .case-head{ display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; }
-.case-head .case-tag{ line-height: 20px; }
-.case-logo{
-  width: 32px; height: 32px; flex: none;
-  border-radius: 10px;
-  transition: transform .3s var(--ease-out);
+.case-head .case-tag{
+  box-sizing: border-box; height: 32px;
+  display: inline-flex; align-items: center;
+  padding: 0 12px; line-height: 1; white-space: nowrap;
 }
-.case-card:hover .case-logo{ transform: rotate(-6deg) scale(1.06); }
-@media (prefers-reduced-motion: reduce){ .case-card:hover .case-logo{ transform: none; } }
+.case-logo{
+  width: 32px; height: 32px; flex: none; object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
 
 /* the toast never runs off a narrow screen */
 .copy-toast{ max-width: calc(100vw - 24px); white-space: normal; }
