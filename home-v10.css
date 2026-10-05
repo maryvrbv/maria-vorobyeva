@@ -887,3 +887,73 @@ img{ max-width: 100%; height: auto; display: block; }
     justify-self: center;
   }
 }
+
+/* ---------- fonts: Cyrillic and an accent face ----------
+   Bricolage Grotesque and Figtree have no Cyrillic, so Russian text falls
+   back to Onest (a warm Cyrillic grotesque) glyph by glyph. The hero
+   greeting is set in Unbounded, a rounded wide display face that suits
+   the chrome objects; it covers Latin and Cyrillic */
+:root{
+  --font-display: 'Bricolage Grotesque', 'Onest', 'Figtree', system-ui, sans-serif;
+  --font-body: 'Figtree', 'Onest', -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-accent: 'Unbounded', 'Onest', system-ui, sans-serif;
+}
+.hero-glow .hero-copy .hero-title{
+  font-family: var(--font-accent);
+  font-weight: 600;
+  font-variation-settings: normal;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+@media (min-width: 901px){
+  .hero-glow .hero-copy .hero-title{ font-size: clamp(36px, 3.7vw, 68px); white-space: nowrap; }
+}
+@media (max-width: 900px){
+  .hero-glow .hero-copy .hero-title{ font-size: clamp(30px, 9vw, 52px); white-space: normal; }
+}
+
+/* ---------- contact: centred, balanced ---------- */
+.contact-in{ align-items: center; text-align: center; gap: 28px; padding-block: clamp(40px, 6vw, 80px); }
+.contact-head{ flex-direction: column; align-items: center; gap: 16px; }
+.contact-head .contact-sub{ margin: 10px auto 0; max-width: 44ch; }
+.contact-title{ font-size: clamp(30px, 3.4vw, 48px); }
+.contact-row{ flex-direction: column; justify-content: center; gap: 22px; }
+.contact-row .hero-actions{ justify-content: center; }
+@media (max-width: 560px){ .contact-head{ align-items: center; } }
+
+/* ---------- fonts: Cyrillic and an accent face ----------
+   Bricolage Grotesque and Figtree have no Cyrillic, so Russian text falls
+   back to Onest (a warm Cyrillic grotesque) glyph by glyph. The hero
+   greeting is set in Unbounded, a rounded wide display face that suits
+   the chrome objects; it covers Latin and Cyrillic */
+:root{
+  --font-display: 'Bricolage Grotesque', 'Onest', 'Figtree', system-ui, sans-serif;
+  --font-body: 'Figtree', 'Onest', -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-accent: 'Unbounded', 'Onest', system-ui, sans-serif;
+}
+.hero-glow .hero-copy .hero-title{
+  font-family: var(--font-accent);
+  font-weight: 600;
+  font-variation-settings: normal;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+@media (min-width: 901px){
+  .hero-glow .hero-copy .hero-title{ font-size: clamp(36px, 3.7vw, 68px); white-space: nowrap; }
+}
+@media (max-width: 900px){
+  .hero-glow .hero-copy .hero-title{ font-size: clamp(30px, 9vw, 52px); white-space: normal; }
+}
+
+/* ---------- contact: centred, balanced ---------- */
+.contact-in{ align-items: center; text-align: center; gap: 28px; padding-block: clamp(40px, 6vw, 80px); }
+.contact-head{ flex-direction: column; align-items: center; gap: 16px; }
+.contact-head .contact-sub{ margin: 10px auto 0; max-width: 44ch; }
+.contact-title{ font-size: clamp(30px, 3.4vw, 48px); }
+.contact-row{ flex-direction: column; justify-content: center; gap: 22px; }
+.contact-row .hero-actions{ justify-content: center; }
+@media (max-width: 560px){ .contact-head{ align-items: center; } }
+@media (max-width: 900px){
+  /* keep the greeting on one line on phones too */
+  .hero-glow .hero-copy .hero-title{ white-space: nowrap; font-size: clamp(24px, calc((100vw - 88px) / 10.6), 52px); }
+}
