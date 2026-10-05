@@ -546,7 +546,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .metric .num-big{ font-weight: 700; font-size: 24px; letter-spacing: -0.01em; color: var(--ink); }
 .metric .lbl{ font-size: 12px; color: var(--ink-soft); }
 /* secondary detail under a metric (e.g. the raw before → after values) */
-.metric .sub{ margin-top: 4px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.metric .sub{ font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
 .quote-block{
   border-left: 2px solid var(--accent);
