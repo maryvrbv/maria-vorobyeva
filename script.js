@@ -778,7 +778,11 @@ function initEmailCopy() {
   initLangSwitchDots();
   initClickTracking();
   initEmailCopy();
-  document.querySelectorAll('.mesh-heading').forEach(initMeshHeading);
+  // the heading is rasterised into a texture, so wait for the web fonts
+  // (Manrope) — otherwise the fallback face gets baked in
+  const initHeadings = () => document.querySelectorAll('.mesh-heading').forEach(initMeshHeading);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(initHeadings, initHeadings);
+  else initHeadings();
 
   // homepage hero: spans the whole page top (behind the nav) down through
   // the hero buttons, with a long fade tail

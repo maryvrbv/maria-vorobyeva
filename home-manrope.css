@@ -1,7 +1,7 @@
 /* ==========================================================================
-   Font trial for the homepage (index-manrope.html, index-en-manrope.html):
-   Manrope for headings and figures, Inter for everything else. Loaded
-   after home-v10.css. Manrope is a geometric grotesque with Cyrillic and
+   Homepage typography (index.html, index-en.html and the Manrope trial
+   pages): Manrope for headings and figures, Inter for everything else.
+   Loaded after home-v10.css; case pages use fonts-manrope.css. Manrope is a geometric grotesque with Cyrillic and
    a large x-height; heavy weights hold up well on the gradient
    ========================================================================== */
 :root{
