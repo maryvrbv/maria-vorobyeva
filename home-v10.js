@@ -167,6 +167,19 @@
     glow: 0.35,      // pointer light
     colors: ['#baa3ff', '#6e7df0', '#ffbab3', '#26195c'],
   };
+  // the values above are tuned for a ~1300px wide panel. On narrower
+  // panels the ribs would bunch up (a fixed count across the width) and
+  // shimmer, so the rib density follows the width in pixels, and ribs and
+  // grain fade down toward phone widths; blobs get slightly bigger there
+  const fitGlow = (w) => {
+    const t = Math.min(1, Math.max(0, (w - 360) / (1300 - 360)));
+    return {
+      scale: GLOW.scale * (0.82 + 0.18 * t),
+      ribs: GLOW.ribs * (0.25 + 0.75 * t),
+      ribFreq: GLOW.ribFreq * Math.min(1, w / 1300),
+      grain: GLOW.grain * (0.55 + 0.45 * t),
+    };
+  };
   const FRAG = `
 precision mediump float;
 uniform vec2 uRes; uniform float uTime; uniform vec3 uA; uniform vec3 uB; uniform vec3 uC; uniform vec3 uD; uniform float uSeed;
@@ -237,9 +250,10 @@ void main(){
       mx += (tx - mx) * 0.06; my += (ty - my) * 0.06; on += (tOn - on) * 0.05;
       gl.uniform1f(u('uTime'), clock);
       ['uA', 'uB', 'uC', 'uD'].forEach((k, i) => gl.uniform3fv(u(k), hex(GLOW.colors[i])));
-      gl.uniform1f(u('uScale'), GLOW.scale); gl.uniform1f(u('uWarp'), GLOW.warp);
-      gl.uniform1f(u('uRibs'), GLOW.ribs); gl.uniform1f(u('uRibFreq'), GLOW.ribFreq);
-      gl.uniform1f(u('uGrain'), GLOW.grain); gl.uniform1f(u('uGlow'), GLOW.glow * on);
+      const fit = fitGlow(canvas.clientWidth);
+      gl.uniform1f(u('uScale'), fit.scale); gl.uniform1f(u('uWarp'), GLOW.warp);
+      gl.uniform1f(u('uRibs'), fit.ribs); gl.uniform1f(u('uRibFreq'), fit.ribFreq);
+      gl.uniform1f(u('uGrain'), fit.grain); gl.uniform1f(u('uGlow'), GLOW.glow * on);
       gl.uniform2f(u('uMouse'), mx, my);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
