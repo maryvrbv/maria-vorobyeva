@@ -169,21 +169,25 @@
   };
   // the values above are tuned for a ~1300px wide panel. On narrower
   // panels the ribs would bunch up (a fixed count across the width) and
-  // shimmer, so the rib density follows the width in pixels, and ribs and
-  // grain fade down toward phone widths; blobs get slightly bigger there
+  // shimmer, so the rib density follows the width in pixels and ribs fade
+  // out; on phones (under 700px) there are no ribs at all and the grain is
+  // faint and still — re-rolled every frame it reads as flicker on a small
+  // high-density screen. Blobs get slightly bigger toward phone widths
   const fitGlow = (w) => {
-    const t = Math.min(1, Math.max(0, (w - 360) / (1300 - 360)));
+    const t = Math.min(1, Math.max(0, (w - 700) / (1300 - 700)));
+    const phone = w < 700;
     return {
-      scale: GLOW.scale * (0.82 + 0.18 * t),
-      ribs: GLOW.ribs * (0.25 + 0.75 * t),
+      scale: GLOW.scale * (phone ? 0.82 : 0.9 + 0.1 * t),
+      ribs: phone ? 0 : GLOW.ribs * (0.4 + 0.6 * t),
       ribFreq: GLOW.ribFreq * Math.min(1, w / 1300),
-      grain: GLOW.grain * (0.55 + 0.45 * t),
+      grain: GLOW.grain * (phone ? 0.3 : 0.6 + 0.4 * t),
+      grainAnim: phone ? 0 : 1,
     };
   };
   const FRAG = `
 precision mediump float;
 uniform vec2 uRes; uniform float uTime; uniform vec3 uA; uniform vec3 uB; uniform vec3 uC; uniform vec3 uD; uniform float uSeed;
-uniform float uScale; uniform float uWarp; uniform float uRibs; uniform float uRibFreq; uniform float uGrain; uniform float uGlow;
+uniform float uScale; uniform float uWarp; uniform float uRibs; uniform float uRibFreq; uniform float uGrain; uniform float uGlow; uniform float uGrainAnim;
 uniform vec2 uMouse;
 float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float n(vec2 p){ vec2 i = floor(p), f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);
@@ -203,7 +207,7 @@ void main(){
   col += 0.025 * uRibs * sin(uv.x * uRibFreq + f * 6.0);
   vec2 m = (uv - uMouse) * vec2(asp, 1.0);
   col += uGlow * exp(-dot(m, m) * 5.0) * vec3(1.0, 0.93, 0.96) * 0.3;
-  col += (h(gl_FragCoord.xy + fract(uTime * 17.0)) - 0.5) * uGrain;
+  col += (h(gl_FragCoord.xy + fract(uTime * 17.0) * uGrainAnim) - 0.5) * uGrain;
   gl_FragColor = vec4(col, 1.0);
 }`;
   const VERT = 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }';
@@ -253,7 +257,7 @@ void main(){
       const fit = fitGlow(canvas.clientWidth);
       gl.uniform1f(u('uScale'), fit.scale); gl.uniform1f(u('uWarp'), GLOW.warp);
       gl.uniform1f(u('uRibs'), fit.ribs); gl.uniform1f(u('uRibFreq'), fit.ribFreq);
-      gl.uniform1f(u('uGrain'), fit.grain); gl.uniform1f(u('uGlow'), GLOW.glow * on);
+      gl.uniform1f(u('uGrain'), fit.grain); gl.uniform1f(u('uGrainAnim'), fit.grainAnim); gl.uniform1f(u('uGlow'), GLOW.glow * on);
       gl.uniform2f(u('uMouse'), mx, my);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
