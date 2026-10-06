@@ -1049,9 +1049,3 @@ img{ max-width: 100%; height: auto; display: block; }
   .nav-reveal{ display: none; }
   .stack-item{ top: calc(12px + var(--i, 0) * 10px); }
 }
-
-/* footer carries a third link (presentation): let it wrap on phones */
-@media (max-width: 700px){
-  .footer{ flex-wrap: wrap; row-gap: 4px; }
-  .footer > span{ width: 100%; }
-}
