@@ -11,7 +11,7 @@
 // - Microsoft Clarity session recordings, once CLARITY_ID is filled in
 (function () {
   var GA_ID = 'G-FHZS0V3GJE';
-  var CLARITY_ID = '';
+  var CLARITY_ID = 'yx22ghlbmz';
   var off = window['ga-disable-' + GA_ID] === true;
 
   function store(key, value) {
