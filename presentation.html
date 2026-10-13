@@ -8,9 +8,10 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   // owner opt-out: open the site once with ?notrack to stop counting your own
-  // visits in this browser (?track undoes it); preview deploys never count
+  // visits in this browser (?track undoes it); only the live site and its
+  // gitverse mirror count, previews and local copies never do
   (function(){
-    var off = !/(^|\.)marydis\.com$/.test(location.hostname);
+    var off = !/(^|\.)marydis\.com$|^mariadis\.gitverse\.site$/.test(location.hostname);
     try {
       var q = location.search;
       if (/[?&]notrack\b/.test(q)) localStorage.setItem('noTrack', '1');
