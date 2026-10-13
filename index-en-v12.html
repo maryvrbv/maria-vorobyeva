@@ -8,6 +8,19 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
+  // owner opt-out: open the site once with ?notrack to stop counting your own
+  // visits in this browser (?track undoes it); preview deploys never count
+  (function(){
+    var off = !/(^|\.)marydis\.com$/.test(location.hostname);
+    try {
+      var q = location.search;
+      if (/[?&]notrack\b/.test(q)) localStorage.setItem('noTrack', '1');
+      if (/[?&]track\b/.test(q)) localStorage.removeItem('noTrack');
+      if (/[?&](no)?track\b/.test(q)) history.replaceState(null, '', location.pathname + location.hash);
+      if (localStorage.getItem('noTrack') === '1') off = true;
+    } catch (e) {}
+    if (off) window['ga-disable-G-FHZS0V3GJE'] = true;
+  })();
   gtag('config', 'G-FHZS0V3GJE');
 </script>
 <meta charset="UTF-8">
