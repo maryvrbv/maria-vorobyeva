@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FHZS0V3GJE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // owner opt-out: open the site once with ?notrack to stop counting your own
+  // visits in this browser (?track undoes it); only the live site and its
+  // gitverse mirror count, previews and local copies never do
+  (function(){
+    var off = !/(^|\.)marydis\.com$|^mariadis\.gitverse\.site$/.test(location.hostname);
+    try {
+      var q = location.search;
+      if (/[?&]notrack\b/.test(q)) localStorage.setItem('noTrack', '1');
+      if (/[?&]track\b/.test(q)) localStorage.removeItem('noTrack');
+      if (/[?&](no)?track\b/.test(q)) history.replaceState(null, '', location.pathname + location.hash);
+      if (localStorage.getItem('noTrack') === '1') off = true;
+    } catch (e) {}
+    if (off) window['ga-disable-G-FHZS0V3GJE'] = true;
+  })();
+</script>
+<!-- sends the config hit, plus visitor id, link tags, scroll depth, read time, Clarity -->
+<script src="/analytics.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>404 — Маша Воробьева</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ==========================================================================
+     404 (RU/EN in one page). Work from the cases floats around the number in
+     a shallow 3D scene that leans toward the pointer; two chrome objects (the
+     hero's raymarched studio chrome) rock slowly behind the text. Language:
+     ?lang, then the address (-en pages), then the browser. Every path is
+     absolute because this page is served at whatever URL was missing.
+     ========================================================================== */
+  :root{ --bg:#000; --ink:#f2f2f0; --soft:#a3a39e; --line:#262624; }
+  *{ box-sizing:border-box; }
+  html, body{ height:100%; }
+  body{ margin:0; overflow:hidden; background:var(--bg); color:var(--ink);
+    font-family:'Inter', system-ui, -apple-system, sans-serif; -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; }
+
+  .scene{ position:fixed; inset:0; perspective:1400px; overflow:hidden; }
+  .stage{ position:absolute; inset:0; transform-style:preserve-3d;
+    transform:rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg)); transition:transform .6s cubic-bezier(.22,1,.36,1); }
+  .work{ position:absolute; left:var(--x); top:var(--y); width:var(--w); max-width:340px; min-width:90px;
+    transform:translate(-50%,-50%) translateZ(var(--z)) rotate(var(--r));
+    border-radius:12px; overflow:hidden; display:block;
+    box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 30px 60px rgba(0,0,0,.6);
+    opacity:0; animation:arrive 1.1s cubic-bezier(.22,1,.36,1) forwards, bob 7s ease-in-out infinite;
+    animation-delay:calc(var(--d) * .25), var(--d);
+    transition:filter .3s ease, box-shadow .3s ease; filter:brightness(.72) saturate(.85); }
+  .work img{ display:block; width:100%; height:auto; }
+  a.work:hover{ filter:none; box-shadow:0 0 0 1px rgba(255,255,255,.25), 0 30px 70px rgba(0,0,0,.7); }
+  @keyframes arrive{ from{ opacity:0; margin-top:24px; } to{ opacity:1; margin-top:0; } }
+  @keyframes bob{ 0%,100%{ translate:0 0; } 50%{ translate:0 -10px; } }
+
+  .chrome{ position:absolute; pointer-events:none; }
+  .chrome.q{ width:min(30vmin, 260px); height:min(30vmin, 260px); left:calc(50% - min(52vmin, 470px)); top:calc(50% - min(36vmin, 320px)); }
+  .chrome.star{ width:min(22vmin, 190px); height:min(22vmin, 190px); left:calc(50% + min(16vmin, 170px)); top:calc(50% + min(5vmin, 40px)); }
+
+  .center{ position:fixed; inset:0; z-index:1; display:grid; place-items:center; pointer-events:none; }
+  .copy{ text-align:center; pointer-events:auto; padding:0 16px; }
+  .num{ margin:0; font:800 clamp(120px, 19vw, 260px)/.9 'Manrope', 'Inter', sans-serif; letter-spacing:-.05em;
+    background:linear-gradient(180deg, #ffffff 0%, #d9dadf 38%, #8d8f98 52%, #e9eaee 64%, #a7a9b1 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 18px 40px rgba(0,0,0,.65)); }
+  .msg{ margin:18px 0 28px; font-size:clamp(17px, 1.6vw, 20px); color:var(--soft); }
+  .home{ display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+    background:#f2f2f0; color:#0b0b0f; font:600 16px/1 'Inter', sans-serif; padding:15px 26px; border-radius:999px;
+    box-shadow:0 16px 40px rgba(0,0,0,.6); transition:transform .2s ease, background .2s ease; }
+  .home:hover{ background:#fff; transform:translateY(-1px); }
+  .home:focus-visible, .lang:focus-visible{ outline:2px solid #b28dff; outline-offset:3px; }
+  .lang{ position:fixed; top:20px; right:24px; z-index:2; font:500 14px/1 'Inter', sans-serif; color:var(--soft);
+    text-decoration:none; padding:10px 12px; border-radius:999px; }
+  .lang:hover{ color:var(--ink); background:rgba(255,255,255,.06); }
+  .brand{ position:fixed; top:20px; left:24px; z-index:2; font:600 15px/1 'Inter', sans-serif; text-decoration:none; padding:10px 0; }
+
+  @media (max-width: 700px){
+    .work{ min-width:72px; }
+    .work.small, .work.side{ display:none; }
+    .chrome.q{ left:calc(50% - 44vmin); top:calc(50% - 62vmin); width:34vmin; height:34vmin; }
+    .chrome.star{ left:calc(50% + 18vmin); top:calc(50% + 22vmin); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .work{ animation:none; opacity:1; }
+    .stage{ transition:none; }
+  }
+</style>
+</head>
+<body>
+<a class="brand" href="/" data-home>Маша Воробьева</a>
+<a class="lang" href="?lang=en" data-lang-switch>EN</a>
+<div class="scene" aria-hidden="true">
+  <div class="stage" id="stage">
+      <a class="work" href="/case-alfa.html" data-case="case-alfa" style="--x:14%;--y:18%;--w:17vw;--z:60px;--r:-4deg;--d:0.0s" aria-hidden="true" tabindex="-1"><img src="/images/home/cover-alfa.webp" data-ru="/images/home/cover-alfa.webp" data-en="/images/home/cover-alfa-en.webp" alt="" loading="lazy"></a>
+      <a class="work" href="/case-alfa.html" data-case="case-alfa" style="--x:30%;--y:9%;--w:11vw;--z:-80px;--r:3deg;--d:0.7s" aria-hidden="true" tabindex="-1"><img src="/images/alfa/profile-purchases.webp" data-ru="/images/alfa/profile-purchases.webp" data-en="/images/alfa/profile-purchases-en.webp" alt="" loading="lazy"></a>
+      <div class="work side" style="--x:10%;--y:48%;--w:13vw;--z:-40px;--r:2deg;--d:1.4s" aria-hidden="true" tabindex="-1"><img src="/images/home/exp/screen-sber.webp" data-ru="/images/home/exp/screen-sber.webp" data-en="/images/home/exp/screen-sber.webp" alt="" loading="lazy"></div>
+      <a class="work" href="/case-megafon.html" data-case="case-megafon" style="--x:20%;--y:76%;--w:14vw;--z:90px;--r:-3deg;--d:2.1s" aria-hidden="true" tabindex="-1"><img src="/images/megafon/card-redesign.webp" data-ru="/images/megafon/card-redesign.webp" data-en="/images/megafon/card-redesign-en.webp" alt="" loading="lazy"></a>
+      <a class="work small" href="/case-loyalty.html" data-case="case-loyalty" style="--x:35%;--y:88%;--w:9vw;--z:-60px;--r:4deg;--d:2.8s" aria-hidden="true" tabindex="-1"><img src="/images/loyalty/screens-2.webp" data-ru="/images/loyalty/screens-2.webp" data-en="/images/loyalty/screens-2.webp" alt="" loading="lazy"></a>
+      <a class="work" href="/case-megafon.html" data-case="case-megafon" style="--x:80%;--y:16%;--w:15vw;--z:40px;--r:3deg;--d:3.5s" aria-hidden="true" tabindex="-1"><img src="/images/home/cover-megafon.webp" data-ru="/images/home/cover-megafon.webp" data-en="/images/home/cover-megafon-en.webp" alt="" loading="lazy"></a>
+      <a class="work small" href="/case-megafon.html" data-case="case-megafon" style="--x:66%;--y:8%;--w:9vw;--z:-90px;--r:-2deg;--d:4.2s" aria-hidden="true" tabindex="-1"><img src="/images/megafon/megasily.webp" data-ru="/images/megafon/megasily.webp" data-en="/images/megafon/megasily-en.webp" alt="" loading="lazy"></a>
+      <a class="work side" href="/case-loyalty.html" data-case="case-loyalty" style="--x:86%;--y:55%;--w:17vw;--z:110px;--r:-3deg;--d:4.9s" aria-hidden="true" tabindex="-1"><img src="/images/home/cover-loyalty-ru.webp" data-ru="/images/home/cover-loyalty-ru.webp" data-en="/images/home/cover-loyalty-en.webp" alt="" loading="lazy"></a>
+      <div class="work" style="--x:70%;--y:86%;--w:12vw;--z:-30px;--r:2deg;--d:5.6s" aria-hidden="true" tabindex="-1"><img src="/images/home/exp/screen-medacoustica.webp" data-ru="/images/home/exp/screen-medacoustica.webp" data-en="/images/home/exp/screen-medacoustica.webp" alt="" loading="lazy"></div>
+      <a class="work small" href="/case-alfa.html" data-case="case-alfa" style="--x:90%;--y:86%;--w:8vw;--z:-70px;--r:-4deg;--d:6.3s" aria-hidden="true" tabindex="-1"><img src="/images/alfa/details.webp" data-ru="/images/alfa/details.webp" data-en="/images/alfa/details-en.webp" alt="" loading="lazy"></a>
+  </div>
+  <canvas class="chrome q" data-chrome="q"></canvas>
+  <canvas class="chrome star" data-chrome="star"></canvas>
+</div>
+<main class="center">
+  <div class="copy">
+    <h1 class="num">404</h1>
+    <p class="msg" data-t-ru="Кажется, такой страницы нет" data-t-en="Looks like there’s nothing here">Кажется, такой страницы нет</p>
+    <a class="home" href="/" data-home data-t-ru="На главную" data-t-en="Back home">На главную</a>
+  </div>
+</main>
+<script>
+(function(){
+  // ---- language: ?lang= wins, then an -en address, then the browser ----
+  var q = new URLSearchParams(location.search).get('lang');
+  var lang = q === 'en' || q === 'ru' ? q
+    : /-en(\.html)?\/?$|\/en(\/|$)/.test(location.pathname) ? 'en'
+    : (navigator.language || 'ru').toLowerCase().indexOf('ru') === 0 ? 'ru' : 'en';
+  var en = lang === 'en';
+  document.documentElement.lang = lang;
+  document.title = en ? '404 — Maria Vorobyeva' : '404 — Маша Воробьева';
+  document.querySelectorAll('[data-t-ru]').forEach(function(el){ el.textContent = el.getAttribute(en ? 'data-t-en' : 'data-t-ru'); });
+  document.querySelectorAll('[data-home]').forEach(function(a){ a.href = en ? '/index-en.html' : '/'; });
+  document.querySelector('.brand').textContent = en ? 'Maria Vorobyeva' : 'Маша Воробьева';
+  var sw = document.querySelector('[data-lang-switch]');
+  sw.textContent = en ? 'RU' : 'EN'; sw.href = '?lang=' + (en ? 'ru' : 'en');
+  sw.setAttribute('aria-label', en ? 'Переключить на русский' : 'Switch to English');
+  document.querySelectorAll('.work img').forEach(function(i){ i.src = i.getAttribute(en ? 'data-en' : 'data-ru'); });
+  document.querySelectorAll('a.work[data-case]').forEach(function(a){ a.href = '/' + a.dataset.case + (en ? '-en' : '') + '.html'; });
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- the scene leans a little toward the pointer ----
+  var stage = document.getElementById('stage');
+  if (!reduce) window.addEventListener('pointermove', function(e){
+    var x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+    stage.style.setProperty('--rx', (x * 8).toFixed(2) + 'deg');
+    stage.style.setProperty('--ry', (-y * 6).toFixed(2) + 'deg');
+  });
+
+  // ---- chrome objects: same raymarched studio chrome as the hero rigs ----
+  var HEAD = "\nprecision highp float;\nuniform vec2 uRes; uniform float uRotY; uniform float uTiltX; uniform float uRough;\nuniform float uObj; uniform float uSpin; uniform float uYaw; uniform float uPitch; uniform float uTime;\nuniform float uTurn;   // eased scroll turn, for rigs whose parts spin on their own\nvec3 rotX(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x, v.y*c-v.z*s, v.y*s+v.z*c); }\nvec3 rotY(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c+v.z*s, v.y, -v.x*s+v.z*c); }\nvec3 rotZ(vec3 v, float a){ float c=cos(a),s=sin(a); return vec3(v.x*c-v.y*s, v.x*s+v.y*c, v.z); }\n// view <-> object: in-plane angle, spin about the object's own y axis,\n// then the lean toward the viewer\nvec3 toObj(vec3 v){ return rotY(rotZ(rotX(rotY(v, -uYaw), -uPitch), -uObj), -uSpin); }\nvec3 toView(vec3 v){ return rotY(rotX(rotZ(rotY(v, uSpin), uObj), uPitch), uYaw); }\n// 2D distance d2 extruded to half-depth h, every edge rounded by r\nfloat sdSlab(float d2, float z, float h, float r){\n  vec2 w = vec2(d2 + r, abs(z) - h + r);\n  return min(max(w.x, w.y), 0.0) + length(max(w, 0.0)) - r;\n}\nfloat sdSeg(vec2 p, vec2 a, vec2 b){ vec2 pa=p-a, ba=b-a; float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0); return length(pa-ba*h); }\nvec3 env(vec3 R, float rough){\n  float soft = mix(0.05, 0.55, rough), softK = mix(0.015, 0.25, rough);\n  vec3 c = vec3(0.02,0.021,0.024) + vec3(0.014,0.015,0.019)*clamp(R.y*0.5+0.5,0.0,1.0);\n  c += smoothstep(0.55-soft,0.55+soft, dot(R, normalize(vec3(-0.55,0.65,0.6)))) * vec3(1.0,0.97,0.9)*1.15;\n  c += smoothstep(0.82-softK,0.82+softK, dot(R, normalize(vec3(0.75,-0.35,0.45)))) * vec3(0.85,0.9,1.0)*1.4;\n  c += smoothstep(0.5-soft,0.5+soft, dot(R, normalize(vec3(0.2,-0.7,-0.6)))) * vec3(0.35,0.36,0.4)*0.35;\n  // broad softbox behind the camera: faces turned toward the viewer stay\n  // bright, so the darker side walls read as thickness\n  c += smoothstep(0.15, 1.0, dot(R, normalize(vec3(0.15,0.25,1.0)))) * vec3(0.95,0.95,0.97)*0.55 + 0.07;\n  return c;\n}\n// chrome with an optional enamel (diffuse) coat, lit by the studio\nvec3 metal(vec3 base, vec3 nv, vec3 R, float enamel){\n  vec3 spec = env(R, uRough) + pow(1.0 - abs(nv.z), mix(4.5,2.0,uRough)) * base * 0.5;\n  return mix(spec * base, base * (0.60 + 0.28 * abs(nv.z)) + spec * 0.45, enamel);\n}\n";
+  var MAIN = "\nvoid main(){\n  vec2 p = (gl_FragCoord.xy*2.0 - uRes) / min(uRes.x, uRes.y) * 0.92;\n  vec3 ro = toObj(vec3(p, 2.0)), rd = toObj(vec3(0.0, 0.0, -1.0));\n  float b = dot(ro, rd), disc = b*b - dot(ro, ro) + 1.0;\n  if (disc < 0.0) { gl_FragColor = vec4(0.0); return; }\n  float t = max(-b - sqrt(disc), 0.0), tEnd = -b + sqrt(disc);\n  float dmin = 1e9, tmin = t; bool hit = false;\n  for (int i = 0; i < 96; i++){\n    float d = map(ro + rd*t);\n    if (d < dmin){ dmin = d; tmin = t; }\n    if (d < 0.0006){ hit = true; break; }\n    t += d * STEP;\n    if (t > tEnd) break;\n  }\n  // soft silhouette from the ray's closest approach\n  float px = 1.7 / min(uRes.x, uRes.y);\n  float cov = hit ? 1.0 : 1.0 - smoothstep(0.0, px, dmin);\n  if (cov <= 0.0) { gl_FragColor = vec4(0.0); return; }\n  vec3 q = ro + rd*tmin;\n  vec2 e = vec2(0.0015, -0.0015);\n  vec3 n = normalize(e.xyy*map(q+e.xyy) + e.yyx*map(q+e.yyx) + e.yxy*map(q+e.yxy) + e.xxx*map(q+e.xxx));\n  vec3 nv = toView(n);\n  vec3 R = rotY(rotX(reflect(vec3(0.0,0.0,-1.0), nv), uTiltX), uRotY);\n  vec3 col = shade(q, nv, R);\n  col += (fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898,78.233)))*43758.5453) - 0.5) / 255.0;\n  gl_FragColor = vec4(col*cov, cov);\n}";
+  var BODIES = { q: '\n#define STEP 0.85\nfloat sdArc(vec2 p, vec2 sc, float ra, float rb){\n  p.x = abs(p.x);\n  return ((sc.y*p.x > sc.x*p.y) ? length(p - sc*ra) : abs(length(p) - ra)) - rb;\n}\nconst float W = 0.078;\nfloat sdShape(vec2 p){\n  vec2 c = vec2(0.0, 0.19), a = p - c;\n  float r = radians(15.0);\n  a = vec2(a.x*cos(r) - a.y*sin(r), a.x*sin(r) + a.y*cos(r));\n  float hook = sdArc(a, vec2(sin(radians(125.0)), cos(radians(125.0))), 0.215, W);\n  vec2 e = c + 0.215 * vec2(cos(radians(-50.0)), sin(radians(-50.0)));\n  float neck = sdSeg(p, e, vec2(0.0, -0.08)) - W;\n  float stem = sdSeg(p, vec2(0.0, -0.08), vec2(0.0, -0.17)) - W;\n  float dot_ = length(p - vec2(0.0, -0.40)) - 0.088;\n  return min(min(hook, neck), min(stem, dot_));\n}\nfloat map(vec3 q){ return sdSlab(sdShape(q.xy), q.z, 0.075, 0.055); }\nvec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(vec3(0.93,0.94,0.96), nv, R, 0.0); }\n', star: '\n#define STEP 0.9\nfloat sdShape(vec2 p){\n  const float RT = 0.012; float L = 0.62 - RT * 1.6;\n  vec2 q = abs(p), b = q - vec2(L);\n  float box = length(max(b, 0.0)) + min(max(b.x, b.y), 0.0);\n  float cut = length(q - vec2(0.972 * L)) - 0.972 * L;\n  return max(box, -cut) - RT;\n}\nfloat map(vec3 q){ return sdSlab(sdShape(q.xy), q.z, 0.07, 0.025); }\nvec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(vec3(0.96,0.96,0.98), nv, R, 0.12); }\n' };
+  document.querySelectorAll('canvas[data-chrome]').forEach(function(c, k){
+    var gl = c.getContext('webgl', { antialias: true, premultipliedAlpha: true, alpha: true });
+    if (!gl) { c.remove(); return; }
+    var sh = function(t, s){ var o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; };
+    var prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a,0.0,1.0); }'));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, HEAD + BODIES[c.dataset.chrome] + MAIN));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { c.remove(); return; }
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    var U = function(n){ return gl.getUniformLocation(prog, n); };
+    gl.uniform1f(U('uRough'), 0.76); gl.uniform1f(U('uTiltX'), -0.17); gl.uniform1f(U('uYaw'), 0.0);
+    gl.uniform1f(U('uPitch'), 0.12); gl.uniform1f(U('uTurn'), 0.0);
+    gl.clearColor(0, 0, 0, 0);
+    var resize = function(){ var d = Math.min(devicePixelRatio || 1, 2); c.width = Math.round(c.clientWidth * d); c.height = Math.round(c.clientHeight * d); gl.viewport(0, 0, c.width, c.height); };
+    resize(); addEventListener('resize', resize);
+    var px = 0, py = 0, tx = 0, ty = 0, phase = k * 1.7;
+    addEventListener('pointermove', function(e){ tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; });
+    var draw = function(t){
+      px += (tx - px) * 0.06; py += (ty - py) * 0.06;
+      var a = t * 0.0011 + phase;
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(U('uRes'), c.width, c.height);
+      gl.uniform1f(U('uSpin'), (c.dataset.chrome === 'q' ? 0.5 : 0.7) * Math.sin(a));
+      gl.uniform1f(U('uObj'), ((c.dataset.chrome === 'q' ? -10 : 8) + 6 * Math.cos(a * 0.8)) * Math.PI / 180);
+      gl.uniform1f(U('uRotY'), 13 * Math.PI / 180 + px * 0.6);
+      gl.uniform1f(U('uTiltX'), -0.17 + py * 0.35);
+      gl.uniform1f(U('uTime'), t * 0.001);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (!reduce) requestAnimationFrame(draw);
+    };
+    requestAnimationFrame(draw);
+  });
+})();
+</script>
+</body>
+</html>
