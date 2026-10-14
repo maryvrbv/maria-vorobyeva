@@ -40,13 +40,14 @@
     history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
   }
 
-  var config = { client_id: visitorId };
+  // sent with every event of this tag, and repeated on the custom events below
+  var tagged = { visitor_id: visitorId, link_tag: linkTag || '(none)' };
+  var config = { client_id: visitorId, visitor_id: tagged.visitor_id, link_tag: tagged.link_tag };
   // a tagged landing also shows up as its own source in the standard reports
   if (fromUrl) {
     config.page_location = location.origin + location.pathname +
       '?utm_source=' + encodeURIComponent(fromUrl) + '&utm_medium=link&utm_campaign=' + encodeURIComponent(fromUrl);
   }
-  gtag('set', { visitor_id: visitorId, link_tag: linkTag || '(none)' });
   gtag('config', GA_ID, config);
 
   if (off) return;
@@ -61,7 +62,7 @@
       var m = marks[i];
       if (!sent[m] && seen >= (m === 100 ? 98 : m)) {
         sent[m] = true;
-        gtag('event', 'scroll_depth', { scroll_percent: m });
+        gtag('event', 'scroll_depth', { scroll_percent: m, visitor_id: tagged.visitor_id, link_tag: tagged.link_tag });
       }
     }
     if (sent[100]) window.removeEventListener('scroll', onScroll);
@@ -76,7 +77,7 @@
     if (document.visibilityState !== 'visible') return;
     seconds++;
     if (seconds === steps[0]) {
-      gtag('event', 'read_time', { read_seconds: steps.shift() });
+      gtag('event', 'read_time', { read_seconds: steps.shift(), visitor_id: tagged.visitor_id, link_tag: tagged.link_tag });
       if (!steps.length) clearInterval(timer);
     }
   }, 1000);
