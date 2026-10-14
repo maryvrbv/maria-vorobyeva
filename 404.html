@@ -90,9 +90,19 @@
 
   @media (max-width: 700px){
     .work{ min-width:72px; }
-    .work.small, .work.side{ display:none; }
-    .chrome.q{ left:calc(50% - 44vmin); top:calc(50% - 62vmin); width:34vmin; height:34vmin; }
-    .chrome.star{ left:calc(50% + 18vmin); top:calc(50% + 22vmin); }
+    /* phones: a composed layout of four big cards instead of the scatter,
+       two above the text and two below, objects tucked into the gaps */
+    .work{ display:none; }
+    /* --mt: share of the screen below the 64px header */
+    .work.m{ display:block; left:var(--mx); top:calc(64px + (100% - 64px) * var(--mt)); width:var(--mw); max-width:none; min-width:0;
+      transform:translate(-50%,-50%) translateZ(calc(var(--z) * .4)) rotate(var(--mr)); border-radius:14px; }
+    .chrome.q{ left:2vw; top:calc(50% - 215px); width:120px; height:120px; }
+    .chrome.star{ left:calc(50% + 95px); top:calc(50% + 110px); width:84px; height:84px; }
+  }
+  /* short phones (iPhone SE and the like): fewer, smaller pieces */
+  @media (max-width: 700px) and (max-height: 740px){
+    .chrome.q, .work.m.side{ display:none; }
+    .work.m{ width:calc(var(--mw) * .86); }
   }
   @media (prefers-reduced-motion: reduce){
     .work{ animation:none; opacity:1; }
@@ -105,14 +115,14 @@
 <a class="lang" href="?lang=en" data-lang-switch>EN</a>
 <div class="scene" aria-hidden="true">
   <div class="stage" id="stage">
-      <a class="work" href="/case-alfa.html" data-case="case-alfa" style="--x:14%;--y:18%;--w:17vw;--z:60px;--r:-4deg;--d:0.0s" aria-hidden="true" tabindex="-1"><img src="/images/home/cover-alfa.webp" data-ru="/images/home/cover-alfa.webp" data-en="/images/home/cover-alfa-en.webp" alt="" loading="lazy"></a>
+      <a class="work m" href="/case-alfa.html" data-case="case-alfa" style="--x:14%;--y:18%;--w:17vw;--z:60px;--r:-4deg;--d:0.0s;--mx:34%;--mt:.10;--mw:54vw;--mr:-6deg" aria-hidden="true" tabindex="-1"><img src="/images/home/cover-alfa.webp" data-ru="/images/home/cover-alfa.webp" data-en="/images/home/cover-alfa-en.webp" alt="" loading="lazy"></a>
       <a class="work" href="/case-alfa.html" data-case="case-alfa" style="--x:30%;--y:9%;--w:11vw;--z:-80px;--r:3deg;--d:0.7s" aria-hidden="true" tabindex="-1"><img src="/images/alfa/profile-purchases.webp" data-ru="/images/alfa/profile-purchases.webp" data-en="/images/alfa/profile-purchases-en.webp" alt="" loading="lazy"></a>
       <div class="work side" style="--x:10%;--y:48%;--w:13vw;--z:-40px;--r:2deg;--d:1.4s" aria-hidden="true" tabindex="-1"><img src="/images/home/exp/screen-sber.webp" data-ru="/images/home/exp/screen-sber.webp" data-en="/images/home/exp/screen-sber.webp" alt="" loading="lazy"></div>
-      <a class="work hero-card" href="/" data-home style="--x:20%;--y:76%;--w:16vw;--z:90px;--r:-3deg;--d:2.1s" aria-hidden="true" tabindex="-1"><img src="/images/home/hero-card.webp" data-ru="/images/home/hero-card.webp" data-en="/images/home/hero-card-en.webp" alt="" loading="lazy"></a>
+      <a class="work hero-card m" href="/" data-home style="--x:20%;--y:76%;--w:16vw;--z:90px;--r:-3deg;--d:2.1s;--mx:38%;--mt:.80;--mw:64vw;--mr:-4deg" aria-hidden="true" tabindex="-1"><img src="/images/home/hero-card.webp" data-ru="/images/home/hero-card.webp" data-en="/images/home/hero-card-en.webp" alt="" loading="lazy"></a>
       <a class="work small" href="/case-loyalty.html" data-case="case-loyalty" style="--x:35%;--y:88%;--w:9vw;--z:-60px;--r:4deg;--d:2.8s" aria-hidden="true" tabindex="-1"><img src="/images/loyalty/screens-2.webp" data-ru="/images/loyalty/screens-2.webp" data-en="/images/loyalty/screens-2.webp" alt="" loading="lazy"></a>
-      <a class="work" href="/case-megafon.html" data-case="case-megafon" style="--x:80%;--y:16%;--w:15vw;--z:40px;--r:3deg;--d:3.5s" aria-hidden="true" tabindex="-1"><img src="/images/home/cover-megafon.webp" data-ru="/images/home/cover-megafon.webp" data-en="/images/home/cover-megafon-en.webp" alt="" loading="lazy"></a>
+      <a class="work m" href="/case-megafon.html" data-case="case-megafon" style="--x:80%;--y:16%;--w:15vw;--z:40px;--r:3deg;--d:3.5s;--mx:73%;--mt:.22;--mw:44vw;--mr:5deg" aria-hidden="true" tabindex="-1"><img src="/images/home/cover-megafon.webp" data-ru="/images/home/cover-megafon.webp" data-en="/images/home/cover-megafon-en.webp" alt="" loading="lazy"></a>
       <a class="work small" href="/case-megafon.html" data-case="case-megafon" style="--x:66%;--y:8%;--w:9vw;--z:-90px;--r:-2deg;--d:4.2s" aria-hidden="true" tabindex="-1"><img src="/images/megafon/megasily.webp" data-ru="/images/megafon/megasily.webp" data-en="/images/megafon/megasily-en.webp" alt="" loading="lazy"></a>
-      <a class="work side" href="/case-loyalty.html" data-case="case-loyalty" style="--x:86%;--y:55%;--w:17vw;--z:110px;--r:-3deg;--d:4.9s" aria-hidden="true" tabindex="-1"><img src="/images/home/cover-loyalty-ru.webp" data-ru="/images/home/cover-loyalty-ru.webp" data-en="/images/home/cover-loyalty-en.webp" alt="" loading="lazy"></a>
+      <a class="work side m" href="/case-loyalty.html" data-case="case-loyalty" style="--x:86%;--y:55%;--w:17vw;--z:110px;--r:-3deg;--d:4.9s;--mx:80%;--mt:.93;--mw:40vw;--mr:6deg" aria-hidden="true" tabindex="-1"><img src="/images/home/cover-loyalty-ru.webp" data-ru="/images/home/cover-loyalty-ru.webp" data-en="/images/home/cover-loyalty-en.webp" alt="" loading="lazy"></a>
       <div class="work" style="--x:70%;--y:86%;--w:12vw;--z:-30px;--r:2deg;--d:5.6s" aria-hidden="true" tabindex="-1"><img src="/images/home/exp/screen-medacoustica.webp" data-ru="/images/home/exp/screen-medacoustica.webp" data-en="/images/home/exp/screen-medacoustica.webp" alt="" loading="lazy"></div>
       <a class="work small" href="/case-alfa.html" data-case="case-alfa" style="--x:90%;--y:86%;--w:8vw;--z:-70px;--r:-4deg;--d:6.3s" aria-hidden="true" tabindex="-1"><img src="/images/alfa/details.webp" data-ru="/images/alfa/details.webp" data-en="/images/alfa/details-en.webp" alt="" loading="lazy"></a>
   </div>
