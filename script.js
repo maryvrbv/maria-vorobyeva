@@ -702,12 +702,30 @@ void main() {
 // GA4 click tracking for CTA links (CV, email, socials, case cards) — one
 // delegated listener instead of a per-link handler, so links added later
 // just need the data-track/data-place attributes, no JS changes
+// navigation links shared by every case page, tracked by class so the
+// markup needs no data-track: [selector, event name, place from the link]
+const NAV_TRACKING = [
+  ['.lang-switch', 'lang_switch', (a) => 'to-' + (a.dataset.targetLang || '')],
+  ['.next-side', 'next_case', (a) => a.getAttribute('href').replace(/\.html.*$/, '')],
+  ['.btn-pill-secondary[href*="research"]', 'research_open', (a) => a.getAttribute('href').replace(/\.html.*$/, '')],
+  ['.back-link', 'back_click', (a) => a.getAttribute('href').replace(/\.html.*$/, '')],
+];
+
 function initClickTracking() {
   document.addEventListener('click', (e) => {
-    const el = e.target.closest('[data-track]');
-    if (!el || typeof gtag !== 'function') return;
-    gtag('event', el.dataset.track, {
-      link_place: el.dataset.place || '',
+    if (typeof gtag !== 'function') return;
+    let el = e.target.closest('[data-track]');
+    let name = el && el.dataset.track;
+    let place = el && el.dataset.place;
+    if (!el) {
+      const nav = NAV_TRACKING.find(([sel]) => e.target.closest(sel));
+      if (!nav) return;
+      el = e.target.closest(nav[0]);
+      name = nav[1];
+      place = nav[2](el);
+    }
+    gtag('event', name, {
+      link_place: place || '',
       page_lang: document.documentElement.lang || '',
       transport_type: 'beacon', // event still sends even if the click opens a new tab
     });

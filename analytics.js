@@ -42,7 +42,10 @@
 
   // sent with every event of this tag, and repeated on the custom events below
   var tagged = { visitor_id: visitorId, link_tag: linkTag || '(none)' };
-  var config = { client_id: visitorId, visitor_id: tagged.visitor_id, link_tag: tagged.link_tag };
+  var config = {
+    client_id: visitorId, visitor_id: tagged.visitor_id, link_tag: tagged.link_tag,
+    page_lang: document.documentElement.lang || ''
+  };
   // a tagged landing also shows up as its own source in the standard reports
   if (fromUrl) {
     config.page_location = location.origin + location.pathname +
