@@ -1,9 +1,8 @@
 /* ==========================================================================
-   Alternative EN homepage (index-en-v10.html).
-   Standalone: does not load styles.css, so the live homepage and case pages
-   are untouched. Same brand — black canvas, single violet accent — set in
-   Bricolage Grotesque (display) and Figtree (text) for a warmer, more
-   human voice.
+   Homepage (index.html, index-en.html).
+   Standalone: does not load styles.css, which serves the case pages. Black
+   canvas, single violet accent; fonts come from home-manrope.css (Manrope
+   headings, Inter text).
    Hero and case stack adapted from 21st.dev components
    ("Portfolio Hero", "Stacking Cards"), rewritten in plain CSS/JS.
    ========================================================================== */
