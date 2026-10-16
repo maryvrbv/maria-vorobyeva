@@ -971,13 +971,13 @@ img{ max-width: 100%; height: auto; display: block; }
 }
 .photo-orbit .profile-photo{ width: 64%; margin: 0; }
 .profile-card .photo-orbit canvas{ position: absolute; z-index: 2; aspect-ratio: 1; margin: 0; }
-.profile-card .photo-orbit .pen-rig{ width: 28%; right: 7%; top: -2%; left: auto; }
+.profile-card .photo-orbit .pen-rig{ width: 28%; right: 13%; top: 8%; left: auto; }
 .profile-card .photo-orbit .type-rig{ width: 25%; left: 4.5%; top: 24.5%; right: auto; }
 .profile-card .photo-orbit .sparkle-rig{ width: 42%; right: 0%; top: 57%; left: auto; }
 @media (max-width: 900px){
   /* the chips are gone, so on phones the square can fill more of the card */
   .photo-orbit{ width: min(100cqw, 92cqh); }
-  .profile-card .photo-orbit .pen-rig{ width: 28%; right: 7%; top: -2%; }
+  .profile-card .photo-orbit .pen-rig{ width: 28%; right: 13%; top: 8%; }
   .profile-card .photo-orbit .type-rig{ width: 25%; left: 4.5%; top: 24.5%; }
   .profile-card .photo-orbit .sparkle-rig{ width: 42%; right: 0%; top: 57%; }
 }
