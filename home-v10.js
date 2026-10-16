@@ -613,10 +613,15 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
         x.fillText('Aa', N / 2, N * 0.73);
       });
       // the same nib and cap as the 3D pen (its units, y up), scaled down
-      // and turned so the tip points to the upper right
-      function paintNib(x, N) {
+      // and turned so the tip points to the upper right; drawn apart first,
+      // then centred on the tile by its bounds and lifted a touch, so it
+      // sits in the optical centre rather than sagging toward the cap
+      function paintNib(out, N) {
+        const c = document.createElement('canvas'); c.width = c.height = N;
+        const x = c.getContext('2d');
         const k = N / span * 0.7;
-        x.translate(N / 2, N / 2); x.scale(k, -k); x.rotate(3 * Math.PI / 4); x.translate(0, 0.05);
+        x.fillStyle = '#fff';
+        x.translate(N / 2, N / 2); x.scale(k, -k); x.rotate(3 * Math.PI / 4);
         x.strokeStyle = '#fff'; x.lineJoin = 'round'; x.lineCap = 'round';
         x.beginPath();
         [[-0.27, 0.25], [0.27, 0.25], [0.33, 0.03], [0, -0.62], [-0.33, 0.03]].forEach(([u, v], i) => (i ? x.lineTo(u, v) : x.moveTo(u, v)));
@@ -625,6 +630,13 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
         x.globalCompositeOperation = 'destination-out';
         x.beginPath(); x.arc(0, -0.12, 0.085, 0, 2 * Math.PI); x.fill();
         x.fillRect(-0.035, -0.5, 0.07, 0.38);
+        const d = x.getImageData(0, 0, N, N).data;
+        let x0 = N, x1 = 0, y0 = N, y1 = 0;
+        for (let i = 0; i < N * N; i++) if (d[i * 4 + 3] > 127) {
+          const px = i % N, py = (i / N) | 0;
+          if (px < x0) x0 = px; if (px > x1) x1 = px; if (py < y0) y0 = py; if (py > y1) y1 = py;
+        }
+        out.drawImage(c, Math.round(N / 2 - (x0 + x1) / 2), Math.round(N / 2 - (y0 + y1) / 2 - N * 0.02));
       }
       bake();
       if (document.fonts && document.fonts.load) document.fonts.load('700 128px "Bricolage Grotesque"').then(() => { bake(); redraw(); }, () => {});
