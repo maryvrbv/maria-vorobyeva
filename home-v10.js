@@ -498,7 +498,8 @@ float sdNib2(vec2 p){
 }
 float sdCap2(vec2 p){ vec2 q = abs(p - vec2(0.0,0.47)) - vec2(0.21, 0.0); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - 0.12; }
 // half-depths are scaled to each canvas so all three objects look about
-// as thick as each other on the card (pen canvas 31.5%, tile 24%, sparkles 36%)
+// as thick as each other on the card (pen canvas 31.5%, tile 22%, sparkles 42%):
+// half-depth × canvas width ≈ 2.05 for each
 float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.045); }
 float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.055); }
 float map(vec3 q){ return min(nib(q), cap(q)); }
@@ -560,7 +561,7 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
   chromeRig(document.querySelector('canvas[data-type-rig]'), `
 #define STEP 0.8
 uniform float uGlyphEnamel; uniform sampler2D uSdf;
-const float TILE = 0.62, TR = 0.20, TH = 0.085, RANGE = 0.18;
+const float TILE = 0.62, TR = 0.20, TH = 0.093, RANGE = 0.18;
 float sdTile2(vec2 p){ vec2 q = abs(p) - vec2(TILE - TR); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - TR; }
 // glyph SDF baked from text into a texture: 0.5 = edge, +-0.5 = +-RANGE
 float sdGlyph2(vec2 p){
@@ -581,9 +582,9 @@ float sdFigma2(vec2 p){
   d = min(d, min(length(u - vec2(9.5,47.5)) - 9.5, sdBox2(u, vec2(14.25,42.75), vec2(4.75,4.75))));
   return (d + GAP) * LS;
 }
-float tile(vec3 q){ return sdSlab(sdTile2(q.xy), q.z, TH, 0.07); }
-float glyph(vec3 q){ return sdSlab(sdGlyph2(q.xy), q.z - TH, 0.045, 0.028); }
-float logo(vec3 q){ return sdSlab(sdFigma2(q.xy), q.z + TH, 0.04, 0.024); }
+float tile(vec3 q){ return sdSlab(sdTile2(q.xy), q.z, TH, 0.076); }
+float glyph(vec3 q){ return sdSlab(sdGlyph2(q.xy), q.z - TH, 0.049, 0.031); }
+float logo(vec3 q){ return sdSlab(sdFigma2(q.xy), q.z + TH, 0.044, 0.026); }
 float map(vec3 q){ return min(tile(q), min(glyph(q), logo(q))); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){
   float dt = tile(q), dg = glyph(q), dl = logo(q);
@@ -637,13 +638,13 @@ float sdStar(vec2 p, float L){
 float star(vec3 q, vec2 c, float L, float a){
   q.xy -= c;
   q = rotY(q, -a);
-  return sdSlab(sdStar(q.xy, L), q.z, 0.057, 0.02);
+  return sdSlab(sdStar(q.xy, L), q.z, 0.049, 0.017);
 }
 // each star turns on its own axis, both in step, on scroll only — like
 // the pen and the tile
 float map(vec3 q){
   float a = 0.35 + uTurn;
-  return min(star(q, vec2(-0.142, 0.132), 0.419, a), star(q, vec2(0.300, -0.290), 0.259, a));
+  return min(star(q, vec2(-0.150, 0.140), 0.419, a), star(q, vec2(0.330, -0.320), 0.310, a));
 }
 vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,0.96), uAno), nv, R, uEnamel); }`, {
     set(gl, U) {
