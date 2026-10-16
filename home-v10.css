@@ -187,16 +187,6 @@ img{ max-width: 100%; height: auto; display: block; }
   right: clamp(24px, 4vw, 56px); top: clamp(24px, 4vw, 56px);
   display: flex; align-items: center;
 }
-/* the chrome mark sits at the portrait's right, slightly overlapping */
-.figma-rig{
-  display: block;
-  width: clamp(76px, 8.4vw, 124px); aspect-ratio: 2 / 3;
-  margin-left: calc(clamp(76px, 8.4vw, 124px) * -0.22);
-  position: relative; z-index: 2;
-  rotate: 8deg;
-  filter: drop-shadow(0 18px 24px rgba(20, 10, 60, .45));
-  animation: face-in 1s .45s var(--ease-out) both;
-}
 .hero-face{
   position: relative;
   width: clamp(110px, 14vw, 200px); aspect-ratio: 1;
@@ -212,7 +202,6 @@ img{ max-width: 100%; height: auto; display: block; }
   .hero-panel{ min-height: 0; }
   .hero-in{ padding-top: 140px; }
   .hero-face{ width: 96px; }
-  .figma-rig{ width: 58px; margin-left: -12px; }
 }
 
 /* buttons on the gradient */
@@ -638,7 +627,7 @@ img{ max-width: 100%; height: auto; display: block; }
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   .reveal, .blur-seg{ opacity: 1; transform: none; filter: none; transition: none; }
-  .hero-row, .hero-face, .figma-rig{ animation: none; }
+  .hero-row, .hero-face{ animation: none; }
   .postcards .postcard{ opacity: 1; translate: none; transform: rotate(var(--r)); transition: none; }
   .exp-float{ display: none; }
   .pill-cycle img{ transition: none; }
@@ -679,11 +668,6 @@ img{ max-width: 100%; height: auto; display: block; }
   animation: face-in 1s .3s var(--ease-out) both;
 }
 .profile-photo img{ width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; }
-.profile-card .figma-rig{
-  position: absolute; z-index: 2;
-  right: 9%; top: 12%;
-  width: 24%; margin: 0;
-}
 .profile-meta{
   position: absolute; z-index: 2;
   left: clamp(16px, 2vw, 28px); right: clamp(16px, 2vw, 28px); bottom: clamp(16px, 2vw, 28px);
@@ -694,33 +678,22 @@ img{ max-width: 100%; height: auto; display: block; }
   .profile-card{ order: -1; aspect-ratio: 1; max-height: none; }
   .profile-photo{ width: 50%; margin-bottom: 18%; }
   .profile-meta .glass-pill + .glass-pill{ display: none; }
-  .profile-card .figma-rig{ width: 20%; margin: 0; }
 }
 @media (prefers-reduced-motion: reduce){ .profile-photo{ animation: none; } }
 
-/* ---------- v10: card on the left, pen nib instead of the Figma mark ---------- */
+/* ---------- v10: card on the left ---------- */
 @media (min-width: 901px){
   .hero-split{ grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
   .hero-split .profile-card{ order: -1; }
 }
-.profile-card .pen-rig{
-  aspect-ratio: 1;
-  width: 31.5%;
-  right: 5.25%; top: 7%;
-}
-@media (max-width: 900px){
-  .profile-card .pen-rig{ width: 26%; right: 5%; top: 5%; }
-}
-
-/* chrome "Aa" type tile, upper-left of the card, opposite the pen */
+/* chrome tile (Figma logo on the face, pen nib on the back) */
 .profile-card .type-rig{
   position: absolute; z-index: 2;
   left: 5%; top: 30%;
   width: 24%; aspect-ratio: 1;
 }
-/* chrome sparkles, lower right of the portrait; canvas sizes are set so the
-   pen, tile and sparkles match in visual weight, not in bounding box: the
-   pen is set smaller, the open, spiky sparkles larger */
+/* chrome sparkles; canvas sizes are set so the tile and sparkles match in
+   visual weight, not in bounding box: the open, spiky sparkles are larger */
 .profile-card .sparkle-rig{
   position: absolute; z-index: 2;
   right: 3%; top: 59.5%;
@@ -961,8 +934,10 @@ img{ max-width: 100%; height: auto; display: block; }
 /* ---------- photo orbit ----------
    The photo and the chrome objects sit in one square that scales as a
    unit (the largest square the card allows, 80% of its height at most),
-   so the pen, tile and sparkles keep their place around the photo at any
-   screen size instead of drifting with the card's proportions */
+   so the tile and sparkles keep their place around the photo at any
+   screen size instead of drifting with the card's proportions. The two sit
+   on a diagonal (tile at about 210°, sparkles at 35°) and both clearly
+   overlap the photo's edge */
 .profile-card{ container-type: size; }
 .photo-orbit{
   position: relative;
@@ -971,15 +946,13 @@ img{ max-width: 100%; height: auto; display: block; }
 }
 .photo-orbit .profile-photo{ width: 64%; margin: 0; }
 .profile-card .photo-orbit canvas{ position: absolute; z-index: 2; aspect-ratio: 1; margin: 0; }
-.profile-card .photo-orbit .pen-rig{ width: 28%; right: 13%; top: 8%; left: auto; }
-.profile-card .photo-orbit .type-rig{ width: 25%; left: 4.5%; top: 24.5%; right: auto; }
-.profile-card .photo-orbit .sparkle-rig{ width: 42%; right: 0%; top: 57%; left: auto; }
+.profile-card .photo-orbit .type-rig{ width: 25%; left: 7.1%; top: 55.2%; right: auto; }
+.profile-card .photo-orbit .sparkle-rig{ width: 42%; left: 57.1%; top: 8.2%; right: auto; }
 @media (max-width: 900px){
   /* the chips are gone, so on phones the square can fill more of the card */
   .photo-orbit{ width: min(100cqw, 92cqh); }
-  .profile-card .photo-orbit .pen-rig{ width: 28%; right: 13%; top: 8%; }
-  .profile-card .photo-orbit .type-rig{ width: 25%; left: 4.5%; top: 24.5%; }
-  .profile-card .photo-orbit .sparkle-rig{ width: 42%; right: 0%; top: 57%; }
+  .profile-card .photo-orbit .type-rig{ width: 25%; left: 7.1%; top: 55.2%; }
+  .profile-card .photo-orbit .sparkle-rig{ width: 42%; left: 57.1%; top: 8.2%; }
 }
 
 /* ---------- phones: tighter gutters, clearer hero hierarchy ----------

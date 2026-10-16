@@ -337,10 +337,10 @@ void main(){
   }
 
   // ---- chrome objects next to the portrait (in the style of the Figma Rig
-  // experiment): a pen nib with its cap, an "Aa" type tile and sparkles. Each
-  // is a 2D outline extruded into a solid with rounded edges and raymarched,
-  // so it has real thickness: the side walls show as it turns about its own
-  // axis on scroll. All three reflect the same three-light studio, which
+  // experiment): a tile with the Figma logo and a pen nib, and sparkles.
+  // Each is a 2D outline extruded into a solid with rounded edges and
+  // raymarched, so it has real thickness: the side walls show as it turns
+  // about its own axis on scroll. Both reflect the same three-light studio, which
   // swings toward the pointer anywhere over the hero; the objects lean a
   // little toward it too. Transparent background; still frame under reduced
   // motion.
@@ -476,45 +476,6 @@ void main(){
     window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(); });
   }
 
-  // pen nib (five-point outline with breather hole and slit) and its pill
-  // cap, both plain chrome. From the Pen Rig console: finish 0.76, studio
-  // 13°, pen tilt 138° (tip to the upper right)
-  chromeRig(document.querySelector('canvas[data-figma-rig]'), `
-#define STEP 0.9
-float sdNibPoly(vec2 p){
-  vec2 v0=vec2(-0.27,0.25), v1=vec2(0.27,0.25), v2=vec2(0.33,0.03), v3=vec2(0.0,-0.62), v4=vec2(-0.33,0.03);
-  float d = min(min(min(sdSeg(p,v0,v1), sdSeg(p,v1,v2)), min(sdSeg(p,v2,v3), sdSeg(p,v3,v4))), sdSeg(p,v4,v0));
-  #define LEFT(a,b) (((b).x-(a).x)*(p.y-(a).y) - ((b).y-(a).y)*(p.x-(a).x) >= 0.0)
-  bool inside = LEFT(v0,v4) && LEFT(v4,v3) && LEFT(v3,v2) && LEFT(v2,v1) && LEFT(v1,v0);
-  return inside ? -d : d;
-}
-float sdNib2(vec2 p){
-  // generous corner radius: a soft, friendly nib rather than a blade
-  float d = sdNibPoly(p) - 0.075;
-  d = max(d, -(length(p-vec2(0.0,-0.12)) - 0.075));
-  // slit stops short of the rounded tip
-  vec2 q = abs(p - vec2(0.0,-0.38)) - vec2(0.018, 0.20);
-  return max(d, -(length(max(q,0.0)) + min(max(q.x,q.y),0.0)));
-}
-float sdCap2(vec2 p){ vec2 q = abs(p - vec2(0.0,0.47)) - vec2(0.21, 0.0); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - 0.12; }
-// half-depths are scaled to each canvas so all three objects look about
-// as thick as each other on the card (pen canvas 28%, tile 25%, sparkles 42%):
-// half-depth × canvas width ≈ 2.05 for each
-float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.073, 0.051); }
-float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.073, 0.062); }
-float map(vec3 q){ return min(nib(q), cap(q)); }
-vec3 shade(vec3 q, vec3 nv, vec3 R){
-  return metal(vec3(0.93,0.94,0.96), nv, R, 0.0);
-}`, {
-    set(gl, U) {
-      gl.uniform1f(U('uRough'), 0.76);
-      gl.uniform1f(U('uObj'), 138 * Math.PI / 180);
-    },
-    base: 13 * Math.PI / 180, spin0: 0.55, yaw: 0.0, pitch: 0.12,
-    // one full turn per ~1000px of scroll, eased so it glides to a stop
-    spin: (y) => y * 0.0063,
-  });
-
   // bakes a white shape painted on an N×N canvas into a signed distance
   // texture (Felzenszwalb EDT) on unit 0: the canvas spans `span` units,
   // 0.5 = edge, ±0.5 = ±range units
@@ -553,11 +514,11 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   }
 
-  // "Aa" type tile: a rounded chrome tile with raised letters; the letters
-  // are text baked into a signed distance field (Felzenszwalb EDT) at load.
-  // The back carries the Figma logo, chrome like the letters.
+  // tile: a rounded chrome tile showing the Figma logo, which the scroll
+  // turns over to a raised pen nib. The nib is painted and baked into a
+  // signed distance field (Felzenszwalb EDT) at load; the logo is analytic.
   // Look tuned in the Type Rig console: finish 0.66, studio -17°, tile tilt
-  // -9°, chrome tile, letters enamel 0.62. Turns opposite to the pen
+  // -9°, chrome tile, raised parts enamel 0.62
   chromeRig(document.querySelector('canvas[data-type-rig]'), `
 #define STEP 0.8
 uniform float uGlyphEnamel; uniform sampler2D uSdf;
@@ -603,16 +564,8 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
       gl.uniform1f(U('uGlyphEnamel'), 0.62);
     },
     init(gl, U, redraw) {
-      // data-glyph="pen" on the canvas puts the pen nib on the tile instead
-      // of the letters
-      const glyph = (document.querySelector('canvas[data-type-rig]') || {}).dataset || {};
       const span = 0.62 * 2 * 0.80;
-      const bake = () => bakeSdf(gl, 512, span, 0.18, glyph.glyph === 'pen' ? paintNib : (x, N) => {
-        x.textAlign = 'center'; x.textBaseline = 'alphabetic';
-        x.font = '700 ' + Math.round(N * 0.64) + 'px "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif';
-        x.fillText('Aa', N / 2, N * 0.73);
-      });
-      // the same nib and cap as the 3D pen (its units, y up), scaled down
+      // a pen nib with its pill cap (y up), scaled down
       // and turned so the tip points to the upper right; drawn apart first,
       // then moved halfway from its own centre toward the centre of its
       // bounds, so it neither sags toward the cap nor crowds the tip's corner
@@ -639,20 +592,19 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
         }
         out.drawImage(c, Math.round((N / 2 - (x0 + x1) / 2) * 0.5), Math.round((N / 2 - (y0 + y1) / 2) * 0.5));
       }
-      bake();
-      if (document.fonts && document.fonts.load) document.fonts.load('700 128px "Bricolage Grotesque"').then(() => { bake(); redraw(); }, () => {});
+      bakeSdf(gl, 512, span, 0.18, paintNib);
+      redraw();
     },
-    // data-front="figma" starts the tile turned over, so the Figma logo is
-    // the face and the scroll flips it to the letters / pen
-    base: -17 * Math.PI / 180, yaw: 0.0, pitch: 0.18,
-    spin0: -0.4 + ((((document.querySelector('canvas[data-type-rig]') || {}).dataset || {}).front === 'figma') ? Math.PI : 0),
+    // starts turned over (+π), so the Figma logo on the back is the face and
+    // the scroll flips it to the pen
+    base: -17 * Math.PI / 180, spin0: -0.4 + Math.PI, yaw: 0.0, pitch: 0.18,
     // flips to the other face within the first ~250px, while still in view
     spin: (y) => -y * 0.011,
   });
 
   // sparkles: two four-point stars, each a square with a circle cut from
   // every corner (concave sides, long rays), tips rounded off; fitted to the
-  // ✨ reference. Flat chrome slabs like the pen and tile, rounded rims; each
+  // ✨ reference. Flat chrome slabs like the tile, rounded rims; each
   // star spins about its own axis
   chromeRig(document.querySelector('canvas[data-sparkle-rig]'), `
 #define STEP 0.9
@@ -675,7 +627,7 @@ float star(vec3 q, vec2 c, float L, float a){
   return sdSlab(sdStar(q.xy, L), q.z, 0.049, 0.017);
 }
 // each star turns on its own axis, both in step, on scroll only — like
-// the pen and the tile
+// the tile
 float map(vec3 q){
   float a = 0.35 + uTurn;
   return min(star(q, vec2(-0.150, 0.140), 0.419, a), star(q, vec2(0.330, -0.320), 0.310, a));
@@ -688,7 +640,7 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){ return metal(mix(vec3(1.0), vec3(0.93,0.94,
       gl.uniform1f(U('uObj'), -6 * Math.PI / 180);
     },
     base: 13 * Math.PI / 180, spin0: 0.0, yaw: 0.0, pitch: -0.15, selfSpin: true,
-    // same rate as the pen: one full turn per ~1000px of scroll
+    // one full turn per ~1000px of scroll
     spin: (y) => y * 0.0063,
   });
 })();
