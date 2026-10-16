@@ -498,10 +498,10 @@ float sdNib2(vec2 p){
 }
 float sdCap2(vec2 p){ vec2 q = abs(p - vec2(0.0,0.47)) - vec2(0.21, 0.0); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - 0.12; }
 // half-depths are scaled to each canvas so all three objects look about
-// as thick as each other on the card (pen canvas 31.5%, tile 22%, sparkles 42%):
+// as thick as each other on the card (pen canvas 28%, tile 25%, sparkles 42%):
 // half-depth × canvas width ≈ 2.05 for each
-float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.045); }
-float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.065, 0.055); }
+float nib(vec3 q){ return sdSlab(sdNib2(q.xy + vec2(0.0,0.06)), q.z, 0.073, 0.051); }
+float cap(vec3 q){ return sdSlab(sdCap2(q.xy + vec2(0.0,0.06)), q.z, 0.073, 0.062); }
 float map(vec3 q){ return min(nib(q), cap(q)); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){
   return metal(vec3(0.93,0.94,0.96), nv, R, 0.0);
@@ -561,7 +561,7 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
   chromeRig(document.querySelector('canvas[data-type-rig]'), `
 #define STEP 0.8
 uniform float uGlyphEnamel; uniform sampler2D uSdf;
-const float TILE = 0.62, TR = 0.20, TH = 0.093, RANGE = 0.18;
+const float TILE = 0.62, TR = 0.20, TH = 0.082, RANGE = 0.18;
 float sdTile2(vec2 p){ vec2 q = abs(p) - vec2(TILE - TR); return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - TR; }
 // glyph SDF baked from text into a texture: 0.5 = edge, +-0.5 = +-RANGE
 float sdGlyph2(vec2 p){
@@ -582,9 +582,9 @@ float sdFigma2(vec2 p){
   d = min(d, min(length(u - vec2(9.5,47.5)) - 9.5, sdBox2(u, vec2(14.25,42.75), vec2(4.75,4.75))));
   return (d + GAP) * LS;
 }
-float tile(vec3 q){ return sdSlab(sdTile2(q.xy), q.z, TH, 0.076); }
-float glyph(vec3 q){ return sdSlab(sdGlyph2(q.xy), q.z - TH, 0.049, 0.031); }
-float logo(vec3 q){ return sdSlab(sdFigma2(q.xy), q.z + TH, 0.044, 0.026); }
+float tile(vec3 q){ return sdSlab(sdTile2(q.xy), q.z, TH, 0.067); }
+float glyph(vec3 q){ return sdSlab(sdGlyph2(q.xy), q.z - TH, 0.043, 0.027); }
+float logo(vec3 q){ return sdSlab(sdFigma2(q.xy), q.z + TH, 0.039, 0.023); }
 float map(vec3 q){ return min(tile(q), min(glyph(q), logo(q))); }
 vec3 shade(vec3 q, vec3 nv, vec3 R){
   float dt = tile(q), dg = glyph(q), dl = logo(q);
