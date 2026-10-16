@@ -969,10 +969,16 @@ img{ max-width: 100%; height: auto; display: block; }
   .hero-glow .photo-orbit{ width: min(100cqw, 100cqh); }
 }
 @media (min-width: 901px){
-  /* about as tall as the photo square needs (its column is a bit under
-     half the width), so there is no slack above and below the photo */
-  .hero-glow{ --hero-h: clamp(520px, min(88svh, 48vw + 80px), 780px); }
-  .photo-orbit{ width: min(100cqw, 96cqh); }
+  /* the height follows the content: the photo square takes its column's
+     width (never taller than the screen allows), the text sits beside it,
+     and the panel is whichever is taller plus the padding */
+  .hero-glow{ height: auto; min-height: 0; }
+  .hero-glow > .hero-split{ padding-block: clamp(40px, 5vw, 88px); align-items: center; }
+  .hero-glow .hero-split .profile-card{
+    height: auto; aspect-ratio: 1;
+    width: min(100%, calc(100svh - 200px)); max-height: none;
+  }
+  .hero-glow .photo-orbit{ width: 100cqw; }
 }
 
 /* ---------- phones: tighter gutters, clearer hero hierarchy ----------
