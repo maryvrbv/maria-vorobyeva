@@ -969,7 +969,10 @@ img{ max-width: 100%; height: auto; display: block; }
   .hero-glow .photo-orbit{ width: min(100cqw, 100cqh); }
 }
 @media (min-width: 901px){
-  .hero-glow{ --hero-h: clamp(560px, min(88svh, 64vw), 900px); }
+  /* about as tall as the photo square needs (its column is a bit under
+     half the width), so there is no slack above and below the photo */
+  .hero-glow{ --hero-h: clamp(520px, min(88svh, 48vw + 80px), 780px); }
+  .photo-orbit{ width: min(100cqw, 96cqh); }
 }
 
 /* ---------- phones: tighter gutters, clearer hero hierarchy ----------
