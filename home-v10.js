@@ -603,11 +603,29 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
       gl.uniform1f(U('uGlyphEnamel'), 0.62);
     },
     init(gl, U, redraw) {
-      const bake = () => bakeSdf(gl, 512, 0.62 * 2 * 0.80, 0.18, (x, N) => {
+      // data-glyph="pen" on the canvas puts the pen nib on the tile instead
+      // of the letters
+      const glyph = (document.querySelector('canvas[data-type-rig]') || {}).dataset || {};
+      const span = 0.62 * 2 * 0.80;
+      const bake = () => bakeSdf(gl, 512, span, 0.18, glyph.glyph === 'pen' ? paintNib : (x, N) => {
         x.textAlign = 'center'; x.textBaseline = 'alphabetic';
         x.font = '700 ' + Math.round(N * 0.64) + 'px "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif';
         x.fillText('Aa', N / 2, N * 0.73);
       });
+      // the same nib and cap as the 3D pen (its units, y up), scaled down
+      // and turned so the tip points to the upper right
+      function paintNib(x, N) {
+        const k = N / span * 0.7;
+        x.translate(N / 2, N / 2); x.scale(k, -k); x.rotate(3 * Math.PI / 4); x.translate(0, 0.05);
+        x.strokeStyle = '#fff'; x.lineJoin = 'round'; x.lineCap = 'round';
+        x.beginPath();
+        [[-0.27, 0.25], [0.27, 0.25], [0.33, 0.03], [0, -0.62], [-0.33, 0.03]].forEach(([u, v], i) => (i ? x.lineTo(u, v) : x.moveTo(u, v)));
+        x.closePath(); x.lineWidth = 0.15; x.fill(); x.stroke();
+        x.beginPath(); x.moveTo(-0.21, 0.47); x.lineTo(0.21, 0.47); x.lineWidth = 0.24; x.stroke();
+        x.globalCompositeOperation = 'destination-out';
+        x.beginPath(); x.arc(0, -0.12, 0.085, 0, 2 * Math.PI); x.fill();
+        x.fillRect(-0.035, -0.5, 0.07, 0.38);
+      }
       bake();
       if (document.fonts && document.fonts.load) document.fonts.load('700 128px "Bricolage Grotesque"').then(() => { bake(); redraw(); }, () => {});
     },
