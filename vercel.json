@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/files/CV_Vorobyeva_Mariia_EN.pdf",
+      "destination": "/files/CV_Vorobeva_Mariia_EN.pdf",
+      "permanent": true
+    }
+  ]
+}
