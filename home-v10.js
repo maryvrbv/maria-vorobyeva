@@ -642,8 +642,11 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
       bake();
       if (document.fonts && document.fonts.load) document.fonts.load('700 128px "Bricolage Grotesque"').then(() => { bake(); redraw(); }, () => {});
     },
-    base: -17 * Math.PI / 180, spin0: -0.4, yaw: 0.0, pitch: 0.18,
-    // flips to the Figma logo within the first ~250px, while still in view
+    // data-front="figma" starts the tile turned over, so the Figma logo is
+    // the face and the scroll flips it to the letters / pen
+    base: -17 * Math.PI / 180, yaw: 0.0, pitch: 0.18,
+    spin0: -0.4 + ((((document.querySelector('canvas[data-type-rig]') || {}).dataset || {}).front === 'figma') ? Math.PI : 0),
+    // flips to the other face within the first ~250px, while still in view
     spin: (y) => -y * 0.011,
   });
 
