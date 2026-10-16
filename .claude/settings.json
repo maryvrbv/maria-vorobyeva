@@ -9,5 +9,6 @@
       "mcp__21st-magic",
       "mcp__claude-code-remote"
     ]
-  }
+  },
+  "enabledMcpjsonServers": ["21st-magic"]
 }
