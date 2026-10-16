@@ -1,8 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "mcp__Composio__*",
-      "mcp__Supabase__*"
+      "Bash",
+      "WebFetch",
+      "WebSearch",
+      "mcp__github",
+      "mcp__Figma",
+      "mcp__21st-magic",
+      "mcp__Claude_Code_Remote"
     ]
   }
 }
