@@ -613,10 +613,10 @@ vec3 shade(vec3 q, vec3 nv, vec3 R){
         x.fillText('Aa', N / 2, N * 0.73);
       });
       // the same nib and cap as the 3D pen (its units, y up), scaled down
-      // and turned so the tip points to the lower left, like a pen tool icon
+      // and turned so the tip points to the upper right
       function paintNib(x, N) {
-        const k = N / span * 0.8;
-        x.translate(N / 2, N / 2); x.scale(k, -k); x.rotate(-Math.PI / 4); x.translate(0, 0.05);
+        const k = N / span * 0.7;
+        x.translate(N / 2, N / 2); x.scale(k, -k); x.rotate(3 * Math.PI / 4); x.translate(0, 0.05);
         x.strokeStyle = '#fff'; x.lineJoin = 'round'; x.lineCap = 'round';
         x.beginPath();
         [[-0.27, 0.25], [0.27, 0.25], [0.33, 0.03], [0, -0.62], [-0.33, 0.03]].forEach(([u, v], i) => (i ? x.lineTo(u, v) : x.moveTo(u, v)));
