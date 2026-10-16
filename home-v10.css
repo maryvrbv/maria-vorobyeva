@@ -955,6 +955,23 @@ img{ max-width: 100%; height: auto; display: block; }
   .profile-card .photo-orbit .sparkle-rig{ width: 42%; left: 57.1%; top: 8.2%; }
 }
 
+/* ---------- tablets and narrow desktops: no empty hero ----------
+   Single column (up to 900px): the photo card was a full-width square, so
+   the greeting ended up far below the photo; it is now a wide, shorter
+   band and the text follows right under it, as on phones.
+   Two columns just above 900px: the hero took 88% of the screen height
+   while the narrow photo column kept the photo small, leaving big gaps
+   above and below; the height now also follows the width */
+@media (max-width: 900px){
+  .hero-glow{ height: auto; min-height: 0; }
+  .hero-glow > .hero-split{ align-content: start; row-gap: 0; }
+  .hero-glow .profile-card{ aspect-ratio: 1 / .75; margin-bottom: -4%; }
+  .hero-glow .photo-orbit{ width: min(100cqw, 100cqh); }
+}
+@media (min-width: 901px){
+  .hero-glow{ --hero-h: clamp(560px, min(88svh, 64vw), 900px); }
+}
+
 /* ---------- phones: tighter gutters, clearer hero hierarchy ----------
    Smaller side gutters so more fits; the greeting is set noticeably
    larger than the lead (≈2×) instead of nearly the same size; the photo
