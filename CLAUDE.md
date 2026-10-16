@@ -93,6 +93,7 @@ Senior Product Designer, B2C. Сайт: **marydis.com**.
   - хромированные объекты: перо, звёздочки, плитка Aa, знак вопроса.
 - `404.html`: чёрная, с карточками работ и серебряными объектами, RU и EN, кнопка с домиком. Vercel отдаёт её на любом пути, поэтому все ссылки в ней абсолютные.
 - Резюме в `files/`: `CV_Vorobyeva_Mariia_RU.pdf` и `CV_Vorobeva_Mariia_EN.pdf` (английское написание как в паспорте).
+  - Старый адрес `CV_Vorobyeva_Mariia_EN.pdf` перенаправляется на `CV_Vorobeva_Mariia_EN.pdf` через `vercel.json`.
 - Google Analytics `G-FHZS0V3GJE` и `analytics.js`.
   - Свои визиты не считаются, если один раз открыть сайт с `?notrack`. Включить подсчёт обратно: `?track`.
   - Аналитика работает только на marydis.com и gitverse.
