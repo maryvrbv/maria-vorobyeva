@@ -7,7 +7,8 @@
       "mcp__github",
       "mcp__Figma",
       "mcp__21st-magic",
-      "mcp__claude-code-remote"
+      "mcp__claude-code-remote",
+      "mcp__Composio"
     ]
   },
   "enabledMcpjsonServers": ["21st-magic"]
