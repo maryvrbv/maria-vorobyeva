@@ -31,7 +31,7 @@
   }
 
   var params = new URLSearchParams(location.search);
-  var fromUrl = (params.get('from') || '').trim().toLowerCase().replace(/[^a-z0-9а-яё_.-]+/gi, '-').slice(0, 60);
+  var fromUrl = (params.get('from') || '').trim().toLowerCase().replace(/[^a-z0-9а-яё_.-]+/gi, '-').replace(/^[-.]+|[-.]+$/g, '').slice(0, 60);
   if (fromUrl && !store('linkTag')) store('linkTag', fromUrl);
   var linkTag = fromUrl || store('linkTag') || '';
   if (params.has('from')) {
