@@ -12,7 +12,11 @@
 (function () {
   var GA_ID = 'G-FHZS0V3GJE';
   var CLARITY_ID = 'yx22ghlbmz';
-  var off = window['ga-disable-' + GA_ID] === true;
+  // the live pages; anything else is a mistyped address (served by 404.html)
+  // or an old test version. A new page has to be added here to be counted
+  var PAGES = /^\/(index(-en)?|case-(alfa|alfa-research|megafon|megafon-research|loyalty)(-en)?)?(\.html)?$/;
+  // Masha's own browser, counted before ?notrack existed
+  var OWNER_IDS = ['72680649.1791984'];
 
   function store(key, value) {
     try {
@@ -29,6 +33,14 @@
     visitorId = ga ? ga[1] : Math.floor(Math.random() * 2147483647) + '.' + Math.floor(Date.now() / 1000);
     store('visitorId', visitorId);
   }
+
+  // not real visitors: wrong address, automated browsers (our own checks), the owner
+  if (!PAGES.test(location.pathname) ||
+      navigator.webdriver || /HeadlessChrome|Lighthouse|bot|crawl|spider/i.test(navigator.userAgent) ||
+      OWNER_IDS.indexOf(visitorId) !== -1) {
+    window['ga-disable-' + GA_ID] = true;
+  }
+  var off = window['ga-disable-' + GA_ID] === true;
 
   var params = new URLSearchParams(location.search);
   var fromUrl = (params.get('from') || '').trim().toLowerCase().replace(/[^a-z0-9а-яё_.-]+/gi, '-').replace(/^[-.]+|[-.]+$/g, '').slice(0, 60);
