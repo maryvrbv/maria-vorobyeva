@@ -41,6 +41,10 @@
     window['ga-disable-' + GA_ID] = true;
   }
   var off = window['ga-disable-' + GA_ID] === true;
+  // The Google tag also forwards every hit to the property's second stream
+  // (mariadis_gitverse), which doubled all numbers. hostName already tells the
+  // two sites apart, so only the Marydis stream collects
+  window['ga-disable-G-H08Z7GQ9BW'] = true;
 
   var params = new URLSearchParams(location.search);
   var fromUrl = (params.get('from') || '').trim().toLowerCase().replace(/[^a-z0-9а-яё_.-]+/gi, '-').replace(/^[-.]+|[-.]+$/g, '').slice(0, 60);
