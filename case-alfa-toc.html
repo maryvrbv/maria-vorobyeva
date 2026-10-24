@@ -401,6 +401,8 @@
   transition: opacity .4s ease;
 }
 .toc.on{ opacity: 1; pointer-events: auto; }
+/* a jumped-to chapter lands below the sticky header, not under it */
+[data-toc]{ scroll-margin-top: 88px; }
 .toc[hidden]{ display: none; }
 @media (max-width: 1359px){ .toc{ display: none; } }
 
