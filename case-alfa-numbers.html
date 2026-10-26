@@ -53,35 +53,76 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="fonts-manrope.css">
 <style>
-/* section numbers as a visual device: a large numeral in the hero gradient
-   stands in the empty right side of each section heading, fading downwards */
+/* section numbers as a visual device — four variants to compare, switched by
+   the pill at the bottom (or ?v=a…d). All neutral, all on the heading's left edge */
 .case-h2[data-num]{ position: relative; z-index: 0; }
 .case-h2[data-num]::before{
   content: attr(data-num) / "";
-  position: absolute; z-index: -1;
-  right: 0; bottom: -0.2em;
-  font-family: 'Manrope', sans-serif; font-weight: 800;
-  font-size: 132px; line-height: 1; letter-spacing: -0.05em;
-  background: linear-gradient(160deg, #baa3ff 0%, #6e7df0 45%, #ffbab3 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  opacity: .5;
-  -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 92%);
-          mask-image: linear-gradient(180deg, #000 35%, transparent 92%);
+  position: absolute; z-index: -1; left: 0;
+  font-family: 'Manrope', sans-serif; font-weight: 800; line-height: 1;
   pointer-events: none; user-select: none;
 }
-/* the first numeral needs room below the page title */
-.case-section:first-child .case-h2[data-num]{ padding-top: 48px; }
-/* phones: no room beside the heading, so the numeral stands above it */
-@media (max-width: 640px){
-  .case-h2[data-num]{ --pt: 84px; padding-top: var(--pt); }
-  .case-section:first-child .case-h2[data-num]{ --pt: 60px; padding-top: var(--pt); }
-  .case-h2[data-num]::before{
-    font-size: 64px; right: auto; left: -2px; bottom: auto;
-    top: calc(var(--pt) - 60px);
-    -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent 100%);
-            mask-image: linear-gradient(180deg, #000 30%, transparent 100%);
+
+/* A — outline numeral above the heading */
+.v-a .case-h2[data-num]{ --pt: 112px; --n: 64px; padding-top: var(--pt); }
+.v-a .case-section:first-child .case-h2[data-num]{ --pt: 72px; }
+.v-a .case-h2[data-num]::before{
+  top: calc(var(--pt) - var(--n) + 2px);
+  font-size: var(--n); letter-spacing: -0.02em; margin-left: -0.05em;
+  color: transparent; -webkit-text-stroke: 1px rgba(242,242,240,.4);
+}
+
+/* B — big ghost numeral behind the heading, heading sits on its lower part */
+.v-b .case-h2[data-num]{ padding-top: 104px; }
+.v-b .case-section:first-child .case-h2[data-num]{ padding-top: 60px; }
+.v-b .case-h2[data-num]::before{
+  bottom: -0.04em; font-size: 148px; letter-spacing: -0.05em; margin-left: -0.06em;
+  color: rgba(242,242,240,.09);
+}
+
+/* C — small eyebrow numeral above the heading */
+.v-c .case-h2[data-num]::before{
+  position: static; display: block; margin-bottom: 10px;
+  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .08em;
+  color: var(--ink-soft);
+}
+
+/* D — hanging numeral in the margin, on the heading's baseline */
+.v-d .case-h2[data-num]::before{
+  top: auto; bottom: 0.12em; left: auto; right: calc(100% + 22px);
+  font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px; letter-spacing: .04em;
+  color: var(--ink-faint); line-height: 1.6;
+}
+.v-d .case-h2[data-num]{ line-height: 1.4; }
+@media (max-width: 899px){
+  /* no margin to hang into on narrow screens: falls back to C */
+  .v-d .case-h2[data-num]::before{
+    position: static; display: block; margin-bottom: 10px;
+    font-size: 13px; font-weight: 600; letter-spacing: .08em; color: var(--ink-soft);
   }
 }
+
+@media (max-width: 640px){
+  .v-a .case-h2[data-num]{ --pt: 88px; --n: 48px; }
+  .v-a .case-section:first-child .case-h2[data-num]{ --pt: 64px; }
+  .v-b .case-h2[data-num]{ padding-top: 80px; }
+  .v-b .case-section:first-child .case-h2[data-num]{ padding-top: 52px; }
+  .v-b .case-h2[data-num]::before{ font-size: 104px; }
+}
+
+/* variant switcher */
+.num-switch{
+  position: fixed; z-index: 60; left: 50%; bottom: 20px; transform: translateX(-50%);
+  display: flex; gap: 4px; padding: 4px; border-radius: 999px;
+  background: rgba(20,20,20,.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-1);
+}
+.num-switch button{
+  font: 600 13px/1 'Inter', sans-serif; color: var(--ink-soft); background: none; border: 0;
+  min-width: 40px; height: 34px; padding: 0 12px; border-radius: 999px; cursor: pointer;
+}
+.num-switch button[aria-pressed="true"]{ background: var(--ink); color: #000; }
+.num-switch button:focus-visible{ outline: 2px solid var(--accent-active); outline-offset: 2px; }
 </style>
 </head>
 <body data-toc-logo="images/home/exp/logo-alfa.webp">
@@ -414,5 +455,24 @@
 </footer>
 
 <script src="script.js"></script>
+
+<div class="num-switch" role="group" aria-label="Вариант нумерации">
+  <button type="button" data-v="a">A</button><button type="button" data-v="b">B</button><button type="button" data-v="c">C</button><button type="button" data-v="d">D</button>
+</div>
+<script>
+(function () {
+  var btns = [].slice.call(document.querySelectorAll('.num-switch button'));
+  function set(v) {
+    document.body.classList.remove('v-a', 'v-b', 'v-c', 'v-d');
+    document.body.classList.add('v-' + v);
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
+    var q = new URLSearchParams(location.search); q.set('v', v);
+    history.replaceState(null, '', location.pathname + '?' + q + location.hash);
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.v); }); });
+  var v = new URLSearchParams(location.search).get('v');
+  set(/^[abcd]$/.test(v) ? v : 'a');
+})();
+</script>
 </body>
 </html>
