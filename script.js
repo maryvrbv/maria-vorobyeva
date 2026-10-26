@@ -400,7 +400,9 @@ function initMeshHeading(el) {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const text = el.textContent;
+  // innerText keeps a deliberate <br> as a line break (textContent would
+  // glue the two lines into one word)
+  const text = el.innerText.replace(/\r/g, '');
   const cs = getComputedStyle(el);
   const w = el.offsetWidth, h = el.offsetHeight;
   if (!w || !h) return;
@@ -436,7 +438,9 @@ function initMeshHeading(el) {
   // re-wrap the words ourselves at the pinned width — canvas text has no
   // native wrapping, and this only needs to be close enough to the real
   // layout to read cleanly, not pixel-identical to it
-  const lines = numLines === 1 ? [text] : wrapTextLines(tctx, text, w);
+  const lines = numLines === 1 && text.indexOf('\n') < 0
+    ? [text]
+    : text.split('\n').reduce(function (all, part) { return all.concat(wrapTextLines(tctx, part, w)); }, []);
   const lineH = h / lines.length;
   lines.forEach((line, i) => tctx.fillText(line, pad, pad + lineH * (i + 0.5)));
 
