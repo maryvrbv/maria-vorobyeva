@@ -861,3 +861,83 @@ function initEmailCopy() {
     window.addEventListener('resize', updateNavReveal);
   }
 })();
+
+/* ---------- chapter progress ----------
+   Headings marked data-toc="Label" become chapters of a rail in the left
+   gutter (wide screens only, see styles.css). The company logo from
+   <body data-toc-logo> rides the hero gradient down as the case is read */
+(function () {
+  if (document.getElementById('toc')) return; // a page that builds its own
+  var heads = [].slice.call(document.querySelectorAll('[data-toc]'));
+  if (heads.length < 3) return;
+  var en = (document.documentElement.lang || '').indexOf('en') === 0;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  var nav = document.createElement('nav');
+  nav.className = 'toc';
+  nav.id = 'toc';
+  nav.setAttribute('aria-label', en ? 'Case chapters' : 'Главы кейса');
+  nav.innerHTML = '<div class="toc-track"><div class="toc-fill"></div>' +
+    '<img class="toc-thumb" src="' + (document.body.getAttribute('data-toc-logo') || '') + '" alt="" width="114" height="114"></div>' +
+    '<ol class="toc-list"></ol>';
+  var list = nav.querySelector('.toc-list');
+
+  var links = heads.map(function (h, i) {
+    if (!h.id) h.id = 'ch-' + (i + 1);
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.getAttribute('data-toc');
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      h.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' });
+      history.replaceState(null, '', '#' + h.id);
+    });
+    li.appendChild(a);
+    list.appendChild(li);
+    return a;
+  });
+  document.body.appendChild(nav);
+
+  var end = document.querySelector('.case-nav') || document.querySelector('footer');
+  var cur = -1;
+  function update() {
+    // reading happens around a line a third of the way down the screen; over
+    // the last screen of the page the line slides to the bottom, so the short
+    // closing chapters still get their turn
+    var vh = window.innerHeight;
+    var left = document.documentElement.getBoundingClientRect().bottom - vh;
+    var line = vh / 3 + (vh * 2 / 3) * Math.min(1, Math.max(0, 1 - left / vh));
+    var tops = heads.map(function (h) { return h.getBoundingClientRect().top; });
+    var stop = end ? end.getBoundingClientRect().top : vh;
+
+    // i: chapter the line is in, f: how far through it
+    var i = 0;
+    while (i < tops.length - 1 && tops[i + 1] <= line) i++;
+    var steps = heads.length - 1;
+    var p = 1;
+    if (i < steps) {
+      var f = (line - tops[i]) / Math.max(1, tops[i + 1] - tops[i]);
+      p = (i + Math.min(1, Math.max(0, f))) / steps;
+    }
+    nav.style.setProperty('--p', p.toFixed(4));
+    // shows once the case starts, steps aside when the page ends
+    nav.classList.toggle('on', tops[0] < vh * 0.9 && stop > vh * 0.5);
+
+    if (i !== cur) {
+      if (cur >= 0) { links[cur].classList.remove('cur'); links[cur].removeAttribute('aria-current'); }
+      links[i].classList.add('cur'); links[i].setAttribute('aria-current', 'true');
+      cur = i;
+    }
+  }
+
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { ticking = false; update(); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+})();

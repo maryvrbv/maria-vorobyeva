@@ -889,3 +889,89 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 
 /* the toast never runs off a narrow screen */
 .copy-toast{ max-width: calc(100vw - 24px); white-space: normal; }
+
+
+/* ================= case pages: header and chapter progress ================= */
+/* top menu as on the home page: full width, same sizes. Case pages scale the
+   whole page by 1.25 on desktop (styles.css), so the header undoes that */
+@media (min-width: 900px){
+  header.nav, .nav-reveal{ zoom: .8; }
+}
+header.nav .nav-inner, .nav-reveal .nav-inner{
+  max-width: 1680px;
+  padding: 20px clamp(20px, 4vw, 64px);
+}
+header.nav .nav-name, .nav-reveal .nav-name{ font-size: 17px; }
+header.nav .nav-links, .nav-reveal .nav-links{ gap: 6px; }
+header.nav .nav-links a:not(.lang-switch), .nav-reveal .nav-links a:not(.lang-switch){
+  padding: 8px 12px; border: 0; border-radius: var(--radius-full);
+  transition: color .15s ease, background .15s ease;
+}
+header.nav .nav-links a:not(.lang-switch):hover, .nav-reveal .nav-links a:not(.lang-switch):hover{ color: var(--ink); background: var(--paper-raised); }
+header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 40px; min-height: 36px; padding: 0; top: 0; }
+.nav-reveal{
+  background: rgba(0,0,0,.78);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 560px){
+  header.nav .nav-inner, .nav-reveal .nav-inner{ padding: 14px 16px; }
+  header.nav .nav-name, .nav-reveal .nav-name{ font-size: 15px; }
+  header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 44px; min-height: 44px; }
+}
+
+/* ---- chapter progress: left gutter, wide screens only ---- */
+.toc{
+  --row: 30px;
+  position: fixed; z-index: 40; top: 50%;
+  /* same left edge as the name in the header: the header is full width
+     (max 1680px) with a clamp(20px, 4vw, 64px) gutter, but it is unscaled while
+     this page is zoomed 1.25, so the numbers here are divided by 1.25 */
+  --hdr-gutter: clamp(16px, 4%, 51.2px);
+  left: max(var(--hdr-gutter), calc((100% - 1344px) / 2 + var(--hdr-gutter)));
+  width: 150px;
+  transform: translateY(-50%);
+  display: grid; grid-template-columns: 21px 1fr; column-gap: 14px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .4s ease;
+}
+.toc.on{ opacity: 1; pointer-events: auto; }
+/* a jumped-to chapter lands below the sticky header, not under it */
+[data-toc]{ scroll-margin-top: 88px; }
+/* below this the labels come too close to the text */
+@media (max-width: 1419px){ .toc{ display: none; } }
+
+.toc-track{ position: relative; grid-row: 1; grid-column: 1; }
+/* the rail runs from the first label to the last; the gradient is laid over
+   the whole rail and uncovered from the top, so its colours stay in place */
+.toc-track::before, .toc-fill{
+  content: ""; position: absolute; left: 9px; width: 3px; border-radius: 3px;
+  top: calc(var(--row) / 2); bottom: calc(var(--row) / 2);
+}
+.toc-track::before{ background: var(--line-strong); }
+.toc-fill{
+  background: linear-gradient(180deg, #baa3ff 0%, #6e7df0 55%, #ffbab3 100%);
+  clip-path: inset(0 0 calc((1 - var(--p, 0)) * 100%) 0);
+}
+.toc-thumb{
+  position: absolute; left: 0; width: 21px; height: 21px; border-radius: 6.5px;
+  top: calc(var(--p, 0) * (100% - var(--row)) + var(--row) / 2 - 10.5px);
+  box-shadow: 0 0 0 3px var(--paper), 0 4px 14px rgba(0,0,0,.6);
+}
+
+.toc-list{ grid-row: 1; grid-column: 2; list-style: none; margin: 0; padding: 0; }
+.toc-list li{ height: var(--row); display: flex; align-items: center; }
+/* the whole row is the target (>= 24px), and labels keep 4.5:1 contrast */
+.toc-list a{
+  display: flex; align-items: center; height: 100%;
+  font-size: 12px; line-height: 1.2; letter-spacing: .02em; color: var(--ink-soft);
+  text-decoration: none; white-space: nowrap;
+  transition: color .2s ease;
+}
+.toc-list a:hover{ color: var(--ink); }
+.toc-list a.cur{ color: var(--ink); font-weight: 600; }
+.toc-list a:focus-visible{ outline: 2px solid var(--accent-active); outline-offset: 3px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce){
+  .toc, .toc-list a{ transition: none; }
+}
