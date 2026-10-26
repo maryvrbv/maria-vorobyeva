@@ -422,7 +422,11 @@ header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 40px; min-height: 
 .toc{
   --row: 30px;
   position: fixed; z-index: 40; top: 50%;
-  left: max(16px, calc((100% - var(--max-wide)) / 2 - 170px));
+  /* same left edge as the name in the header: the header is full width
+     (max 1680px) with a clamp(20px, 4vw, 64px) gutter, but it is unscaled while
+     this page is zoomed 1.25, so the numbers here are divided by 1.25 */
+  --hdr-gutter: clamp(16px, 4%, 51.2px);
+  left: max(var(--hdr-gutter), calc((100% - 1344px) / 2 + var(--hdr-gutter)));
   width: 150px;
   transform: translateY(-50%);
   display: grid; grid-template-columns: 21px 1fr; column-gap: 14px;
@@ -433,7 +437,8 @@ header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 40px; min-height: 
 /* a jumped-to chapter lands below the sticky header, not under it */
 [data-toc]{ scroll-margin-top: 88px; }
 .toc[hidden]{ display: none; }
-@media (max-width: 1359px){ .toc{ display: none; } }
+/* below this the labels come too close to the text */
+@media (max-width: 1419px){ .toc{ display: none; } }
 
 .toc-track{ position: relative; grid-row: 1; grid-column: 1; }
 /* the rail runs from the first label to the last; the gradient is laid over
