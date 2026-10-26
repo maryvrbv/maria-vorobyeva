@@ -73,11 +73,11 @@
 }
 
 /* B — big ghost numeral behind the heading, heading sits on its lower part */
-.v-b .case-h2[data-num]{ padding-top: 104px; }
-.v-b .case-section:first-child .case-h2[data-num]{ padding-top: 60px; }
+.v-b .case-h2[data-num]{ padding-top: 88px; }
 .v-b .case-h2[data-num]::before{
-  bottom: -0.04em; font-size: 148px; letter-spacing: -0.05em; margin-left: -0.06em;
-  color: rgba(242,242,240,.09);
+  bottom: -0.05em; font-size: 116px; letter-spacing: -0.05em; margin-left: -0.06em;
+  background: linear-gradient(180deg, rgba(242,242,240,.2) 0%, rgba(242,242,240,.07) 55%, rgba(242,242,240,0) 92%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 
 /* C — small eyebrow numeral above the heading */
@@ -105,9 +105,8 @@
 @media (max-width: 640px){
   .v-a .case-h2[data-num]{ --pt: 88px; --n: 48px; }
   .v-a .case-section:first-child .case-h2[data-num]{ --pt: 64px; }
-  .v-b .case-h2[data-num]{ padding-top: 80px; }
-  .v-b .case-section:first-child .case-h2[data-num]{ padding-top: 52px; }
-  .v-b .case-h2[data-num]::before{ font-size: 104px; }
+  .v-b .case-h2[data-num]{ padding-top: 68px; }
+  .v-b .case-h2[data-num]::before{ font-size: 84px; }
 }
 
 /* variant switcher */
@@ -164,7 +163,7 @@
 
     <!-- ============ 1. Summary ============ -->
     <div class="case-section">
-      <h2 class="case-h2" data-num="01" data-toc="Summary">Summary</h2>
+      <h2 class="case-h2" data-toc="Summary">Summary</h2>
       <p>С нуля спроектировала сценарий покупки внутри приложения «Подели»: от добавления товаров разных продавцов в корзину до оформления и управления заказами.</p>
       <p>С помощью CJM, конкурентного анализа и UX-тестирования нашла понятную структуру мультиселлерной корзины, учла техническое ограничение раздельного чекаута и подготовила MVP к запуску в двух каналах — «Подели» и приложении Альфа-Банка.</p>
 
@@ -193,7 +192,7 @@
 
     <!-- ============ 2. Контекст ============ -->
     <div class="case-section">
-      <h2 class="case-h2" data-num="02" data-toc="Контекст">Контекст</h2>
+      <h2 class="case-h2" data-num="01" data-toc="Контекст">Контекст</h2>
       <p>Альфа-Банк — крупнейший частный банк России, который развивает не только банковские продукты, но и собственную цифровую экосистему: платежи, рассрочку, путешествия и другие сервисы. <a href="https://alfabank.ru" target="_blank" rel="noopener">Официальный сайт Альфа-Банка</a></p>
       <div class="figure">
         <img src="images/alfa/ecom-context.webp" alt="Экосистема e-commerce Альфа-Банка" loading="lazy">
@@ -244,7 +243,7 @@
 
     <!-- ============ 3. Решение задачи ============ -->
     <div class="case-section">
-      <h2 class="case-h2" data-num="03">Решение задачи</h2>
+      <h2 class="case-h2" data-num="02">Решение задачи</h2>
 
       <h3 class="case-h3" data-toc="Исследование">Исследование до редизайна</h3>
       <details class="disclosure">
@@ -388,7 +387,7 @@
 
     <!-- ============ 4. Результаты после запуска ============ -->
     <div class="case-section">
-      <h2 class="case-h2" data-num="04" data-toc="Результаты">Результаты после запуска</h2>
+      <h2 class="case-h2" data-num="03" data-toc="Результаты">Результаты после запуска</h2>
 
       <div class="float-figure-wrap">
         <img class="float-figure" src="images/alfa/results.gif" alt="Экран корзины после запуска сценария покупки" loading="lazy">
@@ -413,7 +412,7 @@
 
     <!-- ============ Key Learnings & Reflection ============ -->
     <div class="case-section">
-      <h2 class="case-h2" data-num="05" data-toc="Выводы">Key Learnings &amp; Reflection</h2>
+      <h2 class="case-h2" data-num="04" data-toc="Выводы">Key Learnings &amp; Reflection</h2>
 
       <h4 class="case-subhead">Что получилось</h4>
       <ul>
@@ -457,7 +456,7 @@
 <script src="script.js"></script>
 
 <div class="num-switch" role="group" aria-label="Вариант нумерации">
-  <button type="button" data-v="a">A</button><button type="button" data-v="b">B</button><button type="button" data-v="c">C</button><button type="button" data-v="d">D</button>
+  <button type="button" data-v="b">B</button><button type="button" data-v="a">A</button><button type="button" data-v="c">C</button><button type="button" data-v="d">D</button>
 </div>
 <script>
 (function () {
@@ -471,7 +470,7 @@
   }
   btns.forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.v); }); });
   var v = new URLSearchParams(location.search).get('v');
-  set(/^[abcd]$/.test(v) ? v : 'a');
+  set(/^[abcd]$/.test(v) ? v : 'b');
 })();
 </script>
 </body>
