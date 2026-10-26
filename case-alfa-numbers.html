@@ -73,10 +73,12 @@
 }
 
 /* B — big ghost numeral behind the heading, heading sits on its lower part */
-.v-b .case-h2[data-num]{ padding-top: 88px; }
+/* the numeral stands above the heading and only its very bottom tucks behind
+   it, so the base of a 2 or a 4 stays readable; the gradient never reaches 0 */
+.v-b .case-h2[data-num]{ padding-top: 104px; }
 .v-b .case-h2[data-num]::before{
-  bottom: -0.05em; font-size: 116px; letter-spacing: -0.05em; margin-left: -0.06em;
-  background: linear-gradient(180deg, rgba(242,242,240,.2) 0%, rgba(242,242,240,.07) 55%, rgba(242,242,240,0) 92%);
+  bottom: 8px; font-size: 116px; letter-spacing: -0.04em; margin-left: -0.06em;
+  background: linear-gradient(180deg, rgba(242,242,240,.22) 0%, rgba(242,242,240,.09) 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 
@@ -105,8 +107,8 @@
 @media (max-width: 640px){
   .v-a .case-h2[data-num]{ --pt: 88px; --n: 48px; }
   .v-a .case-section:first-child .case-h2[data-num]{ --pt: 64px; }
-  .v-b .case-h2[data-num]{ padding-top: 68px; }
-  .v-b .case-h2[data-num]::before{ font-size: 84px; }
+  .v-b .case-h2[data-num]{ padding-top: 88px; }
+  .v-b .case-h2[data-num]::before{ font-size: 84px; bottom: 12px; }
 }
 
 /* variant switcher */
