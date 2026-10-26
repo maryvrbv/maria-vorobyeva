@@ -487,7 +487,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 }
 .back-link:hover{ color: var(--ink); }
 .back-link i{ font-size: 24px; }
-.case-hero h1{ font-size: clamp(24px, 3.6vw, 34px); max-width: 640px; margin-bottom: 11px; }
+.case-hero h1{ font-size: clamp(28px, 4.4vw, 42px); line-height: 1.15; letter-spacing: -0.02em; max-width: none; margin-bottom: 11px; }
 .case-hero .desc{ font-size: 16px; color: var(--body-text); max-width: 560px; margin-bottom: 30px; }
 
 /* neutral category pill — not an accent color */
@@ -616,10 +616,11 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 /* major numbered sections ("1. О проекте") */
 .case-h2{
   font-weight: 700;
-  font-size: 24px;
+  font-size: 30px;
+  line-height: 1.2;
   color: var(--ink);
-  letter-spacing: -0.01em;
-  margin: 0 0 4px;
+  letter-spacing: -0.015em;
+  margin: 0 0 8px;
   padding-top: 56px;
 }
 .case-section:first-child .case-h2{ padding-top: 0; }
@@ -635,7 +636,7 @@ footer{ padding: 30px 0 50px; font-size: 12.5px; color: var(--ink-soft); display
 .case-h3:first-of-type{ margin-top: 28px; }
 
 @media (max-width: 640px){
-  .case-h2{ font-size: 21px; padding-top: 40px; }
+  .case-h2{ font-size: 25px; padding-top: 40px; }
   .case-h3{ font-size: 16.5px; margin: 30px 0 10px; }
   .case-h3:first-of-type{ margin-top: 22px; }
 }
