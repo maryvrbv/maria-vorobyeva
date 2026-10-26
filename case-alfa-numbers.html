@@ -53,62 +53,42 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="fonts-manrope.css">
 <style>
-/* section numbers as a visual device — four variants to compare, switched by
-   the pill at the bottom (or ?v=a…d). All neutral, all on the heading's left edge */
-.case-h2[data-num]{ position: relative; z-index: 0; }
+/* section numbers as a visual device: a large numeral on the heading's left
+   edge, standing above it so only its very bottom tucks behind (otherwise a 2
+   or a 4 loses its base and stops reading). Four gradient treatments to
+   compare, switched by the pill at the bottom (or ?g=1…4) */
+.case-h2[data-num]{ position: relative; z-index: 0; padding-top: 104px; }
 .case-h2[data-num]::before{
   content: attr(data-num) / "";
-  position: absolute; z-index: -1; left: 0;
+  position: absolute; z-index: -1; left: 0; bottom: 8px;
+  margin-left: -0.06em;
   font-family: 'Manrope', sans-serif; font-weight: 800; line-height: 1;
+  font-size: 116px; letter-spacing: -0.04em;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
   pointer-events: none; user-select: none;
 }
-
-/* A — outline numeral above the heading */
-.v-a .case-h2[data-num]{ --pt: 112px; --n: 64px; padding-top: var(--pt); }
-.v-a .case-section:first-child .case-h2[data-num]{ --pt: 72px; }
-.v-a .case-h2[data-num]::before{
-  top: calc(var(--pt) - var(--n) + 2px);
-  font-size: var(--n); letter-spacing: -0.02em; margin-left: -0.05em;
-  color: transparent; -webkit-text-stroke: 1px rgba(242,242,240,.4);
-}
-
-/* B — big ghost numeral behind the heading, heading sits on its lower part */
-/* the numeral stands above the heading and only its very bottom tucks behind
-   it, so the base of a 2 or a 4 stays readable; the gradient never reaches 0 */
-.v-b .case-h2[data-num]{ padding-top: 104px; }
-.v-b .case-h2[data-num]::before{
-  bottom: 8px; font-size: 116px; letter-spacing: -0.04em; margin-left: -0.06em;
-  background: linear-gradient(180deg, rgba(242,242,240,.22) 0%, rgba(242,242,240,.09) 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
-
-/* C — small eyebrow numeral above the heading */
-.v-c .case-h2[data-num]::before{
-  position: static; display: block; margin-bottom: 10px;
-  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .08em;
-  color: var(--ink-soft);
-}
-
-/* D — hanging numeral in the margin, on the heading's baseline */
-.v-d .case-h2[data-num]::before{
-  top: auto; bottom: 0.12em; left: auto; right: calc(100% + 22px);
-  font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px; letter-spacing: .04em;
-  color: var(--ink-faint); line-height: 1.6;
-}
-.v-d .case-h2[data-num]{ line-height: 1.4; }
-@media (max-width: 899px){
-  /* no margin to hang into on narrow screens: falls back to C */
-  .v-d .case-h2[data-num]::before{
-    position: static; display: block; margin-bottom: 10px;
-    font-size: 13px; font-weight: 600; letter-spacing: .08em; color: var(--ink-soft);
-  }
-}
-
 @media (max-width: 640px){
-  .v-a .case-h2[data-num]{ --pt: 88px; --n: 48px; }
-  .v-a .case-section:first-child .case-h2[data-num]{ --pt: 64px; }
-  .v-b .case-h2[data-num]{ padding-top: 88px; }
-  .v-b .case-h2[data-num]::before{ font-size: 84px; bottom: 12px; }
+  .case-h2[data-num]{ padding-top: 88px; }
+  .case-h2[data-num]::before{ font-size: 84px; bottom: 12px; }
+}
+
+/* 1 — soft fade downwards, never to zero */
+.g-1 .case-h2[data-num]::before{
+  background-image: linear-gradient(180deg, rgba(242,242,240,.22) 0%, rgba(242,242,240,.09) 100%);
+}
+/* 2 — reversed: the numeral grows out of the heading and dissolves upwards */
+.g-2 .case-h2[data-num]::before{
+  background-image: linear-gradient(0deg, rgba(242,242,240,.26) 0%, rgba(242,242,240,.1) 55%, rgba(242,242,240,0) 100%);
+}
+/* 3 — diagonal light: bright top-left corner fading to the bottom-right */
+.g-3 .case-h2[data-num]::before{
+  background-image: linear-gradient(135deg, rgba(242,242,240,.32) 0%, rgba(242,242,240,.1) 50%, rgba(242,242,240,.02) 100%);
+}
+/* 4 — the first fade, all the way to zero, with a faint contour keeping
+   the shape readable where the fill is gone */
+.g-4 .case-h2[data-num]::before{
+  background-image: linear-gradient(180deg, rgba(242,242,240,.24) 0%, rgba(242,242,240,.06) 60%, rgba(242,242,240,0) 95%);
+  -webkit-text-stroke: 1px rgba(242,242,240,.12);
 }
 
 /* variant switcher */
@@ -457,22 +437,22 @@
 
 <script src="script.js"></script>
 
-<div class="num-switch" role="group" aria-label="Вариант нумерации">
-  <button type="button" data-v="b">B</button><button type="button" data-v="a">A</button><button type="button" data-v="c">C</button><button type="button" data-v="d">D</button>
+<div class="num-switch" role="group" aria-label="Вариант градиента">
+  <button type="button" data-g="1">1</button><button type="button" data-g="2">2</button><button type="button" data-g="3">3</button><button type="button" data-g="4">4</button>
 </div>
 <script>
 (function () {
   var btns = [].slice.call(document.querySelectorAll('.num-switch button'));
-  function set(v) {
-    document.body.classList.remove('v-a', 'v-b', 'v-c', 'v-d');
-    document.body.classList.add('v-' + v);
-    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
-    var q = new URLSearchParams(location.search); q.set('v', v);
+  function set(g) {
+    document.body.classList.remove('g-1', 'g-2', 'g-3', 'g-4');
+    document.body.classList.add('g-' + g);
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.g === g)); });
+    var q = new URLSearchParams(location.search); q.delete('v'); q.set('g', g);
     history.replaceState(null, '', location.pathname + '?' + q + location.hash);
   }
-  btns.forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.v); }); });
-  var v = new URLSearchParams(location.search).get('v');
-  set(/^[abcd]$/.test(v) ? v : 'b');
+  btns.forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.g); }); });
+  var g = new URLSearchParams(location.search).get('g');
+  set(/^[1-4]$/.test(g) ? g : '1');
 })();
 </script>
 </body>
