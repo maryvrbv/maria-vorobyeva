@@ -975,3 +975,23 @@ header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 40px; min-height: 
 @media (prefers-reduced-motion: reduce){
   .toc, .toc-list a{ transition: none; }
 }
+
+/* section numbers: a large numeral on the heading's left edge as a visual
+   device (the number is no longer part of the heading text). It stands above
+   the heading with only its very bottom tucked behind, so a 2 or a 4 keeps
+   its base; light falls on it from the top-right corner. Summary has none */
+.case-h2[data-num]{ position: relative; z-index: 0; padding-top: 104px; }
+.case-h2[data-num]::before{
+  content: attr(data-num) / "";
+  position: absolute; z-index: -1; left: 0; bottom: 8px;
+  margin-left: -0.06em;
+  font-family: 'Manrope', sans-serif; font-weight: 800; line-height: 1;
+  font-size: 116px; letter-spacing: -0.04em;
+  background-image: linear-gradient(225deg, rgba(242,242,240,.32) 0%, rgba(242,242,240,.1) 50%, rgba(242,242,240,.02) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  pointer-events: none; user-select: none;
+}
+@media (max-width: 640px){
+  .case-h2[data-num]{ padding-top: 88px; }
+  .case-h2[data-num]::before{ font-size: 84px; bottom: 12px; }
+}

@@ -80,9 +80,9 @@
 .g-2 .case-h2[data-num]::before{
   background-image: linear-gradient(0deg, rgba(242,242,240,.26) 0%, rgba(242,242,240,.1) 55%, rgba(242,242,240,0) 100%);
 }
-/* 3 — diagonal light: bright top-left corner fading to the bottom-right */
+/* 3 — diagonal light from the top-right corner (the chosen one) */
 .g-3 .case-h2[data-num]::before{
-  background-image: linear-gradient(135deg, rgba(242,242,240,.32) 0%, rgba(242,242,240,.1) 50%, rgba(242,242,240,.02) 100%);
+  background-image: linear-gradient(225deg, rgba(242,242,240,.32) 0%, rgba(242,242,240,.1) 50%, rgba(242,242,240,.02) 100%);
 }
 /* 4 — the first fade, all the way to zero, with a faint contour keeping
    the shape readable where the fill is gone */
@@ -452,7 +452,7 @@
   }
   btns.forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.g); }); });
   var g = new URLSearchParams(location.search).get('g');
-  set(/^[1-4]$/.test(g) ? g : '1');
+  set(/^[1-4]$/.test(g) ? g : '3');
 })();
 </script>
 </body>
