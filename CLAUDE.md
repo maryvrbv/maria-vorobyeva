@@ -111,6 +111,7 @@ Senior Product Designer, B2C. Сайт: **marydis.com**.
 - В hero:
   - WebGL-градиент: speed 0.07, scale 1.85, warp 0.55, ribs 0.1, ribFreq 144, grain 0.08, цвета `#baa3ff #6e7df0 #ffbab3 #26195c`;
   - хромированные объекты: плитка (лицом логотип Figma, на обороте перо) и звёздочки.
+- Превью ссылки (og:image и twitter:image) на всех страницах: `images/home/og-portfolio.jpg`, 1200×630, тёмная обложка «Maria Vorobeva → Portfolio». Новую картинку класть под новым именем, иначе LinkedIn и Telegram покажут старую из кэша.
 - `404.html`: чёрная, с карточками работ и серебряными объектами, RU и EN, кнопка с домиком. Vercel отдаёт её на любом пути, поэтому все ссылки в ней абсолютные.
 - Резюме в `files/`: `CV_Vorobyeva_Mariia_RU.pdf` и `CV_Vorobeva_Mariia_EN.pdf` (английское написание как в паспорте).
   - Старый адрес `CV_Vorobyeva_Mariia_EN.pdf` перенаправляется на `CV_Vorobeva_Mariia_EN.pdf` через `vercel.json`.
