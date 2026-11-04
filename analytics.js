@@ -52,7 +52,7 @@
   if (!fromUrl) {
     var refHost = '';
     try { refHost = new URL(document.referrer).hostname; } catch (e) {}
-    if (/(^|\.)(linkedin\.com|lnkd\.in)$/i.test(refHost)) fromUrl = 'linkedin';
+    if (/(^|\.)(linkedin\.com|lnkd\.in)$|^com\.linkedin\.android$/i.test(refHost)) fromUrl = 'linkedin';
   }
   if (fromUrl && !store('linkTag')) store('linkTag', fromUrl);
   var linkTag = fromUrl || store('linkTag') || '';
