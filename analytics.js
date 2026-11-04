@@ -48,6 +48,12 @@
 
   var params = new URLSearchParams(location.search);
   var fromUrl = (params.get('from') || '').trim().toLowerCase().replace(/[^a-z0-9а-яё_.-]+/gi, '-').replace(/^[-.]+|[-.]+$/g, '').slice(0, 60);
+  // LinkedIn link cards use the page's og:url and drop ?from=, so tag by referrer too
+  if (!fromUrl) {
+    var refHost = '';
+    try { refHost = new URL(document.referrer).hostname; } catch (e) {}
+    if (/(^|\.)(linkedin\.com|lnkd\.in)$/i.test(refHost)) fromUrl = 'linkedin';
+  }
   if (fromUrl && !store('linkTag')) store('linkTag', fromUrl);
   var linkTag = fromUrl || store('linkTag') || '';
   if (params.has('from')) {
