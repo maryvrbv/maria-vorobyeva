@@ -1,0 +1,183 @@
+/* ================= case grid versions (case-alfa-grid-a/b/c.html) =================
+   The text column keeps its width; illustrations grow out of it to the right,
+   up to the page's right gutter (the left gutter belongs to the chapter rail).
+   Case pages scale the whole page by 1.25 on desktop (styles.css), so viewport
+   units are divided by that zoom to get the real viewport in this page's px. */
+:root{
+  --vw: 100vw; --vh: 100vh;
+  /* where the text column starts, from the viewport's left edge */
+  --col-left: calc(max(0px, (var(--vw) - var(--max-wide)) / 2) + 28px);
+}
+@media (min-width: 900px){
+  :root{ --vw: calc(100vw / 1.25); --vh: calc(100vh / 1.25); }
+}
+
+/* ---------- wide frame: text left edge → right gutter ---------- */
+@media (min-width: 900px){
+  .bx{
+    width: clamp(100%, calc(var(--vw) - var(--col-left) - 48px), 960px);
+    max-width: none;
+  }
+  /* square-ish and tall media stay on screen instead of growing past it */
+  .bx.fit-h img, .bx.fit-h video{
+    width: auto; max-width: 100%;
+    max-height: calc(var(--vh) * .78);
+  }
+  /* …and sit centred on a quiet tile across the whole frame, so the wide
+     frame never ends in an empty gap on the right */
+  .figure.bx.fit-h{
+    display: flex; justify-content: center;
+    padding: 20px; border-radius: var(--radius-lg);
+    background: var(--paper-raised);
+  }
+  .figure.bx.fit-h > .zoom-wrap{ display: inline-block; }
+}
+.figure.bx{ margin: 24px 0; }
+/* tablets (no page zoom there): a little wider than the text as well */
+@media (min-width: 641px) and (max-width: 899px){
+  .bx{ width: calc(var(--vw) - var(--col-left) - 28px); max-width: none; }
+}
+/* phones: illustrations come closer to the screen edges than the text */
+@media (max-width: 640px){
+  .figure.bx, .bento.bx{ margin-left: -14px; margin-right: -14px; }
+  .figure.bx.fit-h{ padding: 12px; }
+}
+.figure figcaption, .panel figcaption{
+  margin-top: 10px; font-size: 13px; line-height: 1.45; color: var(--ink-faint);
+}
+
+/* ---------- zoomable media: a hint on hover, cursor zoom-in ---------- */
+[data-zoomable]{ cursor: zoom-in; }
+.zoom-wrap{ position: relative; display: block; }
+.zoom-wrap.float-figure img{ width: 100%; display: block; border-radius: var(--radius-md); }
+.img-col > .zoom-wrap{ height: 100%; }
+.zoom-hint{
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center; pointer-events: none;
+  color: #fff; font-size: 17px;
+  background: rgba(0,0,0,.45); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  opacity: 0; transition: opacity .2s ease;
+}
+.zoom-wrap:hover .zoom-hint, .zoom-wrap:focus-within .zoom-hint{ opacity: 1; }
+@media (hover: none){ .zoom-hint{ opacity: .9; width: 32px; height: 32px; font-size: 15px; top: 8px; right: 8px; } }
+
+/* ================= B — bento: pairs and splits inside the wide frame ================= */
+.bento{ display: grid; gap: 14px; margin: 24px 0; }
+@media (min-width: 900px){
+  .bento-2{ grid-template-columns: 1fr 1fr; }
+  .bento-split{ grid-template-columns: 620px 1fr; align-items: start; }
+  .bento-meta{ grid-template-columns: 1.15fr 1fr; align-items: stretch; }
+}
+.tile{
+  background: var(--paper-raised); border-radius: var(--radius-md);
+  padding: 14px; display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.tile > .zoom-wrap img, .tile > .zoom-wrap video{ width: 100%; display: block; border-radius: calc(var(--radius-md) - 6px); }
+.tile .case-h3{ margin: 4px 4px 0; }
+.tile p{ margin: 0 4px; }
+.tile .card-grid-2{ margin: 0; grid-template-columns: 1fr; }
+.tile .meta-table, .tile .stat-grid{ margin: 0; }
+/* facts and metrics read as two columns of the same page, not boxes in boxes */
+.bento-meta .tile{ background: none; padding: 0; gap: 10px; }
+.bento-meta .tile .case-h3{ margin: 0 0 4px; }
+.bento-meta .stat-grid{ flex-direction: column; }
+.bento-meta .stat-grid .metric{ flex: none; }
+.bento-split .img-col img{ width: 100%; border-radius: var(--radius-md); display: block; }
+.bento-split .text p{ margin: 0 0 14px; }
+
+/* ================= C — canvases: full-bleed panels behind the key visuals ================= */
+.panel{
+  position: relative;
+  width: var(--vw);
+  margin: 32px 0 32px calc(-1 * var(--col-left));
+  padding: clamp(28px, 4vw, 56px) 0;
+  background:
+    radial-gradient(55% 90% at 88% 0%, rgba(110,125,240,.30), transparent 70%),
+    radial-gradient(45% 80% at 8% 100%, rgba(186,163,255,.18), transparent 70%),
+    #121216;
+}
+.panel-in{ margin-left: var(--col-left); }
+@media (min-width: 900px){
+  .panel-in{ width: clamp(620px, calc(var(--vw) - var(--col-left) - 48px), 960px); }
+  .panel-in.fit-h img, .panel-in.fit-h video{ width: auto; max-width: 100%; max-height: calc(var(--vh) * .78); }
+}
+.panel-in img, .panel-in video{ width: 100%; display: block; border-radius: var(--radius-md); }
+@media (max-width: 899px){
+  .panel-in{ width: calc(var(--vw) - 2 * var(--col-left)); }
+}
+/* the opening visual right under the title */
+.panel-cover{ margin-top: 8px; }
+
+/* ================= lightbox ================= */
+.lb{
+  position: fixed; inset: 0; z-index: 300;
+  display: grid; grid-template-rows: 1fr auto;
+  background: rgba(0,0,0,.92);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  opacity: 0; transition: opacity .22s ease;
+  font-family: 'Inter', sans-serif;
+}
+@media (min-width: 900px){ .lb{ zoom: .8; } }
+.lb[hidden]{ display: none; }
+.lb.on{ opacity: 1; }
+.lb-stage{
+  position: relative; min-height: 0; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(16px, 3vw, 40px) clamp(12px, 5vw, 88px) 8px;
+  touch-action: none;
+}
+.lb-media{
+  max-width: 100%; max-height: 100%; display: block;
+  border-radius: 12px; user-select: none; -webkit-user-drag: none;
+  transform-origin: 50% 50%;
+  transition: transform .28s cubic-bezier(.22,1,.36,1);
+}
+img.lb-media{ cursor: zoom-in; }
+.lb.zoomed img.lb-media{ cursor: zoom-out; transition: transform .28s cubic-bezier(.22,1,.36,1), transform-origin 0s; }
+.lb.panning img.lb-media{ transition: none; }
+.lb-bar{
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px clamp(16px, 3vw, 32px) max(18px, env(safe-area-inset-bottom));
+  color: #f2f2f0;
+}
+.lb-count{ font-size: 13px; color: #a3a39e; font-variant-numeric: tabular-nums; flex: none; }
+.lb-cap{ flex: 1; min-width: 0; font-size: 14px; line-height: 1.45; color: #c6c5c0; }
+.lb-ctrl{ display: flex; gap: 8px; flex: none; }
+.lb-btn{
+  width: 44px; height: 44px; border-radius: 50%; border: 0; cursor: pointer;
+  display: grid; place-items: center; font-size: 18px; color: #f2f2f0;
+  background: rgba(255,255,255,.08); transition: background .2s ease;
+}
+.lb-btn:hover{ background: rgba(255,255,255,.16); }
+.lb-btn:focus-visible{ outline: 2px solid #9061f9; outline-offset: 2px; }
+.lb-btn[disabled]{ opacity: .35; cursor: default; }
+.lb-side{
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+}
+.lb-prev{ left: clamp(8px, 1.6vw, 24px); }
+.lb-next{ right: clamp(8px, 1.6vw, 24px); }
+@media (max-width: 640px){
+  .lb-side{ display: none; }   /* phones: swipe left/right instead */
+  .lb-bar{ flex-wrap: wrap; gap: 10px 12px; }
+  .lb-cap{ order: 3; flex-basis: 100%; font-size: 13px; }
+  .lb-ctrl{ margin-left: auto; }
+}
+@media (prefers-reduced-motion: reduce){
+  .lb, .lb-media, .zoom-hint, .lb-btn{ transition: none !important; }
+}
+
+/* ================= version switcher (only on the trial pages) ================= */
+.grid-switch{
+  position: fixed; z-index: 60; left: 50%; bottom: 20px; transform: translateX(-50%);
+  display: flex; gap: 4px; padding: 4px; border-radius: 999px;
+  background: rgba(20,20,20,.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-1);
+}
+.grid-switch a{
+  font: 600 13px/34px 'Inter', sans-serif; color: var(--ink-soft);
+  padding: 0 14px; border-radius: 999px; text-decoration: none; white-space: nowrap;
+}
+.grid-switch a[aria-current="page"]{ background: var(--ink); color: #000; }
+.grid-switch a:focus-visible{ outline: 2px solid var(--accent-active); outline-offset: 2px; }
+@media (max-width: 640px){ .grid-switch .gs-long{ display: none; } .grid-switch a{ padding: 0 16px; } }
