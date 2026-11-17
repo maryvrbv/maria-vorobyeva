@@ -1,12 +1,14 @@
-/* ---------- image preview (case grid versions) ----------
-   Every illustration in a case opens full screen: it grows out of its place
-   on the page, arrows / swipe go through all of them in page order, a click
-   on the picture zooms in where you clicked and the zoom follows the pointer
-   (on phones: tap to zoom, drag to look around). Esc, the cross or a click
-   on the dark background close it. Videos open bigger, with controls. */
+/* ---------- image preview (all case pages) ----------
+   Every illustration in a case opens full screen on click: it grows out of
+   its place on the page, arrows / swipe go through all of them in page
+   order, a click on the picture (or the magnifier button) zooms in where you
+   clicked and the zoom follows the pointer (on phones: tap to zoom, drag to
+   look around). Esc, the cross or a click on the dark background close it.
+   Looping videos open bigger with controls; the research recording with its
+   own controls stays as it is. No hover effects and no cursor change on the
+   page: the pictures just work when clicked. */
 (function () {
-  var SEL = '.case-body .figure img, .case-body .figure video, .case-body .img-col img, ' +
-            '.case-body .float-figure, .case-body .tile img, .case-body .tile video, .case-body .panel-in img, .case-body .panel-in video';
+  var SEL = '.case-body img, .case-body video:not([controls])';
   var items = [].slice.call(document.querySelectorAll(SEL));
   if (!items.length) return;
   var en = (document.documentElement.lang || '').indexOf('en') === 0;
@@ -15,39 +17,14 @@
     : { dialog: 'Просмотр иллюстрации', prev: 'Предыдущая', next: 'Следующая', close: 'Закрыть', zoom: 'Увеличить', unzoom: 'Уменьшить', open: 'Открыть крупнее' };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // hint + affordance on every zoomable piece
   items.forEach(function (el, i) {
-    el.setAttribute('data-zoomable', '');
     el.setAttribute('tabindex', '0');
     el.setAttribute('role', 'button');
     el.setAttribute('aria-label', T.open + ': ' + (el.getAttribute('alt') || el.getAttribute('aria-label') || ''));
-    var wrap = el.parentNode;
-    if (!wrap.classList.contains('zoom-wrap')) {
-      var w = document.createElement('span');
-      w.className = 'zoom-wrap';
-      // a floated picture hands its float to the wrapper
-      if (el.classList.contains('float-figure')) { el.classList.remove('float-figure'); w.classList.add('float-figure'); }
-      wrap.insertBefore(w, el);
-      w.appendChild(el);
-      wrap = w;
-    }
-    var hint = document.createElement('span');
-    hint.className = 'zoom-hint';
-    hint.setAttribute('aria-hidden', 'true');
-    hint.innerHTML = '<i class="ph-bold ph-magnifying-glass-plus"></i>';
-    wrap.appendChild(hint);
-    // native controls on the research video keep working; open via the hint area instead
-    el.addEventListener('click', function (e) {
-      if (el.tagName === 'VIDEO' && el.hasAttribute('controls')) return;
-      e.preventDefault(); open(i);
-    });
+    el.addEventListener('click', function (e) { e.preventDefault(); open(i); });
     el.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
     });
-    if (el.tagName === 'VIDEO' && el.hasAttribute('controls')) {
-      hint.style.pointerEvents = 'auto'; hint.style.cursor = 'zoom-in';
-      hint.addEventListener('click', function (e) { e.preventDefault(); open(i); });
-    }
   });
 
   // the overlay
