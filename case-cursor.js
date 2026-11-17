@@ -1,14 +1,15 @@
 /* ---------- cursor on case pages (mouse only) ----------
-   A small white shape replaces the arrow (the layer inverts what is under
-   it, so it reads on dark and light). Over a picture that opens larger it
-   turns into a small magnifying glass with a plus that swings in; over
-   links and buttons the shape grows a little. Phones, tablets and keyboard
+   A small white four-point star, like the list bullets, replaces the arrow
+   (the layer inverts what is under it, so it reads on dark and light). Over
+   a picture that opens larger it turns into a small magnifying glass with a
+   plus that swings in; over links and buttons the star grows a little and
+   spins. Phones, tablets and keyboard
    users keep the system behaviour.
    The live shape is SHAPE below; case-alfa-pointer.html tries the others
    through window.zcShape(name) */
 (function () {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-  var SHAPE = 'dot';
+  var SHAPE = 'star';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // pictures in the case, and the picture in the preview while it is not zoomed
   var ZOOMABLE = '.case-body [role=button], .lb:not(.zoomed) img.lb-media';
