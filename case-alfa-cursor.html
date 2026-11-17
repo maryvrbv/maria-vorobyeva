@@ -55,8 +55,11 @@
 <style>
 /* ===== cursor try-outs (case-alfa-cursor.html): how a picture can say "you can zoom" =====
    Only on devices with a mouse; phones keep plain taps. Switch with the pill or ?c=1…5 */
-.cur-layer{ position: fixed; inset: 0; pointer-events: none; z-index: 250; }
+.cur-layer{ position: fixed; inset: 0; pointer-events: none; z-index: 400; }
 @media (min-width: 900px){ .cur-layer{ zoom: .8; } }   /* undo the page zoom: event coords are real px */
+/* inverting cursors: the blend has to sit on the layer itself — the layer is
+   its own stacking context, so a blend on its child would only see the layer */
+.c-5 .cur-layer, .c-6 .cur-layer, .c-7 .cur-layer{ mix-blend-mode: difference; }
 .cur-el{ position: absolute; left: 0; top: 0; will-change: transform; opacity: 0; transition: opacity .18s ease; }
 .cur-on .cur-el{ opacity: 1; }
 
@@ -96,7 +99,7 @@
 .c-5 .case-body [role=button]{ cursor: none; }
 .cur-dot{
   width: 72px; height: 72px; margin: -36px 0 0 -36px; border-radius: 50%;
-  background: #fff; mix-blend-mode: difference;
+  background: #fff;
   display: grid; place-items: center;
   scale: .15; transition: scale .25s cubic-bezier(.22,1,.36,1), opacity .18s ease;
 }
@@ -104,8 +107,33 @@
 .cur-dot i{ color: #000; font-size: 24px; opacity: 0; transition: opacity .2s ease; }
 .cur-on .cur-dot i{ opacity: 1; }
 
+/* 6 — as on ovzson.com: the arrow is gone on the whole page, a small white dot
+   (difference blend) trails the pointer; links make it a little bigger, pictures
+   turn it into a large disc with an ↗ arrow that springs open */
+.c-6, .c-6 *{ cursor: none !important; }
+/* 7 — the same disc, only over pictures; the normal arrow everywhere else */
+.c-7 .case-body [role=button]{ cursor: none; }
+.cur-orb{
+  width: 130px; height: 130px; margin: -65px 0 0 -65px;
+}
+/* the dot: a filled white circle shrunk to a tenth; on a picture it opens
+   into a thin ring and an ↗ arrow appears — both invert what is under them */
+.cur-orb .ring{
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 8px solid #fff; background: #fff;
+  scale: .1; transition: scale .5s cubic-bezier(.34,1.56,.64,1), background-color .25s ease;
+}
+.cur-orb svg{
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; scale: .4; transition: opacity .25s ease, scale .45s cubic-bezier(.34,1.56,.64,1);
+}
+.c-6 .cur-in .cur-orb{ opacity: 1; }
+.cur-link .cur-orb .ring{ scale: .24; }
+.cur-on .cur-orb .ring{ scale: 1; background-color: transparent; }
+.cur-on .cur-orb svg{ opacity: 1; scale: 1; }
+
 @media (prefers-reduced-motion: reduce){
-  .cur-el, .cur-dot, .cur-dot i{ transition: none; animation: none !important; }
+  .cur-el, .cur-dot, .cur-dot i, .cur-orb .ring, .cur-orb svg{ transition: none; animation: none !important; }
 }
 
 /* switcher */
@@ -121,7 +149,7 @@
 }
 .cur-switch button[aria-pressed="true"]{ background: var(--ink); color: #000; }
 .cur-switch button:focus-visible{ outline: 2px solid var(--accent-active); outline-offset: 2px; }
-@media (max-width: 900px){ .cur-switch .cs-long{ display: none; } }
+@media (max-width: 1440px){ .cur-switch .cs-long{ display: none; } }
 </style>
 </head>
 <body data-toc-logo="images/home/exp/logo-alfa.webp">
@@ -456,7 +484,7 @@
 <script src="script.js"></script>
 <script src="case-lightbox.js"></script>
 <div class="cur-switch" role="group" aria-label="Вариант курсора">
-  <button type="button" data-c="1">1<span class="cs-long"> · системная лупа</span></button><button type="button" data-c="2">2<span class="cs-long"> · кружок с плюсом</span></button><button type="button" data-c="3">3<span class="cs-long"> · подпись</span></button><button type="button" data-c="4">4<span class="cs-long"> · линза</span></button><button type="button" data-c="5">5<span class="cs-long"> · растущая точка</span></button>
+  <button type="button" data-c="1">1<span class="cs-long"> · системная лупа</span></button><button type="button" data-c="2">2<span class="cs-long"> · кружок с плюсом</span></button><button type="button" data-c="3">3<span class="cs-long"> · подпись</span></button><button type="button" data-c="4">4<span class="cs-long"> · линза</span></button><button type="button" data-c="5">5<span class="cs-long"> · растущая точка</span></button><button type="button" data-c="6">6<span class="cs-long"> · как ovzson, везде</span></button><button type="button" data-c="7">7<span class="cs-long"> · ovzson на картинках</span></button>
 </div>
 <script>
 (function () {
@@ -472,16 +500,20 @@
     if (m === '3') { el = document.createElement('div'); el.className = 'cur-el cur-label'; el.innerHTML = '<i class="ph-bold ph-magnifying-glass-plus"></i>Увеличить'; }
     if (m === '4') { el = document.createElement('div'); el.className = 'cur-el cur-lens'; }
     if (m === '5') { el = document.createElement('div'); el.className = 'cur-el cur-dot'; el.innerHTML = '<i class="ph-bold ph-arrows-out-simple"></i>'; }
+    if (m === '6' || m === '7') {
+      el = document.createElement('div'); el.className = 'cur-el cur-orb';
+      el.innerHTML = '<span class="ring"></span><svg viewBox="0 0 130 130" aria-hidden="true"><path fill="#fff" d="M44 41h46v46h-8V54.6L46.8 89.8l-5.6-5.6L76.4 49H44z"/></svg>';
+    }
     if (el) layer.appendChild(el);
   }
   function set(m) {
     mode = m;
-    document.body.classList.remove('c-1', 'c-2', 'c-3', 'c-4', 'c-5');
+    document.body.classList.remove('c-1', 'c-2', 'c-3', 'c-4', 'c-5', 'c-6', 'c-7');
     document.body.classList.add('c-' + m);
     [].forEach.call(document.querySelectorAll('.cur-switch button'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.c === m)); });
     var q = new URLSearchParams(location.search); q.set('c', m);
     history.replaceState(null, '', location.pathname + '?' + q + location.hash);
-    make(m); layer.classList.remove('cur-on');
+    make(m); layer.classList.remove('cur-on', 'cur-link');
   }
   [].forEach.call(document.querySelectorAll('.cur-switch button'), function (b) { b.addEventListener('click', function () { set(b.dataset.c); }); });
 
@@ -496,7 +528,7 @@
     raf = 0;
     if (!el) return;
     // the label and the dot trail a little behind the pointer; the lens sticks to it
-    var ease = (reduce || mode === '4') ? 1 : 0.28;
+    var ease = (reduce || mode === '4') ? 1 : (mode === '6' || mode === '7') ? 0.2 : 0.28;
     cx += (x - cx) * ease; cy += (y - cy) * ease;
     el.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
     if (mode === '4') lens();
@@ -505,19 +537,21 @@
   document.addEventListener('mousemove', function (e) {
     x = e.clientX; y = e.clientY;
     var t = e.target.closest && e.target.closest('.case-body [role=button]');
+    if (!layer.classList.contains('cur-in')) { cx = x; cy = y; layer.classList.add('cur-in'); }
     if (t !== target) {
-      if (t && !target) { cx = x; cy = y; }
+      if (t && !target && mode !== '6') { cx = x; cy = y; }
       target = t;
       layer.classList.toggle('cur-on', !!t);
     }
+    layer.classList.toggle('cur-link', !t && !!(e.target.closest && e.target.closest('a, button, summary')));
     if (!raf) raf = requestAnimationFrame(frame);
   }, { passive: true });
-  document.addEventListener('mouseleave', function () { target = null; layer.classList.remove('cur-on'); });
+  document.documentElement.addEventListener('mouseleave', function () { target = null; layer.classList.remove('cur-on', 'cur-in', 'cur-link'); });
   // the preview hides the cursor effect while it is open
   document.addEventListener('click', function () { target = null; layer.classList.remove('cur-on'); }, true);
 
   var c = new URLSearchParams(location.search).get('c');
-  set(/^[1-5]$/.test(c) ? c : '1');
+  set(/^[1-7]$/.test(c) ? c : '1');
   if (!fine) layer.remove();
 })();
 </script>
