@@ -1059,3 +1059,32 @@ header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 40px; min-height: 
 @media (prefers-reduced-motion: reduce){
   .lb, .lb-media, .lb-btn{ transition: none !important; }
 }
+
+/* ---------- cursor: a dot that becomes a small magnifying glass (case-cursor.js) ----------
+   Only with a mouse; the class on <html> is set by the script, so without it
+   the system cursor stays. The layer inverts what is under it, which only
+   works when the blend sits on the layer itself */
+.zc, .zc *{ cursor: none !important; }
+.zc-layer{ position: fixed; inset: 0; pointer-events: none; z-index: 400; mix-blend-mode: difference; }
+@media (min-width: 900px){ .zc-layer{ zoom: .8; } }   /* undo the page zoom: mouse coordinates are real px */
+.zc-el{
+  position: absolute; left: 0; top: 0; width: 40px; height: 40px; margin: -16px 0 0 -16px;
+  will-change: transform; opacity: 0; transition: opacity .18s ease;
+}
+.zc-in .zc-el{ opacity: 1; }
+.zc-dot{
+  position: absolute; left: 10px; top: 10px; width: 12px; height: 12px; border-radius: 50%;
+  background: #fff; transition: scale .3s cubic-bezier(.34,1.56,.64,1), opacity .2s ease;
+}
+.zc-el svg{
+  position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
+  transform-origin: 40% 40%;
+  opacity: 0; scale: .2; rotate: -35deg;
+  transition: opacity .2s ease, scale .5s cubic-bezier(.34,1.56,.64,1), rotate .55s cubic-bezier(.34,1.56,.64,1);
+}
+.zc-link .zc-dot{ scale: 2.2; }
+.zc-on .zc-dot{ scale: 0; opacity: 0; }
+.zc-on .zc-el svg{ opacity: 1; scale: 1; rotate: 0deg; }
+@media (prefers-reduced-motion: reduce){
+  .zc-el, .zc-dot, .zc-el svg{ transition: none; }
+}

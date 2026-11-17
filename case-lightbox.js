@@ -5,8 +5,8 @@
    clicked and the zoom follows the pointer (on phones: tap to zoom, drag to
    look around). Esc, the cross or a click on the dark background close it.
    Looping videos open bigger with controls; the research recording with its
-   own controls stays as it is. No hover effects and no cursor change on the
-   page: the pictures just work when clicked. */
+   own controls stays as it is. No hover effects on the pictures; with a
+   mouse, case-cursor.js turns the pointer into a small magnifier over them. */
 (function () {
   var SEL = '.case-body img, .case-body video:not([controls])';
   var items = [].slice.call(document.querySelectorAll(SEL));
