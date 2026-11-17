@@ -1013,7 +1013,7 @@ header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 40px; min-height: 
 .lb-stage{
   position: relative; min-height: 0; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
-  padding: clamp(16px, 3vw, 40px) clamp(12px, 5vw, 88px) 8px;
+  padding: 72px clamp(12px, 5vw, 88px) 8px;   /* room for the close button above */
   touch-action: none;
 }
 .lb-media{
@@ -1040,6 +1040,11 @@ header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 40px; min-height: 
 .lb-btn:hover{ background: rgba(255,255,255,.16); }
 .lb-btn:focus-visible{ outline: 2px solid #9061f9; outline-offset: 2px; }
 .lb-btn[disabled]{ opacity: .35; }
+/* close: top right corner, where people look for it */
+.lb-close{
+  position: absolute; z-index: 3;
+  top: max(16px, env(safe-area-inset-top)); right: clamp(12px, 1.6vw, 24px);
+}
 .lb-side{
   position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
 }

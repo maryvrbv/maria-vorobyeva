@@ -35,6 +35,7 @@
   lb.setAttribute('aria-modal', 'true');
   lb.setAttribute('aria-label', T.dialog);
   lb.innerHTML =
+    '<button type="button" class="lb-btn lb-close" aria-label="' + T.close + '"><i class="ph-bold ph-x"></i></button>' +
     '<div class="lb-stage">' +
       '<button type="button" class="lb-btn lb-side lb-prev" aria-label="' + T.prev + '"><i class="ph-bold ph-arrow-left"></i></button>' +
       '<button type="button" class="lb-btn lb-side lb-next" aria-label="' + T.next + '"><i class="ph-bold ph-arrow-right"></i></button>' +
@@ -44,7 +45,6 @@
       '<span class="lb-cap"></span>' +
       '<span class="lb-ctrl">' +
         '<button type="button" class="lb-btn lb-zoom" aria-label="' + T.zoom + '"><i class="ph-bold ph-magnifying-glass-plus"></i></button>' +
-        '<button type="button" class="lb-btn lb-close" aria-label="' + T.close + '"><i class="ph-bold ph-x"></i></button>' +
       '</span>' +
     '</div>';
   document.body.appendChild(lb);
