@@ -59,7 +59,7 @@
 @media (min-width: 900px){ .cur-layer{ zoom: .8; } }   /* undo the page zoom: event coords are real px */
 /* inverting cursors: the blend has to sit on the layer itself — the layer is
    its own stacking context, so a blend on its child would only see the layer */
-.c-5 .cur-layer, .c-6 .cur-layer, .c-7 .cur-layer{ mix-blend-mode: difference; }
+.c-5 .cur-layer, .c-6 .cur-layer, .c-7 .cur-layer, .c-8 .cur-layer, .c-9 .cur-layer{ mix-blend-mode: difference; }
 .cur-el{ position: absolute; left: 0; top: 0; will-change: transform; opacity: 0; transition: opacity .18s ease; }
 .cur-on .cur-el{ opacity: 1; }
 
@@ -132,7 +132,37 @@
 .cur-on .cur-orb .ring{ scale: 1; background-color: transparent; }
 .cur-on .cur-orb svg{ opacity: 1; scale: 1; }
 
+/* 8 — our own take: the dot everywhere, and on a picture it turns into a
+   magnifying glass (ring, handle, plus) that swings in. 9 — the same glass,
+   and the ring already shows the picture under it twice as big */
+.c-8, .c-8 *, .c-9, .c-9 *{ cursor: none !important; }
+.cur-loupe{ width: 120px; height: 120px; margin: -48px 0 0 -48px; }
+.cur-loupe .dot{
+  position: absolute; left: 42px; top: 42px; width: 12px; height: 12px; border-radius: 50%;
+  background: #fff; transition: scale .3s cubic-bezier(.34,1.56,.64,1), opacity .2s ease;
+}
+.cur-loupe svg{
+  position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
+  transform-origin: 40% 40%;
+  opacity: 0; scale: .2; rotate: -35deg;
+  transition: opacity .2s ease, scale .5s cubic-bezier(.34,1.56,.64,1), rotate .55s cubic-bezier(.34,1.56,.64,1);
+}
+.c-8 .cur-in .cur-loupe, .c-9 .cur-in .cur-loupe{ opacity: 1; }
+.cur-link .cur-loupe .dot{ scale: 2.2; }
+.cur-on .cur-loupe .dot{ scale: 0; opacity: 0; }
+.cur-on .cur-loupe svg{ opacity: 1; scale: 1; rotate: 0deg; }
+/* 9: the magnified picture lives on its own layer, without the inversion */
+.cur-layer2{ position: fixed; inset: 0; pointer-events: none; z-index: 399; }
+@media (min-width: 900px){ .cur-layer2{ zoom: .8; } }
+.cur-glass{
+  width: 66px; height: 66px; margin: -33px 0 0 -33px; border-radius: 50%;
+  background-repeat: no-repeat; background-color: #111;
+  opacity: 0; scale: .3; transition: opacity .2s ease, scale .5s cubic-bezier(.34,1.56,.64,1);
+}
+.cur-on2 .cur-glass{ opacity: 1; scale: 1; }
+
 @media (prefers-reduced-motion: reduce){
+  .cur-loupe .dot, .cur-loupe svg, .cur-glass{ transition: none; }
   .cur-el, .cur-dot, .cur-dot i, .cur-orb .ring, .cur-orb svg{ transition: none; animation: none !important; }
 }
 
@@ -149,7 +179,9 @@
 }
 .cur-switch button[aria-pressed="true"]{ background: var(--ink); color: #000; }
 .cur-switch button:focus-visible{ outline: 2px solid var(--accent-active); outline-offset: 2px; }
-@media (max-width: 1440px){ .cur-switch .cs-long{ display: none; } }
+/* nine options: only the chosen one shows its name */
+.cur-switch .cs-long{ display: none; }
+.cur-switch button[aria-pressed="true"] .cs-long{ display: inline; }
 </style>
 </head>
 <body data-toc-logo="images/home/exp/logo-alfa.webp">
@@ -484,7 +516,7 @@
 <script src="script.js"></script>
 <script src="case-lightbox.js"></script>
 <div class="cur-switch" role="group" aria-label="Вариант курсора">
-  <button type="button" data-c="1">1<span class="cs-long"> · системная лупа</span></button><button type="button" data-c="2">2<span class="cs-long"> · кружок с плюсом</span></button><button type="button" data-c="3">3<span class="cs-long"> · подпись</span></button><button type="button" data-c="4">4<span class="cs-long"> · линза</span></button><button type="button" data-c="5">5<span class="cs-long"> · растущая точка</span></button><button type="button" data-c="6">6<span class="cs-long"> · как ovzson, везде</span></button><button type="button" data-c="7">7<span class="cs-long"> · ovzson на картинках</span></button>
+  <button type="button" data-c="1">1<span class="cs-long"> · системная лупа</span></button><button type="button" data-c="2">2<span class="cs-long"> · кружок с плюсом</span></button><button type="button" data-c="3">3<span class="cs-long"> · подпись</span></button><button type="button" data-c="4">4<span class="cs-long"> · линза</span></button><button type="button" data-c="5">5<span class="cs-long"> · растущая точка</span></button><button type="button" data-c="6">6<span class="cs-long"> · как ovzson, везде</span></button><button type="button" data-c="7">7<span class="cs-long"> · ovzson на картинках</span></button><button type="button" data-c="8">8<span class="cs-long"> · точка → лупа</span></button><button type="button" data-c="9">9<span class="cs-long"> · лупа с увеличением</span></button>
 </div>
 <script>
 (function () {
@@ -492,10 +524,22 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var layer = document.createElement('div'); layer.className = 'cur-layer'; layer.setAttribute('aria-hidden', 'true');
   document.body.appendChild(layer);
+  var layer2 = document.createElement('div'); layer2.className = 'cur-layer2'; layer2.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(layer2);
+  var glass = null;
   var mode = '1', el = null, target = null, x = 0, y = 0, cx = 0, cy = 0, raf = 0;
 
+  var LOUPE = '<span class="dot"></span><svg viewBox="0 0 120 120"><circle cx="48" cy="48" r="36" fill="none" stroke="#fff" stroke-width="6"/>' +
+    '<path d="M75 75l22 22" stroke="#fff" stroke-width="10" stroke-linecap="round"/>' +
+    '<path d="M48 34v28M34 48h28" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>';
   function make(m) {
-    layer.innerHTML = ''; el = null;
+    layer.innerHTML = ''; layer2.innerHTML = ''; el = null; glass = null;
+    if (m === '8' || m === '9') { el = document.createElement('div'); el.className = 'cur-el cur-loupe'; el.innerHTML = LOUPE; }
+    if (m === '9') {
+      // the plus would cover the magnified detail: lens without it
+      el.querySelector('svg').lastChild.remove();
+      glass = document.createElement('div'); glass.className = 'cur-el cur-glass'; layer2.appendChild(glass);
+    }
     if (m === '2') { el = document.createElement('div'); el.className = 'cur-el cur-ring'; el.innerHTML = '<i class="ph-bold ph-plus"></i>'; }
     if (m === '3') { el = document.createElement('div'); el.className = 'cur-el cur-label'; el.innerHTML = '<i class="ph-bold ph-magnifying-glass-plus"></i>Увеличить'; }
     if (m === '4') { el = document.createElement('div'); el.className = 'cur-el cur-lens'; }
@@ -508,12 +552,12 @@
   }
   function set(m) {
     mode = m;
-    document.body.classList.remove('c-1', 'c-2', 'c-3', 'c-4', 'c-5', 'c-6', 'c-7');
+    document.body.classList.remove('c-1', 'c-2', 'c-3', 'c-4', 'c-5', 'c-6', 'c-7', 'c-8', 'c-9');
     document.body.classList.add('c-' + m);
     [].forEach.call(document.querySelectorAll('.cur-switch button'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.c === m)); });
     var q = new URLSearchParams(location.search); q.set('c', m);
     history.replaceState(null, '', location.pathname + '?' + q + location.hash);
-    make(m); layer.classList.remove('cur-on', 'cur-link');
+    make(m); layer.classList.remove('cur-on', 'cur-link'); layer2.classList.remove('cur-on2');
   }
   [].forEach.call(document.querySelectorAll('.cur-switch button'), function (b) { b.addEventListener('click', function () { set(b.dataset.c); }); });
 
@@ -528,10 +572,19 @@
     raf = 0;
     if (!el) return;
     // the label and the dot trail a little behind the pointer; the lens sticks to it
-    var ease = (reduce || mode === '4') ? 1 : (mode === '6' || mode === '7') ? 0.2 : 0.28;
+    var ease = (reduce || mode === '4') ? 1 : (mode === '5' || mode === '3') ? 0.28 : 0.2;
     cx += (x - cx) * ease; cy += (y - cy) * ease;
     el.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
     if (mode === '4') lens();
+    if (glass) {
+      glass.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
+      if (target && target.tagName === 'IMG') {
+        var r = target.getBoundingClientRect(), k = 2, R = 33;
+        glass.style.backgroundImage = 'url("' + (target.currentSrc || target.src) + '")';
+        glass.style.backgroundSize = (r.width * k) + 'px ' + (r.height * k) + 'px';
+        glass.style.backgroundPosition = (-(cx - r.left) * k + R) + 'px ' + (-(cy - r.top) * k + R) + 'px';
+      }
+    }
     if (Math.abs(x - cx) > .3 || Math.abs(y - cy) > .3) raf = requestAnimationFrame(frame);
   }
   document.addEventListener('mousemove', function (e) {
@@ -542,17 +595,18 @@
       if (t && !target && mode !== '6') { cx = x; cy = y; }
       target = t;
       layer.classList.toggle('cur-on', !!t);
+      layer2.classList.toggle('cur-on2', !!t && t.tagName === 'IMG');
     }
     layer.classList.toggle('cur-link', !t && !!(e.target.closest && e.target.closest('a, button, summary')));
     if (!raf) raf = requestAnimationFrame(frame);
   }, { passive: true });
-  document.documentElement.addEventListener('mouseleave', function () { target = null; layer.classList.remove('cur-on', 'cur-in', 'cur-link'); });
+  document.documentElement.addEventListener('mouseleave', function () { target = null; layer.classList.remove('cur-on', 'cur-in', 'cur-link'); layer2.classList.remove('cur-on2'); });
   // the preview hides the cursor effect while it is open
-  document.addEventListener('click', function () { target = null; layer.classList.remove('cur-on'); }, true);
+  document.addEventListener('click', function () { target = null; layer.classList.remove('cur-on'); layer2.classList.remove('cur-on2'); }, true);
 
   var c = new URLSearchParams(location.search).get('c');
-  set(/^[1-7]$/.test(c) ? c : '1');
-  if (!fine) layer.remove();
+  set(/^[1-9]$/.test(c) ? c : '8');
+  if (!fine) { layer.remove(); layer2.remove(); }
 })();
 </script>
 </body>
