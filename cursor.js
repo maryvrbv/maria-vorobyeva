@@ -3,8 +3,9 @@
    (the layer inverts what is under it, so it reads on dark and light). Over
    a picture that opens larger it turns into a small magnifying glass with a
    plus that swings in; over links and buttons the star grows a little and
-   spins. Phones, tablets and keyboard
-   users keep the system behaviour.
+   spins (LINK below; index-cursor.html tries other hover effects through
+   window.zcLink(name): a bigger still star with tiny stars twinkling
+   around it). Phones, tablets and keyboard users keep the system behaviour.
    On the home page and 404 there are no pictures to open, so there it is
    just the star. The live shape is SHAPE below; case-alfa-pointer.html
    tries the others
@@ -12,6 +13,7 @@
 (function () {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   var SHAPE = 'star';
+  var LINK = 'spin';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // pictures in the case, and the picture in the preview while it is not zoomed
   var ZOOMABLE = '.case-body [role=button], .lb:not(.zoomed) img.lb-media';
@@ -47,16 +49,17 @@
   }
   unzoom();
   window.addEventListener('resize', unzoom);
-  var el, trail, shape;
+  var el, trail, shape, sparks;
   var x = 0, y = 0, cx = 0, cy = 0, tx = 0, ty = 0, raf = 0, target = null;
 
   function make(name) {
     shape = SHAPES[name] || SHAPES.dot;
-    layer.className = 'zc-layer zc-s-' + (SHAPES[name] ? name : 'dot') + (shape.plain ? ' zc-plain' : '') +
+    layer.className = 'zc-layer zc-s-' + (SHAPES[name] ? name : 'dot') + ' zc-l-' + LINK + (shape.plain ? ' zc-plain' : '') +
       (layer.classList.contains('zc-in') ? ' zc-in' : '');
     layer.innerHTML = (shape.trail ? '<span class="zc-trail"></span>' : '') +
-      '<div class="zc-el"><span class="zc-shape">' + shape.html + '</span>' + LOUPE + '</div>';
+      '<div class="zc-el"><span class="zc-glow"></span><span class="zc-sparks"></span><span class="zc-shape">' + shape.html + '</span>' + LOUPE + '</div>';
     el = layer.querySelector('.zc-el');
+    sparks = layer.querySelector('.zc-sparks');
     trail = layer.querySelector('.zc-trail');
     target = null;
     place();
@@ -82,15 +85,75 @@
       target = t;
       layer.classList.toggle('zc-on', !!t);
     }
-    layer.classList.toggle('zc-link', !t && !!(e.target.closest && e.target.closest('a, button, summary, [role=button]')));
+    var link = !t && !!(e.target.closest && e.target.closest('a, button, summary, [role=button]'));
+    if (link !== layer.classList.contains('zc-link')) { layer.classList.toggle('zc-link', link); if (link) linkOn(); else linkOff(); }
+    if (link && LINK === 'trail') sprinkle();
     if (!raf) raf = requestAnimationFrame(frame);
   }, { passive: true });
   document.documentElement.addEventListener('mouseleave', function () {
-    target = null; layer.classList.remove('zc-on', 'zc-in', 'zc-link');
+    target = null; layer.classList.remove('zc-on', 'zc-in', 'zc-link'); linkOff();
   });
   // a click opens or zooms the preview: show the shape until the pointer moves again
   document.addEventListener('click', function () { target = null; layer.classList.remove('zc-on'); }, true);
 
+  /* tiny stars around the cursor over clickable things */
+  var STAR = '<svg viewBox="0 0 24 24"><path d="M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0z" fill="#fff"/></svg>';
+  var LINKS = ['spin', 'twinkle', 'pop', 'trail', 'burst', 'halo'];
+  var timer = 0, lastSprinkle = 0;
+  function spark(parent, px, py, size, cls, life, vars) {
+    var sp = document.createElement('span');
+    sp.className = 'zc-spark ' + cls;
+    sp.style.cssText = 'left:' + px + 'px;top:' + py + 'px;--s:' + size + 'px;' + (vars || '');
+    sp.innerHTML = STAR;
+    parent.appendChild(sp);
+    if (life) setTimeout(function () { sp.remove(); }, life);
+    return sp;
+  }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  // three tiny stars in fixed spots that light up in turn
+  function twinkle(n) {
+    var spots = [[-21, -14, 10, 0], [19, -19, 7, .5], [17, 17, 8, 1]];
+    spots.slice(0, n).forEach(function (p) { spark(sparks, p[0], p[1], p[2], 'zc-tw', 0, '--d:' + p[3] + 's'); });
+  }
+  function linkOn() {
+    if (reduce || !sparks) return;
+    sparks.innerHTML = '';
+    if (LINK === 'twinkle' || LINK === 'halo') twinkle(3);
+    if (LINK === 'pop') {
+      var pop = function () {
+        var a = rnd(0, Math.PI * 2), r = rnd(18, 28);
+        spark(sparks, Math.cos(a) * r, Math.sin(a) * r, rnd(5, 10), 'zc-pop', 800);
+      };
+      pop(); timer = setInterval(pop, 190);
+    }
+    if (LINK === 'burst') {
+      for (var i = 0; i < 6; i++) {
+        var a = i / 6 * Math.PI * 2 + rnd(-.3, .3), r = rnd(22, 32);
+        spark(sparks, 0, 0, rnd(5, 9), 'zc-fly', 700, '--dx:' + (Math.cos(a) * r).toFixed(1) + 'px;--dy:' + (Math.sin(a) * r).toFixed(1) + 'px');
+      }
+      setTimeout(function () { if (layer.classList.contains('zc-link') && LINK === 'burst') twinkle(2); }, 450);
+    }
+  }
+  function linkOff() {
+    clearInterval(timer); timer = 0;
+    if (sparks) sparks.innerHTML = '';
+  }
+  // trail: tiny stars sprinkle off the cursor while it moves over a link
+  function sprinkle() {
+    if (reduce) return;
+    var now = Date.now();
+    if (now - lastSprinkle < 45) return;
+    lastSprinkle = now;
+    spark(layer, cx + rnd(-8, 8), cy + rnd(-8, 8), rnd(4, 9), 'zc-fall', 800);
+  }
+
   make(SHAPE);
   window.zcShape = function (name) { if (SHAPES[name]) make(name); };
+  window.zcLink = function (name) {
+    if (LINKS.indexOf(name) === -1) return;
+    LINK = name; linkOff();
+    LINKS.forEach(function (l) { layer.classList.remove('zc-l-' + l); });
+    layer.classList.add('zc-l-' + name);
+    if (layer.classList.contains('zc-link')) linkOn();
+  };
 })();

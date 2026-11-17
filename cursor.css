@@ -41,8 +41,32 @@
 .zc-s-figma .zc-loupe circle, .zc-s-figma .zc-loupe path{ stroke: #6e7df0; }
 .zc-star{ left: -10px; top: -10px; width: 20px; height: 20px; }
 @keyframes zc-spin{ to{ rotate: 360deg; } }
-/* the star stands still and only spins over things you can click */
-.zc-link .zc-star{ animation: zc-spin 1.6s linear infinite; }
+/* the star stands still; over things you can click it either spins (spin)
+   or grows and gets tiny stars twinkling around it (the other LINK effects) */
+.zc-l-spin.zc-link .zc-star{ animation: zc-spin 1.6s linear infinite; }
+.zc-link:not(.zc-l-spin) .zc-shape{ scale: 1.8; }
+.zc-sparks{ position: absolute; left: 0; top: 0; }
+.zc-spark{
+  position: absolute; width: var(--s); height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  pointer-events: none; opacity: 0; scale: 0;
+}
+.zc-spark svg{ display: block; width: 100%; height: 100%; }
+.zc-on .zc-sparks{ display: none; }
+@keyframes zc-tw{ 0%, 100%{ scale: 0; opacity: 0; } 35%{ scale: 1; opacity: 1; } 70%{ scale: .1; opacity: 0; } }
+.zc-tw{ animation: zc-tw 1.5s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes zc-pop{ 0%{ scale: 0; opacity: 0; rotate: -40deg; } 40%{ scale: 1; opacity: 1; } 100%{ scale: 0; opacity: 0; rotate: 40deg; } }
+.zc-pop{ animation: zc-pop .8s ease-out forwards; }
+@keyframes zc-fly{ 0%{ translate: 0 0; scale: .3; opacity: 1; } 60%{ opacity: 1; } 100%{ translate: var(--dx) var(--dy); scale: 1; opacity: 0; } }
+.zc-fly{ animation: zc-fly .7s cubic-bezier(.2,.8,.3,1) forwards; }
+@keyframes zc-fall{ 0%{ scale: 0; opacity: 0; } 25%{ scale: 1; opacity: 1; } 100%{ translate: 0 16px; scale: .2; opacity: 0; } }
+.zc-fall{ animation: zc-fall .8s ease-out forwards; }
+.zc-glow{
+  position: absolute; left: -32px; top: -32px; width: 64px; height: 64px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.5), rgba(255,255,255,.12) 45%, transparent 70%);
+  opacity: 0; scale: .5; transition: opacity .3s ease, scale .4s cubic-bezier(.34,1.56,.64,1);
+}
+.zc-l-halo.zc-link .zc-glow{ opacity: 1; scale: 1; }
 .zc-pen{ left: -2px; top: -2px; width: 24px; height: 24px; }
 .zc-cross{ left: -12px; top: -12px; width: 24px; height: 24px; }
 .zc-s-cross.zc-link .zc-shape{ rotate: 45deg; scale: 1.2; }
@@ -57,4 +81,5 @@
 @media (prefers-reduced-motion: reduce){
   .zc-el, .zc-trail, .zc-shape, .zc-loupe{ transition: none; }
   .zc-link .zc-star{ animation: none; }
+  .zc-spark{ display: none; }
 }
