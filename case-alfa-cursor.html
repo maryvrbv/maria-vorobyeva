@@ -166,6 +166,55 @@
   .cur-el, .cur-dot, .cur-dot i, .cur-orb .ring, .cur-orb svg{ transition: none; animation: none !important; }
 }
 
+
+/* ===== 10–12: springs instead of easing, ideas from 21st.dev made our own =====
+   10 — a glass lens: the picture under it is magnified and bends at the rim
+        with a little colour fringing, the glass casts a soft shadow;
+   11 — the loupe from 8 on a spring: it leans into the movement and
+        stretches a bit when moved fast, settles when it stops;
+   12 — echo rings: the dot is followed by two thin rings on slower springs;
+        on a picture they gather into the loupe and its handle swings in */
+.c-10, .c-10 *, .c-11, .c-11 *, .c-12, .c-12 *{ cursor: none !important; }
+.sp-layer{ position: fixed; inset: 0; pointer-events: none; z-index: 401; }
+.sp-layer.inv{ mix-blend-mode: difference; }
+@media (min-width: 900px){ .sp-layer{ zoom: .8; } }
+.sp{ position: absolute; left: 0; top: 0; will-change: transform; }
+.sp-dot{ width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: #fff; transition: scale .3s cubic-bezier(.34,1.56,.64,1), opacity .2s ease; }
+.sp-hidden{ opacity: 0; }
+.sp-link .sp-dot{ scale: 2.2; }
+.sp-on .sp-dot{ scale: 0; opacity: 0; }
+
+.sp-lens{
+  width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 50%; overflow: hidden;
+  opacity: 0; scale: .2; transition: opacity .2s ease, scale .55s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 8px 14px 30px rgba(0,0,0,.45);
+}
+.sp-on .sp-lens{ opacity: 1; scale: 1; }
+.sp-lens .pic{ position: absolute; inset: 0; background-repeat: no-repeat; background-color: #f3f3f3; }
+.sp-lens .rim{
+  position: absolute; inset: 0; border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.75), inset 0 10px 18px rgba(255,255,255,.35), inset 0 -12px 22px rgba(0,0,0,.22);
+  background: radial-gradient(60% 40% at 32% 22%, rgba(255,255,255,.35), transparent 70%);
+}
+
+.sp-loupe{ width: 120px; height: 120px; margin: -48px 0 0 -48px; }
+.sp-loupe svg{ width: 100%; height: 100%; overflow: visible; transform-origin: 40% 40%; opacity: 0; scale: .2;
+  transition: opacity .2s ease, scale .5s cubic-bezier(.34,1.56,.64,1); }
+.sp-on .sp-loupe svg{ opacity: 1; scale: 1; }
+
+.sp-ring{ width: 72px; height: 72px; margin: -36px 0 0 -36px; border-radius: 50%; border: 2px solid #fff;
+  opacity: .9; scale: .45; transition: scale .5s cubic-bezier(.34,1.56,.64,1), border-width .3s ease, opacity .2s ease; }
+.sp-ring.r2{ opacity: .5; scale: .7; }
+.sp-on .sp-ring{ scale: 1; border-width: 6px; opacity: 1; }
+.sp-on .sp-ring.r2{ scale: 1; opacity: 0; }
+.sp-handle{ width: 120px; height: 120px; margin: -48px 0 0 -48px; opacity: 0; rotate: -60deg; transform-origin: 40% 40%;
+  transition: opacity .2s ease, rotate .55s cubic-bezier(.34,1.56,.64,1); }
+.sp-handle svg{ width: 100%; height: 100%; overflow: visible; }
+.sp-on .sp-handle{ opacity: 1; rotate: 0deg; }
+@media (prefers-reduced-motion: reduce){
+  .sp-dot, .sp-lens, .sp-loupe svg, .sp-ring, .sp-handle{ transition: none; }
+}
+
 /* switcher */
 .cur-switch{
   position: fixed; z-index: 60; left: 50%; bottom: 20px; transform: translateX(-50%);
@@ -516,7 +565,7 @@
 <script src="script.js"></script>
 <script src="case-lightbox.js"></script>
 <div class="cur-switch" role="group" aria-label="Вариант курсора">
-  <button type="button" data-c="1">1<span class="cs-long"> · системная лупа</span></button><button type="button" data-c="2">2<span class="cs-long"> · кружок с плюсом</span></button><button type="button" data-c="3">3<span class="cs-long"> · подпись</span></button><button type="button" data-c="4">4<span class="cs-long"> · линза</span></button><button type="button" data-c="5">5<span class="cs-long"> · растущая точка</span></button><button type="button" data-c="6">6<span class="cs-long"> · как ovzson, везде</span></button><button type="button" data-c="7">7<span class="cs-long"> · ovzson на картинках</span></button><button type="button" data-c="8">8<span class="cs-long"> · точка → лупа</span></button><button type="button" data-c="9">9<span class="cs-long"> · лупа с увеличением</span></button>
+  <button type="button" data-c="1">1<span class="cs-long"> · системная лупа</span></button><button type="button" data-c="2">2<span class="cs-long"> · кружок с плюсом</span></button><button type="button" data-c="3">3<span class="cs-long"> · подпись</span></button><button type="button" data-c="4">4<span class="cs-long"> · линза</span></button><button type="button" data-c="5">5<span class="cs-long"> · растущая точка</span></button><button type="button" data-c="6">6<span class="cs-long"> · как ovzson, везде</span></button><button type="button" data-c="7">7<span class="cs-long"> · ovzson на картинках</span></button><button type="button" data-c="8">8<span class="cs-long"> · точка → лупа</span></button><button type="button" data-c="9">9<span class="cs-long"> · лупа с увеличением</span></button><button type="button" data-c="10">10<span class="cs-long"> · стеклянная линза</span></button><button type="button" data-c="11">11<span class="cs-long"> · лупа с наклоном</span></button><button type="button" data-c="12">12<span class="cs-long"> · кольца-эхо</span></button>
 </div>
 <script>
 (function () {
@@ -552,12 +601,13 @@
   }
   function set(m) {
     mode = m;
-    document.body.classList.remove('c-1', 'c-2', 'c-3', 'c-4', 'c-5', 'c-6', 'c-7', 'c-8', 'c-9');
+    document.body.classList.remove('c-1', 'c-2', 'c-3', 'c-4', 'c-5', 'c-6', 'c-7', 'c-8', 'c-9', 'c-10', 'c-11', 'c-12');
     document.body.classList.add('c-' + m);
     [].forEach.call(document.querySelectorAll('.cur-switch button'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.c === m)); });
     var q = new URLSearchParams(location.search); q.set('c', m);
     history.replaceState(null, '', location.pathname + '?' + q + location.hash);
     make(m); layer.classList.remove('cur-on', 'cur-link'); layer2.classList.remove('cur-on2');
+    document.dispatchEvent(new CustomEvent('curmode', { detail: m }));
   }
   [].forEach.call(document.querySelectorAll('.cur-switch button'), function (b) { b.addEventListener('click', function () { set(b.dataset.c); }); });
 
@@ -605,8 +655,109 @@
   document.addEventListener('click', function () { target = null; layer.classList.remove('cur-on'); layer2.classList.remove('cur-on2'); }, true);
 
   var c = new URLSearchParams(location.search).get('c');
-  set(/^[1-9]$/.test(c) ? c : '8');
+  set(/^(1[0-2]|[1-9])$/.test(c) ? c : '8');
   if (!fine) { layer.remove(); layer2.remove(); }
+})();
+</script>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="sp-glass" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feImage id="sp-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+    <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cr"/>
+    <feDisplacementMap in="cr" in2="map" scale="34" xChannelSelector="R" yChannelSelector="G" result="dr"/>
+    <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cg"/>
+    <feDisplacementMap in="cg" in2="map" scale="28" xChannelSelector="R" yChannelSelector="G" result="dg"/>
+    <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="cb"/>
+    <feDisplacementMap in="cb" in2="map" scale="22" xChannelSelector="R" yChannelSelector="G" result="db"/>
+    <feBlend in="dr" in2="dg" mode="screen" result="rg"/>
+    <feBlend in="rg" in2="db" mode="screen"/>
+  </filter>
+</defs></svg>
+<script>
+/* cursors 10–12: spring physics (stiffness/damping) instead of easing */
+(function () {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var inv = document.createElement('div'); inv.className = 'sp-layer inv sp-hidden'; inv.setAttribute('aria-hidden', 'true');
+  var norm = document.createElement('div'); norm.className = 'sp-layer sp-hidden'; norm.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(norm); document.body.appendChild(inv);
+  var mode = null, parts = [], px = 0, py = 0, target = null, raf = 0, last = 0, lensPic = null;
+
+  // the glass bends at the rim: a radial displacement map, made once
+  (function () {
+    var n = 160, c = n / 2, cv = document.createElement('canvas'); cv.width = cv.height = n;
+    var ctx = cv.getContext('2d'), img = ctx.createImageData(n, n);
+    for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+      var dx = x - c, dy = y - c, d = Math.sqrt(dx * dx + dy * dy), nd = Math.min(d / c, 1), st = nd * nd * nd;
+      var ux = d ? dx / d : 0, uy = d ? dy / d : 0, i = (y * n + x) * 4;
+      img.data[i] = Math.round(255 * (.5 - .5 * ux * st)); img.data[i + 1] = Math.round(255 * (.5 - .5 * uy * st));
+      img.data[i + 2] = 128; img.data[i + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    document.getElementById('sp-map').setAttribute('href', cv.toDataURL());
+  })();
+
+  var LOUPE = '<svg viewBox="0 0 120 120"><circle cx="48" cy="48" r="36" fill="none" stroke="#fff" stroke-width="6"/>' +
+    '<path d="M75 75l22 22" stroke="#fff" stroke-width="10" stroke-linecap="round"/>' +
+    '<path d="M48 34v28M34 48h28" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>';
+  var HANDLE = '<svg viewBox="0 0 120 120"><path d="M75 75l22 22" stroke="#fff" stroke-width="10" stroke-linecap="round"/></svg>';
+
+  function part(layer, cls, html, k, c) {
+    var el = document.createElement('div'); el.className = 'sp ' + cls; if (html) el.innerHTML = html;
+    layer.appendChild(el);
+    var p = { el: el, k: k, c: c, x: px, y: py, vx: 0, vy: 0, tilt: cls === 'sp-loupe' };
+    parts.push(p); return p;
+  }
+  function build(m) {
+    inv.innerHTML = ''; norm.innerHTML = ''; parts = []; lensPic = null;
+    mode = /^1[0-2]$/.test(m) ? m : null;
+    inv.classList.add('sp-hidden'); norm.classList.add('sp-hidden');
+    if (!mode) return;
+    part(inv, 'sp-dot', '', 900, 50);
+    if (mode === '10') { var l = part(norm, 'sp-lens', '<div class="pic"></div><div class="rim"></div>', 300, 26); lensPic = l.el.querySelector('.pic'); lensPic.style.filter = 'url(#sp-glass)'; }
+    if (mode === '11') part(inv, 'sp-loupe', LOUPE, 220, 16);
+    if (mode === '12') { part(inv, 'sp-ring', '', 600, 40); part(inv, 'sp-ring r2', '', 200, 18); part(inv, 'sp-handle', HANDLE, 600, 40); }
+  }
+  function step(t) {
+    raf = 0;
+    var dt = Math.min(.032, (t - last) / 1000 || .016); last = t;
+    var moving = false;
+    parts.forEach(function (p) {
+      if (reduce) { p.x = px; p.y = py; p.vx = p.vy = 0; }
+      else {
+        p.vx += (p.k * (px - p.x) - p.c * p.vx) * dt; p.vy += (p.k * (py - p.y) - p.c * p.vy) * dt;
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        if (Math.abs(px - p.x) > .2 || Math.abs(py - p.y) > .2 || Math.abs(p.vx) > 2 || Math.abs(p.vy) > 2) moving = true;
+      }
+      var tr = 'translate(' + p.x + 'px,' + p.y + 'px)';
+      if (p.tilt) {
+        // lean into the movement, stretch a little with speed
+        var sp = Math.min(1, Math.hypot(p.vx, p.vy) / 2500);
+        tr += ' rotate(' + Math.max(-25, Math.min(25, p.vx / 60)) + 'deg) scale(' + (1 + sp * .18) + ',' + (1 - sp * .1) + ')';
+      }
+      p.el.style.transform = tr;
+      if (lensPic && p.el.classList.contains('sp-lens') && target && target.tagName === 'IMG') {
+        var r = target.getBoundingClientRect(), k = 1.7, R = 75;
+        lensPic.style.backgroundImage = 'url("' + (target.currentSrc || target.src) + '")';
+        lensPic.style.backgroundSize = (r.width * k) + 'px ' + (r.height * k) + 'px';
+        lensPic.style.backgroundPosition = (-(p.x - r.left) * k + R) + 'px ' + (-(p.y - r.top) * k + R) + 'px';
+      }
+    });
+    if (moving) raf = requestAnimationFrame(step);
+  }
+  document.addEventListener('mousemove', function (e) {
+    if (!mode) return;
+    px = e.clientX; py = e.clientY;
+    if (inv.classList.contains('sp-hidden')) { parts.forEach(function (p) { p.x = px; p.y = py; }); inv.classList.remove('sp-hidden'); norm.classList.remove('sp-hidden'); }
+    target = e.target.closest && e.target.closest('.case-body [role=button]');
+    var on = !!target && (mode !== '10' || target.tagName === 'IMG');
+    inv.classList.toggle('sp-on', on); norm.classList.toggle('sp-on', on);
+    inv.classList.toggle('sp-link', !target && !!(e.target.closest && e.target.closest('a, button, summary')));
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(step); }
+  }, { passive: true });
+  document.documentElement.addEventListener('mouseleave', function () { inv.classList.add('sp-hidden'); norm.classList.add('sp-hidden'); });
+  document.addEventListener('click', function () { inv.classList.remove('sp-on'); norm.classList.remove('sp-on'); }, true);
+  document.addEventListener('curmode', function (e) { build(e.detail); });
+  build((/c-(1[0-2])/.exec(document.body.className) || [])[1]);
 })();
 </script>
 </body>
