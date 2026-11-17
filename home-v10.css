@@ -1072,3 +1072,15 @@ img{ max-width: 100%; height: auto; display: block; }
   .contact-row{ align-self: stretch; }
   .hero-actions .btn-long{ display: none; }
 }
+
+/* ---------- contact buttons: one main action, the rest quieter ----------
+   .btn-glass is declared before .btn, so .btn's dark fill used to win and
+   every contact button looked primary. Same look as in the hero: the first
+   of three (Telegram) is the dark main button, the others are glass; with
+   two buttons (EN, where the email above is the main action) both are glass */
+.contact-row .hero-actions .btn-glass{
+  background: rgba(255,255,255,.22); border-color: transparent; color: #fff;
+}
+.contact-row .hero-actions .btn-glass:hover{ background: rgba(255,255,255,.32); }
+.contact-row .hero-actions .btn-glass:first-child:nth-last-child(3){ background: #0c0a14; }
+.contact-row .hero-actions .btn-glass:first-child:nth-last-child(3):hover{ background: #1c1830; }
