@@ -1100,9 +1100,10 @@ header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 40px; min-height: 
 }
 .zc-s-figma .zc-loupe{ filter: drop-shadow(0 0 1.5px rgba(38,25,92,.9)) drop-shadow(0 1px 3px rgba(0,0,0,.4)); }
 .zc-s-figma .zc-loupe circle, .zc-s-figma .zc-loupe path{ stroke: #6e7df0; }
-.zc-star{ left: -10px; top: -10px; width: 20px; height: 20px; animation: zc-spin 6s linear infinite; }
+.zc-star{ left: -10px; top: -10px; width: 20px; height: 20px; }
 @keyframes zc-spin{ to{ rotate: 360deg; } }
-.zc-link .zc-star{ animation-duration: 1.6s; }
+/* the star stands still and only spins over things you can click */
+.zc-link .zc-star{ animation: zc-spin 1.6s linear infinite; }
 .zc-pen{ left: -2px; top: -2px; width: 24px; height: 24px; }
 .zc-cross{ left: -12px; top: -12px; width: 24px; height: 24px; }
 .zc-s-cross.zc-link .zc-shape{ rotate: 45deg; scale: 1.2; }
@@ -1116,5 +1117,5 @@ header.nav .lang-switch, .nav-reveal .lang-switch{ min-width: 40px; min-height: 
 .zc-on .zc-trail{ scale: .4; opacity: 0; }
 @media (prefers-reduced-motion: reduce){
   .zc-el, .zc-trail, .zc-shape, .zc-loupe{ transition: none; }
-  .zc-star{ animation: none; }
+  .zc-link .zc-star{ animation: none; }
 }
