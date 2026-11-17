@@ -1049,22 +1049,26 @@ img{ max-width: 100%; height: auto; display: block; }
   .stack-item{ top: calc(12px + var(--i, 0) * 10px); }
 }
 
-/* ---------- phone buttons: full width, labels never break ----------
-   Hero and contact follow one rule. With three buttons the main one takes
+/* ---------- phone buttons: compact, full width, labels never break ----------
+   Hero and contact follow one rule: with three buttons the main one takes
    its own row and the other two share the next in equal halves; with two
-   they share one row. Halves are always equal and a label is never split
-   in two: the basis is in em (the width of the longest label), so on a
-   narrow phone or with large system text each button simply gets a full
-   row of its own instead */
+   they share one row. On phones the CV button says just "CV" (the download
+   icon tells the rest), so the pair fits side by side even with large
+   system text; buttons are 44px high, the minimum comfortable touch size.
+   A label is never split: if a pair still does not fit, each button gets a
+   full row of its own */
 .btn{ white-space: nowrap; }
 @media (max-width: 700px){
   .hero-glow .hero-copy .hero-actions,
   .contact-row .hero-actions{ display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
   .hero-glow .hero-copy .hero-actions .btn,
   .contact-row .hero-actions .btn{
-    flex: 1 1 10em; min-width: max-content;
-    justify-content: center; min-height: 48px; padding-inline: 14px;
+    flex: 1 1 6.5em; min-width: max-content;
+    justify-content: center; min-height: 44px; padding: 9px 12px;
+    border-color: transparent;   /* no outlines on phones: the fill is enough */
   }
+  .hero-glow .hero-copy .hero-actions .btn:not(.btn-primary){ background: rgba(255,255,255,.22); }
   .hero-actions .btn:first-child:nth-last-child(3){ flex-basis: 100%; }
   .contact-row{ align-self: stretch; }
+  .hero-actions .btn-long{ display: none; }
 }
