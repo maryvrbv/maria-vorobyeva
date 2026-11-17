@@ -1,11 +1,13 @@
-/* ---------- cursor on case pages (mouse only) ----------
+/* ---------- cursor on every page of the site (mouse only, styles in cursor.css) ----------
    A small white four-point star, like the list bullets, replaces the arrow
    (the layer inverts what is under it, so it reads on dark and light). Over
    a picture that opens larger it turns into a small magnifying glass with a
    plus that swings in; over links and buttons the star grows a little and
    spins. Phones, tablets and keyboard
    users keep the system behaviour.
-   The live shape is SHAPE below; case-alfa-pointer.html tries the others
+   On the home page and 404 there are no pictures to open, so there it is
+   just the star. The live shape is SHAPE below; case-alfa-pointer.html
+   tries the others
    through window.zcShape(name) */
 (function () {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
@@ -37,6 +39,14 @@
   layer.setAttribute('aria-hidden', 'true');
   document.body.appendChild(layer);
   document.documentElement.classList.add('zc');
+  // case pages zoom the whole page on desktop; mouse coordinates are real px,
+  // so the layer takes the opposite zoom
+  function unzoom() {
+    var z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+    layer.style.zoom = z === 1 ? '' : String(1 / z);
+  }
+  unzoom();
+  window.addEventListener('resize', unzoom);
   var el, trail, shape;
   var x = 0, y = 0, cx = 0, cy = 0, tx = 0, ty = 0, raf = 0, target = null;
 
