@@ -2,10 +2,9 @@
    A small white four-point star, like the list bullets, replaces the arrow
    (the layer inverts what is under it, so it reads on dark and light). Over
    a picture that opens larger it turns into a small magnifying glass with a
-   plus that swings in; over links and buttons the star grows a little and
-   spins (LINK below; index-cursor.html tries other hover effects through
-   window.zcLink(name): a bigger still star with tiny stars twinkling
-   around it). Phones, tablets and keyboard users keep the system behaviour.
+   plus that swings in; over links and buttons the star grows and tiny
+   stars light up around it, one at a time (LINK below; index-cursor.html
+   tries the other hover effects through window.zcLink(name)). Phones, tablets and keyboard users keep the system behaviour.
    On the home page and 404 there are no pictures to open, so there it is
    just the star. The live shape is SHAPE below; case-alfa-pointer.html
    tries the others
@@ -13,7 +12,7 @@
 (function () {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   var SHAPE = 'star';
-  var LINK = 'spin';
+  var LINK = 'pop';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // pictures in the case, and the picture in the preview while it is not zoomed
   var ZOOMABLE = '.case-body [role=button], .lb:not(.zoomed) img.lb-media';
@@ -120,11 +119,14 @@
     sparks.innerHTML = '';
     if (LINK === 'twinkle' || LINK === 'halo') twinkle(3);
     if (LINK === 'pop') {
+      // one tiny star at a time, slowly, each in a new spot away from the last
+      var last = rnd(0, Math.PI * 2);
       var pop = function () {
-        var a = rnd(0, Math.PI * 2), r = rnd(18, 28);
-        spark(sparks, Math.cos(a) * r, Math.sin(a) * r, rnd(5, 10), 'zc-pop', 800);
+        var a = last + rnd(Math.PI * .6, Math.PI * 1.4), r = rnd(18, 26);
+        last = a;
+        spark(sparks, Math.cos(a) * r, Math.sin(a) * r, rnd(6, 9), 'zc-pop', 1400);
       };
-      pop(); timer = setInterval(pop, 190);
+      pop(); timer = setInterval(pop, 700);
     }
     if (LINK === 'burst') {
       for (var i = 0; i < 6; i++) {

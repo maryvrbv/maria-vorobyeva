@@ -404,7 +404,7 @@
 .zc-switch .cs-long{ display: none; }
 .zc-switch button[aria-pressed="true"] .cs-long{ display: inline; }
 </style>
-<div class="zc-switch" role="group" aria-label="Курсор над ссылками"><button type="button" data-l="spin">1<span class="cs-long"> · как сейчас, крутится</span></button><button type="button" data-l="twinkle">2<span class="cs-long"> · мерцают вокруг</span></button><button type="button" data-l="pop">3<span class="cs-long"> · вспыхивают вокруг</span></button><button type="button" data-l="trail">4<span class="cs-long"> · сыплются следом</span></button><button type="button" data-l="burst">5<span class="cs-long"> · салют и мерцание</span></button><button type="button" data-l="halo">6<span class="cs-long"> · свечение и мерцание</span></button></div>
+<div class="zc-switch" role="group" aria-label="Курсор над ссылками"><button type="button" data-l="spin">1<span class="cs-long"> · как сейчас, крутится</span></button><button type="button" data-l="twinkle">2<span class="cs-long"> · мерцают вокруг</span></button><button type="button" data-l="pop">3<span class="cs-long"> · вспыхивают по одной</span></button><button type="button" data-l="trail">4<span class="cs-long"> · сыплются следом</span></button><button type="button" data-l="burst">5<span class="cs-long"> · салют и мерцание</span></button><button type="button" data-l="halo">6<span class="cs-long"> · свечение и мерцание</span></button></div>
 <script>
 (function () {
   var names = ['spin','twinkle','pop','trail','burst','halo'];
@@ -416,7 +416,7 @@
   }
   [].forEach.call(document.querySelectorAll('.zc-switch button'), function (b) { b.addEventListener('click', function () { set(b.dataset.l); }); });
   var l = parseInt(new URLSearchParams(location.search).get('l'), 10);
-  set(names[l - 1] || 'twinkle');
+  set(names[l - 1] || 'pop');
 })();
 </script>
 </body>

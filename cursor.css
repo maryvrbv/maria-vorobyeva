@@ -55,8 +55,9 @@
 .zc-on .zc-sparks{ display: none; }
 @keyframes zc-tw{ 0%, 100%{ scale: 0; opacity: 0; } 35%{ scale: 1; opacity: 1; } 70%{ scale: .1; opacity: 0; } }
 .zc-tw{ animation: zc-tw 1.5s ease-in-out infinite; animation-delay: var(--d); }
-@keyframes zc-pop{ 0%{ scale: 0; opacity: 0; rotate: -40deg; } 40%{ scale: 1; opacity: 1; } 100%{ scale: 0; opacity: 0; rotate: 40deg; } }
-.zc-pop{ animation: zc-pop .8s ease-out forwards; }
+/* pop: no turning, a soft rise and fade */
+@keyframes zc-pop{ 0%{ scale: 0; opacity: 0; } 40%{ scale: 1; opacity: 1; } 100%{ scale: .3; opacity: 0; } }
+.zc-pop{ animation: zc-pop 1.4s ease-in-out forwards; }
 @keyframes zc-fly{ 0%{ translate: 0 0; scale: .3; opacity: 1; } 60%{ opacity: 1; } 100%{ translate: var(--dx) var(--dy); scale: 1; opacity: 0; } }
 .zc-fly{ animation: zc-fly .7s cubic-bezier(.2,.8,.3,1) forwards; }
 @keyframes zc-fall{ 0%{ scale: 0; opacity: 0; } 25%{ scale: 1; opacity: 1; } 100%{ translate: 0 16px; scale: .2; opacity: 0; } }
