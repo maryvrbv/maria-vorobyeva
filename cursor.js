@@ -3,11 +3,11 @@
    (the layer inverts what is under it, so it reads on dark and light). Over
    a picture that opens larger it turns into a small magnifying glass with a
    plus that swings in; over links and buttons the star grows and tiny
-   stars light up around it, one at a time (LINK below; index-cursor.html
-   tries the other hover effects through window.zcLink(name)). Phones, tablets and keyboard users keep the system behaviour.
+   stars light up around it, one at a time (LINK below; the other hover effects, tried on index-cursor.html in
+   the backup-2026-11-18 branch, switch with window.zcLink(name)). Phones, tablets and keyboard users keep the system behaviour.
    On the home page and 404 there are no pictures to open, so there it is
-   just the star. The live shape is SHAPE below; case-alfa-pointer.html
-   tries the others
+   just the star. The live shape is SHAPE below; the others (tried on
+   case-alfa-pointer.html in the backup-2026-11-18 branch) switch
    through window.zcShape(name) */
 (function () {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
