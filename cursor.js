@@ -118,11 +118,14 @@
     if (reduce || !sparks) return;
     if (LINK === 'twinkle' || LINK === 'halo') twinkle(3);
     if (LINK === 'pop') {
-      // one tiny star at a time, slowly, each in a new spot away from the last
-      var last = rnd(0, Math.PI * 2);
+      // one tiny star at a time, slowly, each in a new spot away from the last.
+      // Only between the big star's rays (on the diagonals, ±20°) and clear of
+      // its tips: the grown star reaches 18px out along the axes
+      var last = Math.floor(rnd(0, 4));
       var pop = function () {
-        var a = last + rnd(Math.PI * .6, Math.PI * 1.4), r = rnd(22, 30);
-        last = a;
+        var q = (last + 1 + Math.floor(rnd(0, 3))) % 4;
+        last = q;
+        var a = (45 + q * 90 + rnd(-20, 20)) * Math.PI / 180, r = rnd(26, 32);
         spark(sparks, Math.cos(a) * r, Math.sin(a) * r, rnd(9, 13), 'zc-pop', 2200);
       };
       pop(); timer = setInterval(pop, 800);
