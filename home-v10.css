@@ -8,6 +8,8 @@
    ========================================================================== */
 
 :root{
+  /* the four-point star of the bullets — the same shape as the cursor (cursor.js) */
+  --star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0z'/%3E%3C/svg%3E");
   --paper: #000000;
   --paper-raised: #111111;
   --surface-strong: #1a1a1a;
@@ -505,9 +507,10 @@ img{ max-width: 100%; height: auto; display: block; }
 .exp-body ul{ margin: 0 0 12px; padding-left: 20px; list-style: none; }
 .exp-body li{ position: relative; margin-bottom: 6px; }
 .exp-body li::before{
-  content: "\e6a4"; font-family: "Phosphor-Fill";
-  position: absolute; left: -20px; top: .55em;
-  font-size: 10px; line-height: 1; color: var(--accent-soft);
+  /* the same star as the cursor, in the muted text colour like in the cases */
+  content: ""; width: 10px; height: 10px; background: currentColor; -webkit-mask: var(--star) center / contain no-repeat; mask: var(--star) center / contain no-repeat;
+  position: absolute; left: -20px; top: .8em; transform: translateY(-50%);
+  color: var(--ink-soft);
 }
 @media (max-width: 760px){
   .exp-item summary{ grid-template-columns: 36px 1fr auto; gap: 6px 12px; padding: 18px 0; }
