@@ -253,7 +253,14 @@ img{ max-width: 100%; height: auto; display: block; }
   font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
   color: var(--accent-soft);
 }
-.eyebrow i{ font-size: 12px; }
+/* the same four-point star as the bullets and the cursor (--star), not the
+   Phosphor glyph */
+.eyebrow i{
+  display: inline-block; flex: none; width: 12px; height: 12px;
+  background: currentColor;
+  -webkit-mask: var(--star) center / contain no-repeat; mask: var(--star) center / contain no-repeat;
+}
+.eyebrow i.ph-fill::before{ content: none; }   /* beats Phosphor’s .ph-fill.ph-star-four:before */
 .section-title{
   margin: 10px 0 0;
   font-family: var(--font-display);
