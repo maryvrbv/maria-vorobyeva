@@ -116,17 +116,16 @@
   }
   function linkOn() {
     if (reduce || !sparks) return;
-    sparks.innerHTML = '';
     if (LINK === 'twinkle' || LINK === 'halo') twinkle(3);
     if (LINK === 'pop') {
       // one tiny star at a time, slowly, each in a new spot away from the last
       var last = rnd(0, Math.PI * 2);
       var pop = function () {
-        var a = last + rnd(Math.PI * .6, Math.PI * 1.4), r = rnd(18, 26);
+        var a = last + rnd(Math.PI * .6, Math.PI * 1.4), r = rnd(22, 30);
         last = a;
-        spark(sparks, Math.cos(a) * r, Math.sin(a) * r, rnd(6, 9), 'zc-pop', 1400);
+        spark(sparks, Math.cos(a) * r, Math.sin(a) * r, rnd(9, 13), 'zc-pop', 2200);
       };
-      pop(); timer = setInterval(pop, 700);
+      pop(); timer = setInterval(pop, 800);
     }
     if (LINK === 'burst') {
       for (var i = 0; i < 6; i++) {
@@ -138,7 +137,11 @@
   }
   function linkOff() {
     clearInterval(timer); timer = 0;
-    if (sparks) sparks.innerHTML = '';
+    if (!sparks) return;
+    // the tiny stars fade out instead of vanishing at once
+    var old = [].slice.call(sparks.children);
+    old.forEach(function (sp) { sp.classList.add('zc-gone'); });
+    setTimeout(function () { old.forEach(function (sp) { sp.remove(); }); }, 400);
   }
   // trail: tiny stars sprinkle off the cursor while it moves over a link
   function sprinkle() {
