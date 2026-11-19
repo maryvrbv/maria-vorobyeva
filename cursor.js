@@ -75,20 +75,34 @@
     place();
     if (Math.abs(x - cx) > .3 || Math.abs(y - cy) > .3 || Math.abs(x - tx) > .3 || Math.abs(y - ty) > .3) raf = requestAnimationFrame(frame);
   }
-  document.addEventListener('mousemove', function (e) {
-    x = e.clientX; y = e.clientY;
-    var t = e.target.closest ? e.target.closest(ZOOMABLE) : null;
-    if (!layer.classList.contains('zc-in')) { cx = tx = x; cy = ty = y; layer.classList.add('zc-in'); }
+  // what is under the pointer decides the look: glass, star over a link, or star
+  function sense(node) {
+    var t = node && node.closest ? node.closest(ZOOMABLE) : null;
     if (t !== target) {
       if (t && !target) { cx = x; cy = y; }   // the glass appears right under the pointer
       target = t;
       layer.classList.toggle('zc-on', !!t);
     }
-    var link = !t && !!(e.target.closest && e.target.closest('a, button, summary, [role=button]'));
+    var link = !t && !!(node && node.closest && node.closest('a, button, summary, [role=button]'));
     if (link !== layer.classList.contains('zc-link')) { layer.classList.toggle('zc-link', link); if (link) linkOn(); else linkOff(); }
-    if (link && LINK === 'trail') sprinkle();
+    return link;
+  }
+  document.addEventListener('mousemove', function (e) {
+    x = e.clientX; y = e.clientY;
+    if (!layer.classList.contains('zc-in')) { cx = tx = x; cy = ty = y; layer.classList.add('zc-in'); }
+    if (sense(e.target) && LINK === 'trail') sprinkle();
     if (!raf) raf = requestAnimationFrame(frame);
   }, { passive: true });
+  // scrolling with the wheel moves the page under a still pointer: check again
+  // what is under it, otherwise the glass would stay on whatever comes next
+  var scrollRaf = 0;
+  window.addEventListener('scroll', function () {
+    if (scrollRaf || !layer.classList.contains('zc-in')) return;
+    scrollRaf = requestAnimationFrame(function () {
+      scrollRaf = 0;
+      sense(document.elementFromPoint(x, y));
+    });
+  }, { passive: true, capture: true });
   document.documentElement.addEventListener('mouseleave', function () {
     target = null; layer.classList.remove('zc-on', 'zc-in', 'zc-link'); linkOff();
   });
