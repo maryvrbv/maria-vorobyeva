@@ -15,7 +15,7 @@
   var LINK = 'pop';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // pictures in the case, and the picture in the preview while it is not zoomed
-  var ZOOMABLE = '.case-body [role=button], .lb:not(.zoomed) img.lb-media';
+  var ZOOMABLE = '.case-body [role=button], .case-body [data-lb-video], .lb:not(.zoomed) img.lb-media';
   var en = (document.documentElement.lang || '').indexOf('en') === 0;
 
   // each shape: its markup and how closely it follows the pointer

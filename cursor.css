@@ -6,6 +6,10 @@
 /* a fully transparent 1×1 picture as the cursor, with "none" as the fallback:
    some browsers (Safari, Chrome on a Mac) let the system arrow flash through
    "none" while the mouse moves; a transparent image cursor stays hidden */
+/* over a playing video Chrome and Safari on a Mac show their own arrow, even
+   with the cursor hidden: videos without controls let the mouse through to the
+   block around them (a case card link, or the figure that opens the preview) */
+.zc video:not([controls]){ pointer-events: none; }
 .zc, .zc *{
   cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGNgAAIAAAUAAXpeqz8AAAAASUVORK5CYII=") 0 0, none !important;
 }
