@@ -7,13 +7,21 @@
    some browsers (Safari, Chrome on a Mac) let the system arrow flash through
    "none" while the mouse moves; a transparent image cursor stays hidden */
 /* over a playing video Chrome and Safari on a Mac show their own arrow, even
-   with the cursor hidden: videos without controls let the mouse through to the
-   block around them (a case card link, or the figure that opens the preview) */
+   with the cursor hidden. Videos without controls let the mouse through to the
+   block around them (a case card link, or the figure that opens the preview),
+   and a transparent sheet lies over them, so the video is never the top layer
+   under the pointer (a playing video on top gets its own system layer on a Mac) */
 .zc video:not([controls]){ pointer-events: none; }
+.zc .case-cover, .zc [data-lb-video]{ position: relative; }
+.zc .case-cover::after, .zc [data-lb-video]::after{
+  content: ""; position: absolute; inset: 0; z-index: 1; background: rgba(0,0,0,.001);
+}
 .zc, .zc *{
   cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGNgAAIAAAUAAXpeqz8AAAAASUVORK5CYII=") 0 0, none !important;
 }
-.zc-layer{ position: fixed; inset: 0; pointer-events: none; z-index: 400; mix-blend-mode: difference; }
+/* the layer has no size of its own (the star is drawn around a point), so the
+   inverting blend covers only the star, not the whole screen every frame */
+.zc-layer{ position: fixed; left: 0; top: 0; width: 0; height: 0; overflow: visible; pointer-events: none; z-index: 400; mix-blend-mode: difference; }
 .zc-layer.zc-plain{ mix-blend-mode: normal; }
 /* case pages zoom the whole page by 1.25 on desktop; cursor.js gives the
    layer the opposite zoom, because mouse coordinates are real px */
