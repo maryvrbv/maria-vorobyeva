@@ -3,7 +3,12 @@
    the system cursor stays. The layer inverts what is under it, which only
    works when the blend sits on the layer itself. Everything is drawn around
    the pointer: .zc-el has no size and sits exactly on it */
-.zc, .zc *{ cursor: none !important; }
+/* a fully transparent 1×1 picture as the cursor, with "none" as the fallback:
+   some browsers (Safari, Chrome on a Mac) let the system arrow flash through
+   "none" while the mouse moves; a transparent image cursor stays hidden */
+.zc, .zc *{
+  cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGNgAAIAAAUAAXpeqz8AAAAASUVORK5CYII=") 0 0, none !important;
+}
 .zc-layer{ position: fixed; inset: 0; pointer-events: none; z-index: 400; mix-blend-mode: difference; }
 .zc-layer.zc-plain{ mix-blend-mode: normal; }
 /* case pages zoom the whole page by 1.25 on desktop; cursor.js gives the
