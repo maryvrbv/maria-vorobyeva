@@ -22,6 +22,17 @@
     el.setAttribute('role', 'button');
     el.setAttribute('aria-label', T.open + ': ' + (el.getAttribute('alt') || el.getAttribute('aria-label') || ''));
     el.addEventListener('click', function (e) { e.preventDefault(); open(i); });
+    // looping videos do not take the mouse (cursor.css: over a video Chrome and
+    // Safari on a Mac show their own arrow), so the click lands on the block
+    // around the video: open the preview when it is over the video itself
+    if (el.tagName === 'VIDEO' && el.parentElement) {
+      el.parentElement.setAttribute('data-lb-video', '');
+      el.parentElement.addEventListener('click', function (e) {
+        if (e.target !== el.parentElement) return;
+        var r = el.getBoundingClientRect();
+        if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) { e.preventDefault(); open(i); }
+      });
+    }
     el.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
     });
